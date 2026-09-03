@@ -27,8 +27,8 @@ class Settings(BaseSettings):
 
     BACKEND_HOST: str = "0.0.0.0"
     BACKEND_PORT: int = 8000
-    COVER_IMAGES_DIR: str = "cover-images"
-    CACHE_FILE: str = "comics_cache.json"
+    COVER_IMAGES_DIR: str = "frontend/assets"
+    CACHE_FILE: str = "backend/data_cache/comics_cache.json"
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(BASE_DIR, ".env"),

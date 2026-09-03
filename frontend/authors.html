@@ -8,13 +8,13 @@
   3. Khi click vào một tác giả -> Hiển thị toàn bộ các tác phẩm của tác giả đó ở phía dưới.
 -->
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Tác Giả — HManga Library</title>
+    <title>Manage Authors — HManga Library</title>
     <!-- Favicon website -->
-    <link rel="icon" type="image/jpeg" href="rem.jpg">
+    <link rel="icon" type="image/jpeg" href="assets/rem.jpg">
     <!-- Stylesheet dùng chung -->
     <link rel="stylesheet" href="style.css">
     <style>
@@ -64,90 +64,85 @@
     </style>
 </head>
 <body>
-    <!-- 1. Thanh điều hướng trên cùng (Navbar) -->
+    <!-- 1. Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-brand">
-                <img src="rem.jpg" alt="HManga Logo" class="nav-logo">
+                <img src="assets/rem.jpg" alt="HManga Logo" class="nav-logo">
                 <span class="nav-brand-text">HManga</span>
             </a>
-            <!-- Thanh tìm kiếm nhanh trên Navbar -->
+            <!-- Quick Search Form -->
             <div class="nav-center">
                 <form class="quick-search-form" id="quickSearchForm" action="index.html" method="GET" autocomplete="off">
                     <div class="quick-search-wrapper">
-                        <img src="data-icon/search.png" alt="Search" class="quick-search-icon">
-                        <input type="search" name="s" id="inputQuickSearch" class="quick-search-input" placeholder="Tìm tên truyện..." autocomplete="off">
+                        <input type="search" name="s" id="inputQuickSearch" class="quick-search-input" placeholder="Search comics..." autocomplete="off">
                     </div>
                     <a href="search.html" id="btnGoAdvanced" class="btn-go-advanced" title="Advanced Search">
-                        <svg class="bolt-icon" viewBox="0 0 24 24">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                        </svg>
-                        <span>Advanced<span class="btn-text-hide-mobile"> Search</span></span>
+                        <span>Advanced Search</span>
                     </a>
                 </form>
             </div>
             <div class="nav-links">
-                <a href="genres.html" class="nav-link">🏷️ Thể loại</a>
-                <a href="authors.html" class="nav-link active">✍️ Tác giả</a>
+                <a href="genres.html" class="nav-link">Genres</a>
+                <a href="authors.html" class="nav-link active">Authors</a>
                 <a href="add.html" class="btn-add">
-                    <img src="data-icon/plus.png" alt="Thêm" class="nav-icon">
-                    <span>Thêm truyện</span>
+                    <span>Add Comic</span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- 2. Khu vực nội dung chính (Main Content) -->
+    <!-- 2. Main Content Area -->
     <main class="main-content">
-        <!-- Tiêu đề trang -->
+        <!-- Page Title -->
         <div class="page-header">
-            <h1 class="page-title">✍️ Quản Lý Tác Giả</h1>
-            <p class="page-subtitle">Xem danh sách các tác giả trong thư viện, đổi tên hàng loạt hoặc xem các tác phẩm</p>
+            <h1 class="page-title">Manage Authors</h1>
+            <p class="page-subtitle">View authors, batch rename across library, or browse comic works</p>
         </div>
 
-        <!-- Khung hiển thị danh sách các tác giả -->
+        <!-- Authors List Box -->
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="font-size: 16px; font-weight: 700; color: var(--text-main);" id="authors-count-heading">Danh Sách Tác Giả</h2>
-                <span style="font-size: 12px; color: var(--text-dim);">(Bấm vào tác giả để xem các tác phẩm)</span>
+                <h2 style="font-size: 16px; font-weight: 700; color: var(--text-main);" id="authors-count-heading">Authors List</h2>
+                <span style="font-size: 12px; color: var(--text-dim);">(Click on an author to view works)</span>
             </div>
             <div id="authors-list" class="author-manage-grid">
-                <div style="grid-column: 1 / -1; text-align: center; padding: 30px 0; color: var(--text-dim);">⏳ Đang tải danh sách tác giả...</div>
+                <div style="grid-column: 1 / -1; text-align: center; padding: 30px 0; color: var(--text-dim);">Loading authors...</div>
             </div>
         </div>
 
-        <!-- Khu vực hiển thị danh sách truyện của tác giả được chọn -->
+        <!-- Selected Author Comics Area -->
         <div id="author-comics-section" style="display: none; margin-top: 30px;">
             <div class="page-header" style="border-top: 1px solid var(--border-color); padding-top: 24px;">
                 <h2 class="page-title" style="font-size: 20px;">
-                    📚 Tác phẩm của: <span id="selected-author-title" style="color: var(--primary);">---</span>
+                    Works by: <span id="selected-author-title" style="color: var(--primary);">---</span>
                 </h2>
-                <p class="page-subtitle" id="selected-author-count">0 bộ truyện</p>
+                <p class="page-subtitle" id="selected-author-count">0 comics</p>
             </div>
             <div id="author-comics-grid" class="comic-grid"></div>
         </div>
     </main>
 
-    <!-- Modal Popup: Đổi tên tác giả hàng loạt -->
+    <!-- Modal Popup: Batch Rename Author -->
     <div id="modal-rename-author" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <h3 class="modal-title">✏️ Đổi Tên Tác Giả Hàng Loạt</h3>
+                <h3 class="modal-title">Batch Rename Author</h3>
                 <button type="button" class="modal-close" onclick="closeRenameModal()">&times;</button>
             </div>
             <form id="form-rename-author">
                 <input type="hidden" id="rename-author-old">
                 <div class="form-group">
-                    <label class="form-label">Tên tác giả hiện tại:</label>
+                    <label class="form-label">Current author name:</label>
                     <input type="text" id="rename-author-display" class="form-control" disabled style="opacity: 0.7;">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Tên tác giả mới (áp dụng cho tất cả truyện của tác giả này):</label>
-                    <input type="text" id="rename-author-new" class="form-control" placeholder="Nhập tên mới..." required>
+                    <label class="form-label">New author name (applied to all comics by this author):</label>
+                    <input type="text" id="rename-author-new" class="form-control" placeholder="Enter new name..." required>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeRenameModal()">Hủy</button>
-                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeRenameModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -160,42 +155,40 @@
         let selectedAuthorName = null;
 
         /**
-         * Tải danh sách toàn bộ tác giả từ Backend API và hiển thị lên giao diện
+         * Load all authors from backend API
          */
         async function loadAuthors() {
             const listEl = document.getElementById('authors-list');
             try {
                 allAuthors = await api.getAuthors();
-                document.getElementById('authors-count-heading').textContent = `Danh Sách Tác Giả (${allAuthors.length})`;
+                document.getElementById('authors-count-heading').textContent = `Authors List (${allAuthors.length})`;
 
-                // Nếu chưa có tác giả nào
                 if (allAuthors.length === 0) {
-                    listEl.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 30px 0; color: var(--text-dim);">Chưa có tác giả nào trong thư viện.</div>';
+                    listEl.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 30px 0; color: var(--text-dim);">No authors found in library.</div>';
                     return;
                 }
 
-                // Render danh sách các thẻ tác giả
                 listEl.innerHTML = allAuthors.map(item => {
                     const safeAuthor = (item.name || '').replace(/"/g, '&quot;');
                     return `
                     <div class="author-item-card ${selectedAuthorName === item.name ? 'active' : ''}" data-author="${safeAuthor}" onclick="selectAuthor('${safeAuthor}')">
                         <div class="author-name-box">
-                            <span>✍️ ${item.name}</span>
-                            <span class="author-count-badge">${item.comic_count} truyện</span>
+                            <span>${item.name}</span>
+                            <span class="author-count-badge">${item.comic_count} comics</span>
                         </div>
                         <div onclick="event.stopPropagation();">
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="openRenameModal('${safeAuthor}')" title="Đổi tên tác giả">✏️ Sửa</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="openRenameModal('${safeAuthor}')" title="Rename author">Edit</button>
                         </div>
                     </div>
                 `}).join('');
 
             } catch (err) {
-                listEl.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 30px 0; color: var(--danger);">❌ Lỗi tải tác giả: ${err.message}</div>`;
+                listEl.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 30px 0; color: var(--danger);">Error loading authors: ${err.message}</div>`;
             }
         }
 
         /**
-         * Xử lý khi người dùng bấm vào một tác giả -> Lấy và hiển thị các truyện của tác giả đó
+         * Select author to view works
          */
         async function selectAuthor(authorName) {
             selectedAuthorName = authorName;
@@ -209,21 +202,19 @@
             const count = document.getElementById('selected-author-count');
 
             title.textContent = authorName;
-            grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-dim);">⏳ Đang tải truyện...</div>';
+            grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-dim);">Loading comics...</div>';
             section.style.display = 'block';
             section.scrollIntoView({ behavior: 'smooth' });
 
             try {
-                // Gọi API lấy danh sách truyện của tác giả
                 const comics = await api.getComicsByAuthor(authorName);
-                count.textContent = `${comics.length} bộ truyện`;
+                count.textContent = `${comics.length} comics`;
 
                 if (comics.length === 0) {
-                    grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">Chưa có bộ truyện nào của tác giả này.</div>';
+                    grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">No comics found for this author.</div>';
                     return;
                 }
 
-                // Render danh sách các thẻ truyện
                 grid.innerHTML = comics.map(comic => {
                     const coverUrl = api.getCoverUrl(comic.cover_filename);
                     const genresHtml = (comic.genres || []).slice(0, 3).map(g => `<span class="tag-chip">${g}</span>`).join('');
@@ -233,14 +224,14 @@
                         <div class="comic-card" onclick="window.location.href='detail.html?id=${comic.id}'" style="cursor: pointer;">
                             <div class="card-thumb-wrapper">
                                 ${comic.gallery_id ? `<span class="card-id-badge">${comic.gallery_id}</span>` : ''}
-                                <button type="button" class="btn-card-delete" onclick="handleDeleteComicCard(event, ${comic.id}, '${titleSafe}')" title="Xóa bộ truyện này">
-                                    🗑️
+                                <button type="button" class="btn-card-delete" onclick="handleDeleteComicCard(event, ${comic.id}, '${titleSafe}')" title="Delete this comic">
+                                    Delete
                                 </button>
-                                <img src="${coverUrl}" alt="${titleSafe}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='rem.jpg'">
+                                <img src="${coverUrl}" alt="${titleSafe}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='assets/rem.jpg'">
                             </div>
                             <div class="card-body">
                                 <div class="card-title" title="${titleSafe}">${comic.title}</div>
-                                <div class="card-author">${comic.author || 'Tác giả chưa rõ'}</div>
+                                <div class="card-author">${comic.author || 'Unknown Author'}</div>
                                 <div class="card-tags">${genresHtml}</div>
                             </div>
                         </div>
@@ -248,12 +239,12 @@
                 }).join('');
 
             } catch (err) {
-                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--danger);">❌ Lỗi: ${err.message}</div>`;
+                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--danger);">Error: ${err.message}</div>`;
             }
         }
 
         /**
-         * Xóa nhanh bộ truyện từ danh sách tác phẩm của tác giả
+         * Quick delete comic card
          */
         function handleDeleteComicCard(event, comicId, title) {
             if (event) {
@@ -262,15 +253,15 @@
             }
 
             showConfirmModal({
-                title: '🗑️ Xác nhận xóa bộ truyện',
-                message: `Bạn có chắc chắn muốn xóa vĩnh viễn bộ truyện <strong>"${title}"</strong> không?<br><br><span style="color: var(--danger); font-size: 13px;">⚠️ Hành động này sẽ xóa toàn bộ các chương và file ảnh bìa liên quan, không thể khôi phục!</span>`,
-                confirmText: '🗑️ Xóa vĩnh viễn',
-                cancelText: 'Hủy bỏ',
+                title: 'Confirm Delete Comic',
+                message: `Are you sure you want to permanently delete <strong>"${title}"</strong>?<br><br><span style="color: var(--danger); font-size: 13px;">This action will delete all chapters and associated cover images, and cannot be undone!</span>`,
+                confirmText: 'Delete Permanently',
+                cancelText: 'Cancel',
                 type: 'danger',
                 onConfirm: async () => {
                     await api.deleteComic(comicId);
-                    showToast(`Đã xóa bộ truyện "${title}" thành công!`, 'success');
-                    loadAuthors(); // Tải lại danh sách tác giả và tác phẩm
+                    showToast(`Comic "${title}" deleted successfully!`, 'success');
+                    loadAuthors();
                     if (selectedAuthorName) {
                         selectAuthor(selectedAuthorName);
                     }
@@ -278,7 +269,6 @@
             });
         }
 
-        // Mở popup modal đổi tên tác giả hàng loạt
         function openRenameModal(name) {
             document.getElementById('rename-author-old').value = name;
             document.getElementById('rename-author-display').value = name;
@@ -286,12 +276,10 @@
             document.getElementById('modal-rename-author').classList.add('active');
         }
 
-        // Đóng popup modal đổi tên
         function closeRenameModal() {
             document.getElementById('modal-rename-author').classList.remove('active');
         }
 
-        // Lắng nghe sự kiện Submit form đổi tên tác giả hàng loạt
         document.getElementById('form-rename-author').addEventListener('submit', async (e) => {
             e.preventDefault();
             const oldName = document.getElementById('rename-author-old').value.trim();
@@ -303,9 +291,9 @@
 
             try {
                 const res = await api.renameAuthor(oldName, newName);
-                showToast(`Đã đổi tên tác giả cho ${res.updated_count} bộ truyện!`, 'success');
+                showToast(`Renamed author for ${res.updated_count} comics!`, 'success');
                 closeRenameModal();
-                loadAuthors(); // Tải lại danh sách tác giả
+                loadAuthors();
                 if (selectedAuthorName === oldName) {
                     selectAuthor(newName);
                 }
@@ -314,7 +302,6 @@
             }
         });
 
-        // Tải danh sách tác giả ngay khi mở trang
         loadAuthors();
     </script>
 </body>

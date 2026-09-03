@@ -27,7 +27,7 @@ def create_genre(data: GenreCreate):
     """API tạo thêm một thể loại mới"""
     genre = service.create_genre(data.name)
     if not genre:
-        raise HTTPException(status_code=400, detail="Không thể tạo thể loại")
+        raise HTTPException(status_code=400, detail="Failed to create genre")
     return genre
 
 @router.put("/{genre_id}", response_model=GenreResponse)
@@ -35,14 +35,14 @@ def update_genre(genre_id: int, data: GenreUpdate):
     """API đổi tên thể loại theo ID. Trả về 404 nếu không tìm thấy ID."""
     updated = service.update_genre(genre_id, data.name)
     if not updated:
-        raise HTTPException(status_code=404, detail="Không tìm thấy thể loại")
+        raise HTTPException(status_code=404, detail="Genre not found")
     return updated
 
 @router.delete("/{genre_id}")
 def delete_genre(genre_id: int):
     """API xóa thể loại khỏi hệ thống và gỡ liên kết khỏi các bộ truyện"""
     service.delete_genre(genre_id)
-    return {"message": "Đã xóa thể loại thành công"}
+    return {"message": "Genre deleted successfully"}
 
 @router.get("/{genre_id}/comics", response_model=List[ComicResponse])
 def get_comics_by_genre(genre_id: int):

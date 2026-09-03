@@ -4,7 +4,7 @@ Script Khôi Phục Dữ Liệu Tự Động Từ File comics_cache.json
 Chức năng:
 1. Đọc toàn bộ dữ liệu truyện, thể loại, và các chapter từ file `comics_cache.json`.
 2. Tự động phục hồi bảng `genres`, `comics`, `comic_genres`, `chapters` trên Supabase Database mới.
-3. Tự động kiểm tra và tải lại các ảnh bìa (cover images) bị thiếu về thư mục `cover-images/`.
+3. Tự động kiểm tra và tải lại các ảnh bìa (cover images) bị thiếu về thư mục `frontend/assets/`.
 4. Đồng bộ hoàn chỉnh cơ sở dữ liệu mà không cần phải nhập lại bằng tay.
 
 Cách sử dụng:
@@ -31,10 +31,12 @@ from core.database import supabase
 from modules.comics.service import update_cache
 from modules.images.service import download_cover
 
-# Đường dẫn file cache JSON ở thư mục gốc
+# Đường dẫn file cache JSON và thư mục ảnh bìa
 ROOT_DIR = Path(__file__).parent.parent
-CACHE_FILE = ROOT_DIR / "comics_cache.json"
-COVER_DIR = ROOT_DIR / "cover-images"
+CACHE_FILE = ROOT_DIR / "backend" / "data_cache" / "comics_cache.json"
+if not CACHE_FILE.exists():
+    CACHE_FILE = ROOT_DIR / "comics_cache.json"
+COVER_DIR = ROOT_DIR / "frontend" / "assets"
 
 async def restore_database():
     print("================================================================")
@@ -59,7 +61,7 @@ async def restore_database():
         print("⚠️ File cache không có dữ liệu truyện nào để phục hồi.")
         return
 
-    # Tạo thư mục cover-images nếu chưa có
+    # Tạo thư mục frontend/assets nếu chưa có
     COVER_DIR.mkdir(parents=True, exist_ok=True)
 
     # -------------------------------------------------------------------------

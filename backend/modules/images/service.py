@@ -3,7 +3,7 @@ Images Service Module
 =====================
 Xử lý tải và quản lý file ảnh bìa (Cover images).
 Nhiệm vụ:
-- Tải file ảnh bìa từ nguồn bên ngoài (như nhentai) về lưu trữ tại thư mục cục bộ `cover-images/`.
+- Tải file ảnh bìa từ nguồn bên ngoài (như nhentai) về lưu trữ tại thư mục cục bộ `frontend/assets/`.
 - Sử dụng HTTP headers thích hợp (Referer, User-Agent) để vượt qua chặn hotlink/anti-scraping.
 - Cập nhật tên file ảnh bìa (`cover_filename`) vào database và làm mới cache.
 """
@@ -17,8 +17,9 @@ from fastapi import HTTPException
 from core.database import supabase
 from modules.comics.service import update_cache
 
-# Thư mục lưu trữ ảnh bìa cục bộ trên server
-COVER_DIR = Path(__file__).parent.parent.parent.parent / "cover-images"
+# Thư mục lưu trữ ảnh bìa cục bộ trên server (frontend/assets)
+COVER_DIR = Path(__file__).parent.parent.parent.parent / "frontend" / "assets"
+COVER_DIR.mkdir(parents=True, exist_ok=True)
 
 def convert_to_page_one_url(url: str, high_res: bool = True) -> str:
     """
@@ -112,7 +113,7 @@ async def download_cover(url: str, comic_id: int):
                     print(f"[Warning] Failed to fetch cover from {target_url}: {req_err}")
                     
             if not response or response.status_code != 200:
-                raise HTTPException(status_code=400, detail="Không thể tải ảnh bìa trang 1 từ URL đã cung cấp")
+                raise HTTPException(status_code=400, detail="Cannot download page 1 cover image from provided URL")
             
             # Lấy đuôi mở rộng từ URL tải thành công
             m_ext = re.search(r'\.([a-zA-Z0-9]+)(\?.*)?$', successful_url)

@@ -10,129 +10,119 @@
   3. Cho phép người dùng đặt lại bộ lọc tìm kiếm (Reset filter) về mặc định.
 -->
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tìm Kiếm — HManga Library</title>
+    <title>Search — HManga Library</title>
     <!-- Favicon website -->
-    <link rel="icon" type="image/jpeg" href="rem.jpg">
+    <link rel="icon" type="image/jpeg" href="assets/rem.jpg">
     <!-- File stylesheet dùng chung -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 1. Thanh điều hướng trên cùng (Navbar) -->
+    <!-- 1. Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
-            <!-- Logo thương hiệu -->
             <a href="index.html" class="nav-brand">
-                <img src="rem.jpg" alt="HManga Logo" class="nav-logo">
+                <img src="assets/rem.jpg" alt="HManga Logo" class="nav-logo">
                 <span class="nav-brand-text">HManga</span>
             </a>
 
-            <!-- Thanh tìm kiếm chính giữa Navbar dạng Quick Search & Advanced Button -->
+            <!-- Search form in Navbar -->
             <div class="nav-center">
                 <form class="quick-search-form" id="quickSearchForm" action="index.html" method="GET" autocomplete="off">
                     <div class="quick-search-wrapper">
-                        <img src="data-icon/search.png" alt="Search" class="quick-search-icon">
-                        <input type="search" name="s" id="inputQuickSearch" class="quick-search-input" placeholder="Tìm tên truyện..." autocomplete="off">
+                        <input type="search" name="s" id="inputQuickSearch" class="quick-search-input" placeholder="Search comics..." autocomplete="off">
                     </div>
                     <a href="search.html" id="btnGoAdvanced" class="btn-go-advanced always-visible" title="Advanced Search">
-                        <svg class="bolt-icon" viewBox="0 0 24 24">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                        </svg>
-                        <span>Advanced<span class="btn-text-hide-mobile"> Search</span></span>
+                        <span>Advanced Search</span>
                     </a>
                 </form>
             </div>
 
-            <!-- Các nút điều hướng bên phải -->
+            <!-- Navigation Links -->
             <div class="nav-links">
-                <a href="genres.html" class="nav-link">🏷️ Thể loại</a>
-                <a href="authors.html" class="nav-link">✍️ Tác giả</a>
+                <a href="genres.html" class="nav-link">Genres</a>
+                <a href="authors.html" class="nav-link">Authors</a>
                 <a href="add.html" class="btn-add">
-                    <img src="data-icon/plus.png" alt="Thêm" class="nav-icon">
-                    <span>Thêm truyện</span>
+                    <span>Add Comic</span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- 2. Khu vực nội dung chính (Main Content) -->
+    <!-- 2. Main Content Area -->
     <main class="main-content">
-        <!-- Tiêu đề trang tìm kiếm -->
+        <!-- Search Page Title -->
         <div class="page-header">
-            <h1 class="page-title">🔍 Tìm Kiếm & Lọc Truyện</h1>
-            <p class="page-subtitle">Tìm kiếm kết hợp theo tên bộ truyện, tác giả và thể loại</p>
+            <h1 class="page-title">Search & Filter Comics</h1>
+            <p class="page-subtitle">Search comics by title, author, and genre</p>
         </div>
 
-        <!-- FORM TÌM KIẾM NÂNG CAO -->
+        <!-- Advanced Search Form -->
         <div class="card" style="margin-bottom: 24px;">
             <form id="search-form">
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Tên truyện:</label>
-                        <input type="text" id="search-q" class="form-control" placeholder="Nhập từ khóa tên truyện...">
+                        <label class="form-label">Comic title:</label>
+                        <input type="text" id="search-q" class="form-control" placeholder="Enter comic title keyword...">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Tác giả:</label>
-                        <input type="text" id="search-author" list="search-authors-datalist" class="form-control" placeholder="Nhập hoặc chọn tên tác giả...">
+                        <label class="form-label">Author:</label>
+                        <input type="text" id="search-author" list="search-authors-datalist" class="form-control" placeholder="Enter or select author name...">
                         <datalist id="search-authors-datalist"></datalist>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Thể loại:</label>
+                    <label class="form-label">Genre:</label>
                     <select id="search-genre" class="form-control">
-                        <option value="">-- Tất cả thể loại --</option>
+                        <option value="">-- All Genres --</option>
                     </select>
                 </div>
 
                 <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-primary">🔍 Bắt đầu tìm kiếm</button>
-                    <button type="button" id="btn-reset-search" class="btn btn-secondary">Đặt lại bộ lọc</button>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="button" id="btn-reset-search" class="btn btn-secondary">Reset Filter</button>
                 </div>
             </form>
         </div>
 
-        <!-- KHU VỰC HIỂN THỊ KẾT QUẢ TÌM KIẾM -->
+        <!-- Search Results Header -->
         <div id="results-header" style="margin-bottom: 16px; font-size: 15px; font-weight: 600; color: var(--text-muted); display: none;">
-            Kết quả tìm kiếm (<span id="results-count" style="color: var(--primary);">0</span>)
+            Search Results (<span id="results-count" style="color: var(--primary);">0</span>)
         </div>
 
-        <!-- Lưới thẻ kết quả truyện -->
+        <!-- Results Grid -->
         <div id="results-grid" class="comic-grid"></div>
     </main>
 
-    <!-- Nạp file JavaScript tiện ích dùng chung -->
+    <!-- Load JavaScript utilities -->
     <script src="app.js"></script>
     <script>
-        // Nạp dữ liệu ban đầu cho các dropdown thể loại và danh sách tác giả
         document.addEventListener('DOMContentLoaded', async () => {
-            // Nạp danh sách thể loại vào thẻ <select>
             try {
                 const genres = await api.getGenres();
                 const genreSelect = document.getElementById('search-genre');
                 genres.forEach(g => {
                     const opt = document.createElement('option');
                     opt.value = g.name;
-                    opt.textContent = `${g.name} (${g.comic_count} truyện)`;
+                    opt.textContent = `${g.name} (${g.comic_count} comics)`;
                     genreSelect.appendChild(opt);
                 });
             } catch (err) {
-                console.warn('Lỗi nạp thể loại tìm kiếm:', err);
+                console.warn('Error loading search genres:', err);
             }
 
-            // Nạp danh sách tác giả vào thẻ <datalist>
             try {
                 const authors = await api.getAuthors();
                 const datalist = document.getElementById('search-authors-datalist');
                 datalist.innerHTML = authors.map(a => `<option value="${a.name}">`).join('');
             } catch (err) {
-                console.warn('Lỗi nạp tác giả tìm kiếm:', err);
+                console.warn('Error loading search authors:', err);
             }
 
-            // Đọc tham số tìm kiếm từ URL Query (nếu có)
             const urlParams = new URLSearchParams(window.location.search);
             const qParam = urlParams.get('q') || urlParams.get('s');
             const authorParam = urlParams.get('author');
@@ -142,12 +132,11 @@
             if (authorParam) document.getElementById('search-author').value = authorParam;
             if (genreParam) document.getElementById('search-genre').value = genreParam;
 
-            // Thực hiện tìm kiếm ban đầu
             doSearch();
         });
 
         /**
-         * Hàm thực hiện tìm kiếm kết hợp nhiều tiêu chí và vẽ kết quả lên lưới
+         * Perform search with filters and render results
          */
         async function doSearch() {
             const q = document.getElementById('search-q').value.trim();
@@ -158,26 +147,23 @@
             const resHeader = document.getElementById('results-header');
             const countEl = document.getElementById('results-count');
 
-            grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-dim);">⏳ Đang tìm kiếm...</div>';
+            grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-dim);">Searching...</div>';
 
             try {
-                // Gọi API tìm kiếm nâng cao từ Backend
                 const results = await api.searchComics({ q, author, genre });
                 resHeader.style.display = 'block';
                 countEl.textContent = results.length;
 
-                // Nếu không có kết quả phù hợp
                 if (results.length === 0) {
                     grid.innerHTML = `
                         <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
-                            <p style="font-size: 16px; margin-bottom: 6px;">Không tìm thấy bộ truyện nào phù hợp</p>
-                            <p style="font-size: 13px; color: var(--text-dim);">Hãy thử giảm bớt điều kiện tìm kiếm</p>
+                            <p style="font-size: 16px; margin-bottom: 6px;">No comics found matching your criteria</p>
+                            <p style="font-size: 13px; color: var(--text-dim);">Try broadening your search criteria</p>
                         </div>
                     `;
                     return;
                 }
 
-                // Render danh sách các thẻ truyện tìm được
                 grid.innerHTML = results.map(comic => {
                     const coverUrl = api.getCoverUrl(comic.cover_filename);
                     const genresHtml = (comic.genres || []).slice(0, 3).map(g => 
@@ -189,14 +175,14 @@
                         <div class="comic-card" onclick="window.location.href='detail.html?id=${comic.id}'" style="cursor: pointer;">
                             <div class="card-thumb-wrapper">
                                 ${comic.gallery_id ? `<span class="card-id-badge">${comic.gallery_id}</span>` : ''}
-                                <button type="button" class="btn-card-delete" onclick="handleDeleteComicCard(event, ${comic.id}, '${titleSafe}')" title="Xóa bộ truyện này">
-                                    🗑️
+                                <button type="button" class="btn-card-delete" onclick="handleDeleteComicCard(event, ${comic.id}, '${titleSafe}')" title="Delete this comic">
+                                    Delete
                                 </button>
-                                <img src="${coverUrl}" alt="${titleSafe}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='rem.jpg'">
+                                <img src="${coverUrl}" alt="${titleSafe}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='assets/rem.jpg'">
                             </div>
                             <div class="card-body">
                                 <div class="card-title" title="${titleSafe}">${comic.title}</div>
-                                <div class="card-author">${comic.author || 'Tác giả chưa rõ'}</div>
+                                <div class="card-author">${comic.author || 'Unknown Author'}</div>
                                 <div class="card-tags">${genresHtml}</div>
                             </div>
                         </div>
@@ -206,14 +192,14 @@
             } catch (err) {
                 grid.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--danger);">
-                        ❌ Lỗi tìm kiếm: ${err.message}
+                        Search error: ${err.message}
                     </div>
                 `;
             }
         }
 
         /**
-         * Xóa nhanh bộ truyện trực tiếp từ kết quả tìm kiếm
+         * Quick delete comic card from search results
          */
         function handleDeleteComicCard(event, comicId, title) {
             if (event) {
@@ -222,26 +208,24 @@
             }
 
             showConfirmModal({
-                title: '🗑️ Xác nhận xóa bộ truyện',
-                message: `Bạn có chắc chắn muốn xóa vĩnh viễn bộ truyện <strong>"${title}"</strong> không?<br><br><span style="color: var(--danger); font-size: 13px;">⚠️ Hành động này sẽ xóa toàn bộ các chương và file ảnh bìa liên quan, không thể khôi phục!</span>`,
-                confirmText: '🗑️ Xóa vĩnh viễn',
-                cancelText: 'Hủy bỏ',
+                title: 'Confirm Delete Comic',
+                message: `Are you sure you want to permanently delete <strong>"${title}"</strong>?<br><br><span style="color: var(--danger); font-size: 13px;">This action will delete all chapters and associated cover images, and cannot be undone!</span>`,
+                confirmText: 'Delete Permanently',
+                cancelText: 'Cancel',
                 type: 'danger',
                 onConfirm: async () => {
                     await api.deleteComic(comicId);
-                    showToast(`Đã xóa bộ truyện "${title}" thành công!`, 'success');
-                    doSearch(); // Tìm lại để cập nhật danh sách
+                    showToast(`Comic "${title}" deleted successfully!`, 'success');
+                    doSearch();
                 }
             });
         }
 
-        // Lắng nghe Submit form tìm kiếm
         document.getElementById('search-form').addEventListener('submit', (e) => {
             e.preventDefault();
             doSearch();
         });
 
-        // Nút đặt lại bộ lọc tìm kiếm
         document.getElementById('btn-reset-search').addEventListener('click', () => {
             document.getElementById('search-form').reset();
             doSearch();

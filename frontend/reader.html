@@ -10,76 +10,76 @@
     + Góc trên bên phải hiển thị số trang hiện tại & 2 nút Chương trước / Chương sau.
 -->
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đọc Truyện — HManga Library</title>
-    <link rel="icon" type="image/jpeg" href="rem.jpg">
+    <title>Reader — HManga Library</title>
+    <link rel="icon" type="image/jpeg" href="assets/rem.jpg">
     <link rel="stylesheet" href="style.css">
     <style>
         body { margin: 0; padding: 0; overflow-x: hidden; }
     </style>
 </head>
 <body>
-    <!-- 1. Thanh công cụ cố định trên cùng (Sticky Header) -->
+    <!-- 1. Sticky Reader Toolbar -->
     <header class="reader-toolbar">
         <div class="reader-toolbar-inner">
-            <!-- Khối bên trái: Nút trở về & Tiêu đề truyện + Chapter -->
+            <!-- Left: Back Button & Comic Title + Chapter -->
             <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
-                <a id="btn-back-detail" href="index.html" class="btn btn-secondary btn-sm" style="flex-shrink:0;">← Trở về</a>
+                <a id="btn-back-detail" href="index.html" class="btn btn-secondary btn-sm" style="flex-shrink:0;">Back</a>
                 <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                    <span id="comic-header-title" style="font-weight:700; color:var(--text-main); font-size:14px;">Đang tải...</span>
+                    <span id="comic-header-title" style="font-weight:700; color:var(--text-main); font-size:14px;">Loading...</span>
                     <span id="chapter-header-badge" style="color:var(--primary); font-size:13px; font-weight:600; margin-left:4px;"></span>
                 </div>
             </div>
 
-            <!-- Khối ở giữa: Chọn chế độ đọc (Cuộn dọc / Từng trang) -->
+            <!-- Center: Mode Switch (Vertical Scroll / Single Page) -->
             <div style="display:flex; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:2px; flex-shrink:0;">
-                <button type="button" id="mode-scroll-btn" class="btn btn-sm" style="background:var(--primary); color:#fff;">📜 Cuộn dọc</button>
-                <button type="button" id="mode-page-btn" class="btn btn-sm" style="background:transparent; color:var(--text-muted);">📄 Từng trang</button>
+                <button type="button" id="mode-scroll-btn" class="btn btn-sm" style="background:var(--primary); color:#fff;">Vertical Scroll</button>
+                <button type="button" id="mode-page-btn" class="btn btn-sm" style="background:transparent; color:var(--text-muted);">Single Page</button>
             </div>
 
-            <!-- Khối góc trên bên phải: Số trang & 2 Nút Chương trước / Chương sau -->
+            <!-- Right: Page Counter & Prev / Next Chapter -->
             <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
                 <span id="header-page-counter" class="page-badge-pill" style="display:none;">1 / 1</span>
-                <button type="button" id="header-prev-chap" class="btn btn-secondary btn-sm" style="display:none;" title="Chương trước">⏮️ Trước</button>
-                <button type="button" id="header-next-chap" class="btn btn-primary btn-sm" style="display:none;" title="Chương sau">Sau ⏭️</button>
+                <button type="button" id="header-prev-chap" class="btn btn-secondary btn-sm" style="display:none;" title="Previous Chapter">Previous</button>
+                <button type="button" id="header-next-chap" class="btn btn-primary btn-sm" style="display:none;" title="Next Chapter">Next</button>
             </div>
         </div>
     </header>
 
-    <!-- 2. Khung nội dung đọc truyện chính -->
+    <!-- 2. Main Reader Container -->
     <div class="reader-container" id="reader-container">
         
-        <!-- Chế độ 1: Cuộn dọc liên tiếp các trang -->
+        <!-- Mode 1: Continuous Vertical Scroll -->
         <div id="scroll-view" class="scroll-mode-view">
-            <div style="text-align:center; padding:80px 0; color:var(--text-dim);">⏳ Đang kết nối và tải ảnh...</div>
+            <div style="text-align:center; padding:80px 0; color:var(--text-dim);">Connecting and loading images...</div>
         </div>
 
-        <!-- Chế độ 2: Đọc từng trang (Full màn hình, không cần cuộn) -->
+        <!-- Mode 2: Single Page View -->
         <div id="page-view" class="page-mode-view" style="display:none;">
             <div class="page-mode-wrapper">
-                <!-- Vùng nhấp chuột bên Trái (Trang trước) -->
-                <div class="click-zone click-zone-left" id="zone-prev" title="Nhấp hoặc lăn chuột lên để về trang trước">
-                    <span class="click-hint-icon">‹</span>
+                <!-- Left Click Zone (Previous Page) -->
+                <div class="click-zone click-zone-left" id="zone-prev" title="Click or scroll up for previous page">
+                    <span class="click-hint-icon">Prev</span>
                 </div>
 
-                <!-- Ảnh trang truyện hiển thị full khung hình -->
-                <img id="single-page-img" class="page-reading-image" src="" alt="Trang truyện" referrerpolicy="no-referrer" onerror="handleImageFallback(this)" style="display:none;">
+                <!-- Comic Page Image -->
+                <img id="single-page-img" class="page-reading-image" src="" alt="Comic page" referrerpolicy="no-referrer" onerror="handleImageFallback(this)" style="display:none;">
 
-                <!-- Vùng nhấp chuột bên Phải (Trang tiếp theo) -->
-                <div class="click-zone click-zone-right" id="zone-next" title="Nhấp hoặc lăn chuột xuống để sang trang sau">
-                    <span class="click-hint-icon">›</span>
+                <!-- Right Click Zone (Next Page) -->
+                <div class="click-zone click-zone-right" id="zone-next" title="Click or scroll down for next page">
+                    <span class="click-hint-icon">Next</span>
                 </div>
             </div>
         </div>
 
-        <!-- Thanh điều hướng cuối trang (cho chế độ cuộn dọc) -->
+        <!-- Bottom Navigation Bar for Vertical Scroll Mode -->
         <div class="chapter-nav-bar" id="scroll-bottom-nav" style="display:none;">
-            <button type="button" id="nav-prev-chap" class="btn btn-secondary" style="visibility:hidden;">⇦ Chương trước</button>
-            <a id="nav-comic-center" href="index.html" class="btn btn-secondary btn-sm" style="color:var(--text-muted);">📚 Về bộ truyện</a>
-            <button type="button" id="nav-next-chap" class="btn btn-primary" style="visibility:hidden;">Chương sau ⇨</button>
+            <button type="button" id="nav-prev-chap" class="btn btn-secondary" style="visibility:hidden;">Previous Chapter</button>
+            <a id="nav-comic-center" href="index.html" class="btn btn-secondary btn-sm" style="color:var(--text-muted);">Comic Details</a>
+            <button type="button" id="nav-next-chap" class="btn btn-primary" style="visibility:hidden;">Next Chapter</button>
         </div>
     </div>
 
@@ -102,15 +102,15 @@
          */
         async function initReader() {
             if (!chapterId) {
-                document.getElementById('scroll-view').innerHTML = '<div style="text-align:center; padding:60px 0; color:var(--danger);">❌ Không tìm thấy ID chương hợp lệ!</div>';
+                document.getElementById('scroll-view').innerHTML = '<div style="text-align:center; padding:60px 0; color:var(--danger);">Invalid chapter ID!</div>';
                 return;
             }
 
             try {
-                // 1. Tải danh sách URL ảnh từ Backend
+                // 1. Fetch page image URLs from Backend
                 pageUrls = await api.getChapterPages(chapterId);
 
-                // 2. Lấy thông tin truyện và định vị chương trước / sau
+                // 2. Fetch comic info and resolve previous / next chapter
                 let foundComic = null;
                 let foundChapter = null;
                 let paramComicId = parseInt(urlParams.get('comic_id'), 10);
@@ -132,7 +132,7 @@
                     } catch {}
                 }
 
-                // Dự phòng quét danh sách truyện nếu cần
+                // Fallback scan across comics if needed
                 if (!foundComic) {
                     const allComics = await api.getComics();
                     for (const c of allComics) {
@@ -149,14 +149,14 @@
                 if (foundComic) {
                     comicId = foundComic.id;
                     document.getElementById('comic-header-title').textContent = foundComic.title;
-                    document.getElementById('chapter-header-badge').textContent = `• Chương ${foundChapter?.chapter_number || ''}`;
+                    document.getElementById('chapter-header-badge').textContent = `• Chapter ${foundChapter?.chapter_number || ''}`;
                     document.getElementById('btn-back-detail').href = `detail.html?id=${comicId}`;
                     document.getElementById('nav-comic-center').href = `detail.html?id=${comicId}`;
 
                     const sortedChaps = [...(foundComic.chapters || [])].sort((a, b) => a.chapter_number - b.chapter_number);
                     const curIndex = sortedChaps.findIndex(ch => ch.id === chapterId);
 
-                    // Thiết lập Chương trước
+                    // Setup Previous Chapter
                     if (curIndex > 0) {
                         prevChapterId = sortedChaps[curIndex - 1].id;
                         document.getElementById('header-prev-chap').style.display = 'inline-flex';
@@ -167,7 +167,7 @@
                         bottomPrev.onclick = () => { window.location.href = `reader.html?id=${prevChapterId}&comic_id=${comicId}`; };
                     }
 
-                    // Thiết lập Chương sau
+                    // Setup Next Chapter
                     if (curIndex < sortedChaps.length - 1) {
                         nextChapterId = sortedChaps[curIndex + 1].id;
                         document.getElementById('header-next-chap').style.display = 'inline-flex';
@@ -179,23 +179,23 @@
                     }
                 }
 
-                // Render dữ liệu ảnh vào cả 2 chế độ
+                // Render both modes
                 renderScrollView();
                 updateSinglePageView();
                 updateModeUI();
 
             } catch (err) {
-                document.getElementById('scroll-view').innerHTML = `<div style="text-align:center; padding:60px 0; color:var(--danger);">❌ Lỗi khi tải ảnh: ${err.message}</div>`;
+                document.getElementById('scroll-view').innerHTML = `<div style="text-align:center; padding:60px 0; color:var(--danger);">Error loading images: ${err.message}</div>`;
             }
         }
 
         /**
-         * Render chế độ cuộn dọc
+         * Render vertical scroll mode
          */
         function renderScrollView() {
             const scrollView = document.getElementById('scroll-view');
             if (pageUrls.length === 0) {
-                scrollView.innerHTML = '<div style="padding:40px; color:var(--text-dim);">Không có trang ảnh nào.</div>';
+                scrollView.innerHTML = '<div style="padding:40px; color:var(--text-dim);">No pages found.</div>';
                 return;
             }
             scrollView.innerHTML = pageUrls.map((url, i) =>
@@ -213,7 +213,7 @@
         }
 
         /**
-         * Cập nhật hiển thị ảnh và số trang trong chế độ từng trang
+         * Update single page view
          */
         function updateSinglePageView() {
             if (pageUrls.length === 0) return;
@@ -224,25 +224,23 @@
             img.setAttribute('data-page', currentPageIndex + 1);
             img.style.display = 'block';
 
-            // Cập nhật số trang trên góc phải
             const counter = document.getElementById('header-page-counter');
-            counter.textContent = `Trang ${currentPageIndex + 1} / ${pageUrls.length}`;
+            counter.textContent = `Page ${currentPageIndex + 1} / ${pageUrls.length}`;
         }
 
         /**
-         * Điều hướng chuyển trang
+         * Page navigation
          */
         function goToNextPage() {
             if (currentPageIndex < pageUrls.length - 1) {
                 currentPageIndex++;
                 updateSinglePageView();
             } else if (nextChapterId) {
-                // Đã đến trang cuối cùng -> hỏi chuyển chương sau
                 showConfirmModal({
-                    title: '📖 Hết chương',
-                    message: 'Bạn đã đọc hết chương này. Bạn có muốn chuyển sang <strong>Chương sau</strong> không?',
-                    confirmText: 'Chương sau ⏭️',
-                    cancelText: 'Ở lại',
+                    title: 'End of Chapter',
+                    message: 'You have reached the end of this chapter. Would you like to proceed to the <strong>Next Chapter</strong>?',
+                    confirmText: 'Next Chapter',
+                    cancelText: 'Stay',
                     type: 'primary',
                     onConfirm: () => {
                         window.location.href = `reader.html?id=${nextChapterId}${comicId ? '&comic_id=' + comicId : ''}`;
@@ -256,12 +254,11 @@
                 currentPageIndex--;
                 updateSinglePageView();
             } else if (prevChapterId) {
-                // Đang ở trang 1 -> hỏi về chương trước
                 showConfirmModal({
-                    title: '📖 Đầu chương',
-                    message: 'Bạn đang ở đầu chương. Bạn có muốn quay lại <strong>Chương trước</strong> không?',
-                    confirmText: '⏮️ Chương trước',
-                    cancelText: 'Ở lại',
+                    title: 'Beginning of Chapter',
+                    message: 'You are at the beginning of this chapter. Would you like to go to the <strong>Previous Chapter</strong>?',
+                    confirmText: 'Previous Chapter',
+                    cancelText: 'Stay',
                     type: 'primary',
                     onConfirm: () => {
                         window.location.href = `reader.html?id=${prevChapterId}${comicId ? '&comic_id=' + comicId : ''}`;

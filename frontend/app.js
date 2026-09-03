@@ -28,7 +28,6 @@ const API_BASE = window.location.port === '8000' || window.location.port === '30
  */
 function showToast(message, type = 'info') {
     let container = document.getElementById('toast-container');
-    // Nếu chưa có khung chứa toast thì tự động tạo mới gắn vào body
     if (!container) {
         container = document.createElement('div');
         container.id = 'toast-container';
@@ -37,12 +36,11 @@ function showToast(message, type = 'info') {
 
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    // Icon biểu thị trạng thái
-    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
-    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+    const badgeText = type === 'success' ? 'SUCCESS' : type === 'error' ? 'ERROR' : type === 'warning' ? 'WARNING' : 'INFO';
+    toast.innerHTML = `<span class="toast-badge">${badgeText}</span> <span>${message}</span>`;
     container.appendChild(toast);
     
-    // Tự động mờ dần và biến mất sau 3.5 giây
+    // Automatically fade out and remove after 3.5 seconds
     setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transition = 'opacity 0.3s';
@@ -50,24 +48,15 @@ function showToast(message, type = 'info') {
     }, 3500);
 }
 
-// ==================== 1.1 MODAL XÁC NHẬN HÀNH ĐỘNG (CONFIRM MODAL) ====================
+// ==================== 1.1 CONFIRM MODAL ====================
 /**
- * Hiển thị hộp thoại xác nhận (Modal Confirm) giao diện hiện đại thay cho window.confirm mặc định.
- * Tránh trường hợp bị trình duyệt chặn pop-up confirm và mang lại trải nghiệm trực quan.
- * 
- * @param {Object} options
- * @param {string} options.title - Tiêu đề modal (VD: "🗑️ Xác nhận xóa bộ truyện")
- * @param {string} options.message - Nội dung thông báo chi tiết
- * @param {string} [options.confirmText="Xác nhận xóa"] - Chữ nút đồng ý
- * @param {string} [options.cancelText="Hủy bỏ"] - Chữ nút hủy
- * @param {'danger'|'primary'|'warning'} [options.type="danger"] - Kiểu nút
- * @param {Function} options.onConfirm - Hàm callback async khi người dùng nhấn xác nhận
+ * Modern confirm dialog modal replacing window.confirm
  */
 function showConfirmModal({
-    title = 'Xác nhận hành động',
-    message = 'Bạn có chắc chắn muốn thực hiện hành động này không?',
-    confirmText = 'Xác nhận',
-    cancelText = 'Hủy bỏ',
+    title = 'Confirm Action',
+    message = 'Are you sure you want to perform this action?',
+    confirmText = 'Confirm',
+    cancelText = 'Cancel',
     type = 'danger',
     onConfirm
 }) {
@@ -117,7 +106,6 @@ function showConfirmModal({
     const cancelBtn = document.getElementById('btn-global-modal-cancel');
     if (cancelBtn) cancelBtn.onclick = closeModal;
     
-    // Click ngoài khung modal để đóng
     modalEl.onclick = (e) => {
         if (e.target === modalEl) closeModal();
     };
@@ -127,14 +115,14 @@ function showConfirmModal({
         confirmBtn.onclick = async () => {
             confirmBtn.disabled = true;
             const originalHtml = confirmBtn.innerHTML;
-            confirmBtn.innerHTML = '⏳ Đang xử lý...';
+            confirmBtn.innerHTML = 'Processing...';
             try {
                 if (onConfirm) {
                     await onConfirm();
                 }
                 closeModal();
             } catch (err) {
-                showToast(err.message || 'Đã có lỗi xảy ra!', 'error');
+                showToast(err.message || 'An error occurred!', 'error');
                 confirmBtn.disabled = false;
                 confirmBtn.innerHTML = originalHtml;
             }
@@ -157,21 +145,21 @@ const api = {
         if (params.genre) query.set('genre', params.genre);
         if (params.q) query.set('q', params.q);
         const res = await fetch(`${API_BASE}/api/comics${query.toString() ? '?' + query.toString() : ''}`);
-        if (!res.ok) throw new Error('Không thể tải danh sách truyện');
+        if (!res.ok) throw new Error('Failed to load comics list');
         return res.json();
     },
 
     /**
-     * Lấy thông tin chi tiết của 1 bộ truyện theo ID (kèm chapters và genres)
+     * Get comic detail by ID (including chapters and genres)
      */
     async getComic(id) {
         const res = await fetch(`${API_BASE}/api/comics/${id}`);
-        if (!res.ok) throw new Error('Không tìm thấy truyện');
+        if (!res.ok) throw new Error('Comic not found');
         return res.json();
     },
 
     /**
-     * Gửi yêu cầu tạo mới một bộ truyện
+     * Create a new comic
      */
     async createComic(data) {
         const res = await fetch(`${API_BASE}/api/comics`, {
@@ -179,12 +167,12 @@ const api = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        if (!res.ok) throw new Error('Lỗi khi tạo truyện');
+        if (!res.ok) throw new Error('Error creating comic');
         return res.json();
     },
 
     /**
-     * Cập nhật thông tin của một bộ truyện
+     * Update comic information
      */
     async updateComic(id, data) {
         const res = await fetch(`${API_BASE}/api/comics/${id}`, {
@@ -192,25 +180,25 @@ const api = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        if (!res.ok) throw new Error('Lỗi khi cập nhật truyện');
+        if (!res.ok) throw new Error('Error updating comic');
         return res.json();
     },
 
     /**
-     * Xóa vĩnh viễn một bộ truyện khỏi hệ thống
+     * Delete a comic permanently
      */
     async deleteComic(id) {
         const res = await fetch(`${API_BASE}/api/comics/${id}`, { method: 'DELETE' });
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
-            throw new Error(errData.detail || 'Lỗi khi xóa bộ truyện');
+            throw new Error(errData.detail || 'Error deleting comic');
         }
         return res.json();
     },
 
-    // ------------------- CHƯƠNG TRUYỆN (CHAPTERS) -------------------
+    // ------------------- CHAPTERS -------------------
     /**
-     * Thêm một chương mới cho bộ truyện
+     * Create a new chapter
      */
     async createChapter(comicId, data) {
         const res = await fetch(`${API_BASE}/api/comics/${comicId}/chapters`, {
@@ -220,13 +208,13 @@ const api = {
         });
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
-            throw new Error(errData.detail || 'Lỗi khi thêm chương');
+            throw new Error(errData.detail || 'Error adding chapter');
         }
         return res.json();
     },
 
     /**
-     * Cập nhật thông tin một chương (số chương, tiêu đề)
+     * Update a chapter
      */
     async updateChapter(chapterId, data) {
         const res = await fetch(`${API_BASE}/api/chapters/${chapterId}`, {
@@ -236,44 +224,44 @@ const api = {
         });
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
-            throw new Error(errData.detail || 'Lỗi khi cập nhật chương');
+            throw new Error(errData.detail || 'Error updating chapter');
         }
         return res.json();
     },
 
     /**
-     * Xóa một chương khỏi bộ truyện
+     * Delete a chapter
      */
     async deleteChapter(chapterId) {
         const res = await fetch(`${API_BASE}/api/chapters/${chapterId}`, { method: 'DELETE' });
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
-            throw new Error(errData.detail || 'Lỗi khi xóa chương');
+            throw new Error(errData.detail || 'Error deleting chapter');
         }
         return res.json();
     },
 
     /**
-     * Lấy thông tin chi tiết một chương theo ID
+     * Get a chapter by ID
      */
     async getChapter(chapterId) {
         const res = await fetch(`${API_BASE}/api/chapters/${chapterId}`);
-        if (!res.ok) throw new Error('Không tìm thấy chương');
+        if (!res.ok) throw new Error('Chapter not found');
         return res.json();
     },
 
     /**
-     * Lấy danh sách toàn bộ URL ảnh đọc truyện của một chương (từ trang 1 đến total_pages)
+     * Get page URLs for a chapter
      */
     async getChapterPages(chapterId) {
         const res = await fetch(`${API_BASE}/api/chapters/${chapterId}/pages`);
-        if (!res.ok) throw new Error('Không thể tải danh sách trang');
+        if (!res.ok) throw new Error('Failed to load chapter pages');
         return res.json();
     },
 
-    // ------------------- HÌNH ẢNH (IMAGES & COVERS) -------------------
+    // ------------------- IMAGES & COVERS -------------------
     /**
-     * Yêu cầu Backend tải ảnh bìa từ nhentai về lưu tại local thư mục cover-images/
+     * Download cover image to local server
      */
     async downloadCover(url, comicId) {
         const res = await fetch(`${API_BASE}/api/images/download-cover`, {
@@ -281,21 +269,21 @@ const api = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url, comic_id: comicId })
         });
-        if (!res.ok) console.warn('Không thể tải cover image tự động');
+        if (!res.ok) console.warn('Failed to automatically download cover image');
         return res.json();
     },
 
     /**
-     * Lấy đường dẫn URL xem ảnh bìa (nếu chưa có hoặc lỗi thì dùng ảnh dự phòng rem.jpg trong cover-images)
+     * Get cover image URL
      */
     getCoverUrl(filename) {
-        if (!filename) return `${API_BASE}/api/covers/rem.jpg`;
-        return `${API_BASE}/api/covers/${filename}`;
+        if (!filename) return 'assets/rem.jpg';
+        return `assets/${filename}`;
     },
 
-    // ------------------- TÌM KIẾM (SEARCH) -------------------
+    // ------------------- SEARCH -------------------
     /**
-     * Tìm kiếm truyện kết hợp theo: từ khóa tên (q), thể loại (genre), tác giả (author)
+     * Search comics by query, genre, author
      */
     async searchComics(params = {}) {
         const query = new URLSearchParams();
@@ -303,12 +291,12 @@ const api = {
         if (params.genre) query.set('genre', params.genre);
         if (params.author) query.set('author', params.author);
         const res = await fetch(`${API_BASE}/api/search?${query.toString()}`);
-        if (!res.ok) throw new Error('Lỗi tìm kiếm');
+        if (!res.ok) throw new Error('Search failed');
         return res.json();
     },
 
     /**
-     * Kiểm tra xem bộ truyện đã có trong thư viện chưa thông qua gallery_id
+     * Check if comic exists by gallery ID
      */
     async checkComicByGalleryId(galleryId) {
         const res = await fetch(`${API_BASE}/api/comics/check/${galleryId}`);
@@ -316,18 +304,18 @@ const api = {
         return res.json();
     },
 
-    // ------------------- THỂ LOẠI (GENRES) -------------------
+    // ------------------- GENRES -------------------
     /**
-     * Lấy danh sách toàn bộ thể loại kèm số lượng truyện
+     * Get all genres
      */
     async getGenres() {
         const res = await fetch(`${API_BASE}/api/genres`);
-        if (!res.ok) throw new Error('Không thể tải danh sách thể loại');
+        if (!res.ok) throw new Error('Failed to load genres');
         return res.json();
     },
 
     /**
-     * Thêm mới một thể loại
+     * Create a new genre
      */
     async createGenre(name) {
         const res = await fetch(`${API_BASE}/api/genres`, {
@@ -337,13 +325,13 @@ const api = {
         });
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
-            throw new Error(errData.detail || 'Lỗi khi thêm thể loại');
+            throw new Error(errData.detail || 'Error adding genre');
         }
         return res.json();
     },
 
     /**
-     * Đổi tên thể loại theo ID
+     * Update genre by ID
      */
     async updateGenre(genreId, name) {
         const res = await fetch(`${API_BASE}/api/genres/${genreId}`, {
@@ -353,48 +341,45 @@ const api = {
         });
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
-            throw new Error(errData.detail || 'Lỗi khi cập nhật thể loại');
+            throw new Error(errData.detail || 'Error updating genre');
         }
         return res.json();
     },
 
-    /**
-     * Đổi tên thể loại theo ID (alias cho updateGenre)
-     */
     async renameGenre(genreId, name) {
         return this.updateGenre(genreId, name);
     },
 
     /**
-     * Xóa một thể loại khỏi database
+     * Delete genre by ID
      */
     async deleteGenre(genreId) {
         const res = await fetch(`${API_BASE}/api/genres/${genreId}`, { method: 'DELETE' });
-        if (!res.ok) throw new Error('Lỗi khi xóa thể loại');
+        if (!res.ok) throw new Error('Error deleting genre');
         return res.json();
     },
 
     /**
-     * Lấy danh sách các bộ truyện thuộc về một thể loại cụ thể
+     * Get comics by genre ID
      */
     async getComicsByGenre(genreId) {
         const res = await fetch(`${API_BASE}/api/genres/${genreId}/comics`);
-        if (!res.ok) throw new Error('Không thể tải danh sách truyện theo thể loại');
+        if (!res.ok) throw new Error('Failed to load comics by genre');
         return res.json();
     },
 
-    // ------------------- TÁC GIẢ (AUTHORS) -------------------
+    // ------------------- AUTHORS -------------------
     /**
-     * Lấy danh sách toàn bộ tác giả và số lượng truyện của từng tác giả
+     * Get all authors
      */
     async getAuthors() {
         const res = await fetch(`${API_BASE}/api/authors`);
-        if (!res.ok) throw new Error('Không thể tải danh sách tác giả');
+        if (!res.ok) throw new Error('Failed to load authors');
         return res.json();
     },
 
     /**
-     * Đổi tên tác giả hàng loạt cho tất cả các bộ truyện của tác giả đó
+     * Rename author across all comics
      */
     async renameAuthor(oldName, newName) {
         const res = await fetch(`${API_BASE}/api/authors/rename`, {
@@ -402,16 +387,16 @@ const api = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ old_name: oldName, new_name: newName })
         });
-        if (!res.ok) throw new Error('Lỗi khi đổi tên tác giả');
+        if (!res.ok) throw new Error('Error renaming author');
         return res.json();
     },
 
     /**
-     * Lấy danh sách toàn bộ các bộ truyện của một tác giả cụ thể
+     * Get comics by author name
      */
     async getComicsByAuthor(authorName) {
         const res = await fetch(`${API_BASE}/api/authors/${encodeURIComponent(authorName)}/comics`);
-        if (!res.ok) throw new Error('Không thể tải truyện theo tác giả');
+        if (!res.ok) throw new Error('Failed to load comics by author');
         return res.json();
     }
 };
@@ -538,7 +523,7 @@ function handleImageFallback(img, onFinalFail) {
 
 function fallbackToErrorImage(img, onFinalFail) {
     img.onerror = null;
-    img.src = 'rem.jpg';
+    img.src = 'assets/rem.jpg';
     img.style.maxHeight = '300px';
     if (typeof onFinalFail === 'function') {
         onFinalFail(img);
@@ -594,32 +579,25 @@ function renderComicCard(comic) {
         <div class="comic-card" onclick="window.location.href='detail.html?id=${comic.id}'" style="cursor: pointer;">
             <div class="card-thumb-wrapper">
                 ${comic.gallery_id ? `<span class="card-id-badge">${comic.gallery_id}</span>` : ''}
-                <button type="button" class="btn-card-delete" onclick="handleDeleteComicCard(event, ${comic.id}, '${titleSafe}')" title="Xóa bộ truyện này">
-                    🗑️
+                <button type="button" class="btn-card-delete" onclick="handleDeleteComicCard(event, ${comic.id}, '${titleSafe}')" title="Delete this comic">
+                    Delete
                 </button>
-                <img src="${coverUrl}" alt="${titleSafe}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='rem.jpg'">
+                <img src="${coverUrl}" alt="${titleSafe}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='assets/rem.jpg'">
             </div>
             <div class="card-body">
                 <div class="card-title" title="${titleSafe}">${comic.title}</div>
-                <div class="card-author">${comic.author || 'Tác giả chưa rõ'}</div>
+                <div class="card-author">${comic.author || 'Unknown Author'}</div>
                 <div class="card-tags">${genresHtml}</div>
             </div>
         </div>
     `;
 }
 
-// ==================== 4. GENRE SELECTOR COMPONENT (CHỌN THỂ LOẠI) ====================
+// ==================== 4. GENRE SELECTOR COMPONENT ====================
 /**
- * Component giao diện chọn Thể loại dạng nút bấm Chips:
- * - Người dùng bấm chọn trực tiếp từ danh sách có sẵn (không cần nhập tay).
- * - Hỗ trợ chọn/bỏ chọn nhiều thể loại (toggle).
+ * Component for selecting genres via chips
  */
 class GenreSelectorComponent {
-    /**
-     * @param {string} containerId - ID của thẻ div chứa danh sách chips
-     * @param {Array} availableGenres - Danh sách thể loại có sẵn trong hệ thống
-     * @param {Array} selectedGenres - Danh sách thể loại đang được chọn ban đầu
-     */
     constructor(containerId, availableGenres = [], selectedGenres = []) {
         this.container = document.getElementById(containerId);
         this.availableGenres = [...availableGenres];
@@ -632,24 +610,20 @@ class GenreSelectorComponent {
         this.render();
     }
 
-    /** Cập nhật lại danh sách thể loại có sẵn từ máy chủ */
     setAvailableGenres(genres) {
         this.availableGenres = [...genres];
         this.render();
     }
 
-    /** Thiết lập danh sách thể loại đang được chọn */
     setSelectedGenres(genres) {
         this.selectedGenres = new Set(genres.map(g => g.toLowerCase().trim()));
         this.render();
     }
 
-    /** Lấy mảng danh sách tên các thể loại đang được chọn */
     getSelectedGenres() {
         return Array.from(this.selectedGenres);
     }
 
-    /** Bật/tắt chọn một thể loại khi click */
     toggleGenre(genreName) {
         const key = genreName.toLowerCase().trim();
         if (this.selectedGenres.has(key)) {
@@ -660,13 +634,12 @@ class GenreSelectorComponent {
         this.render();
     }
 
-    /** Vẽ lại giao diện danh sách các nút thể loại */
     render() {
         if (!this.container) return;
         if (this.availableGenres.length === 0) {
             this.container.innerHTML = `
                 <div style="padding: 10px; color: var(--text-dim); font-size: 13px;">
-                    Chưa có thể loại nào trong hệ thống. <a href="genres.html" style="color: var(--primary);">Bấm vào đây để thêm thể loại</a>
+                    No genres found in system. <a href="genres.html" style="color: var(--primary);">Click here to add genres</a>
                 </div>
             `;
             return;
@@ -678,13 +651,12 @@ class GenreSelectorComponent {
             const isSelected = this.selectedGenres.has(name.toLowerCase().trim());
             return `
                 <button type="button" class="genre-chip-btn ${isSelected ? 'active' : ''}" data-name="${name}">
-                    <span class="genre-check">${isSelected ? '✓' : '+'}</span>
+                    <span class="genre-check">${isSelected ? 'Selected' : 'Add'}</span>
                     <span>${name}</span>
                 </button>
             `;
         }).join('');
 
-        // Lắng nghe sự kiện click trên từng chip thể loại
         this.container.querySelectorAll('.genre-chip-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const name = btn.getAttribute('data-name');
@@ -694,18 +666,11 @@ class GenreSelectorComponent {
     }
 }
 
-// ==================== 5. AUTHOR AUTOCOMPLETE COMPONENT (GỢI Ý TÁC GIẢ) ====================
+// ==================== 5. AUTHOR AUTOCOMPLETE COMPONENT ====================
 /**
- * Component gợi ý và tìm kiếm tác giả thông minh:
- * - Khi người dùng gõ tên: tìm kiếm tức thì trong danh sách tác giả đã có.
- * - Nếu có tác giả phù hợp: hiển thị danh sách để click chọn.
- * - Nếu là tác giả mới: hiển thị gợi ý "➕ Dùng tác giả mới" và tự động tạo mới khi lưu.
+ * Component for intelligent author suggestions
  */
 class AuthorAutocompleteComponent {
-    /**
-     * @param {string} inputId - ID của ô input nhập tên tác giả
-     * @param {Array} authors - Danh sách các tác giả có sẵn trong thư viện
-     */
     constructor(inputId, authors = []) {
         this.input = document.getElementById(inputId);
         this.authors = [...authors];
@@ -713,16 +678,13 @@ class AuthorAutocompleteComponent {
         this.init();
     }
 
-    /** Cập nhật danh sách tác giả từ API */
     setAuthors(authors) {
         this.authors = [...authors];
     }
 
-    /** Khởi tạo giao diện và gắn các bộ lắng nghe sự kiện */
     init() {
         if (!this.input) return;
 
-        // Bọc ô input vào wrapper để định vị dropdown bên dưới
         let wrapper = this.input.parentElement;
         if (!wrapper.classList.contains('autocomplete-wrapper')) {
             wrapper = document.createElement('div');
@@ -731,16 +693,13 @@ class AuthorAutocompleteComponent {
             wrapper.appendChild(this.input);
         }
 
-        // Tạo dropdown menu hiển thị gợi ý
         this.dropdown = document.createElement('div');
         this.dropdown.className = 'autocomplete-dropdown';
         wrapper.appendChild(this.dropdown);
 
-        // Sự kiện gõ phím & focus
         this.input.addEventListener('input', () => this.onInput());
         this.input.addEventListener('focus', () => this.onInput());
 
-        // Hỗ trợ điều hướng bằng phím mũi tên / Enter / Esc
         this.input.addEventListener('keydown', (e) => {
             const items = this.dropdown.querySelectorAll('.autocomplete-item');
             if (!this.dropdown.classList.contains('active') || items.length === 0) return;
@@ -763,7 +722,6 @@ class AuthorAutocompleteComponent {
             }
         });
 
-        // Đóng dropdown khi bấm chuột ra ngoài ô input
         document.addEventListener('click', (e) => {
             if (!wrapper.contains(e.target)) {
                 this.hide();
@@ -771,13 +729,11 @@ class AuthorAutocompleteComponent {
         });
     }
 
-    /** Xử lý khi người dùng nhập ký tự */
     onInput() {
         const query = this.input.value.trim().toLowerCase();
         this.renderDropdown(query);
     }
 
-    /** Cập nhật vị trí đang được trỏ bằng phím mũi tên */
     updateFocus(items) {
         items.forEach((item, i) => {
             if (i === this.selectedIndex) {
@@ -789,29 +745,24 @@ class AuthorAutocompleteComponent {
         });
     }
 
-    /** Chọn một tác giả từ dropdown */
     selectAuthor(name) {
         this.input.value = name;
         this.hide();
         this.input.dispatchEvent(new Event('change'));
     }
 
-    /** Đóng dropdown */
     hide() {
         this.dropdown.classList.remove('active');
         this.selectedIndex = -1;
     }
 
-    /** Lọc tác giả và hiển thị danh sách gợi ý */
     renderDropdown(query) {
         const rawVal = this.input.value.trim();
-        // Lọc các tác giả có tên chứa từ khóa
         const matches = this.authors.filter(a => {
             const name = (typeof a === 'string' ? a : a.name).toLowerCase();
             return !query || name.includes(query);
         });
 
-        // Kiểm tra xem tên đã gõ có trùng khớp hoàn toàn với tác giả cũ nào không
         const exactMatch = this.authors.some(a => {
             const name = typeof a === 'string' ? a : a.name;
             return name.toLowerCase() === query;
@@ -819,23 +770,21 @@ class AuthorAutocompleteComponent {
 
         let html = '';
 
-        // Nếu đã gõ chữ và chưa trùng khớp 100% với tác giả cũ -> hiện nút thêm mới
         if (rawVal && !exactMatch) {
             html += `
                 <div class="autocomplete-item autocomplete-item-new" data-val="${rawVal}">
-                    <span>➕ Dùng tác giả mới: <b>"${rawVal}"</b></span>
-                    <span class="autocomplete-badge">Mới</span>
+                    <span>Use new author: <b>"${rawVal}"</b></span>
+                    <span class="autocomplete-badge">New</span>
                 </div>
             `;
         }
 
-        // Liệt kê các tác giả đã có khớp với từ khóa
         matches.forEach(item => {
             const name = typeof item === 'string' ? item : item.name;
-            const count = typeof item === 'object' && item.comic_count !== undefined ? `${item.comic_count} truyện` : '';
+            const count = typeof item === 'object' && item.comic_count !== undefined ? `${item.comic_count} comics` : '';
             html += `
                 <div class="autocomplete-item" data-val="${name}">
-                    <span>✍️ ${name}</span>
+                    <span>${name}</span>
                     ${count ? `<span class="autocomplete-badge">${count}</span>` : ''}
                 </div>
             `;
@@ -850,7 +799,6 @@ class AuthorAutocompleteComponent {
         this.dropdown.classList.add('active');
         this.selectedIndex = -1;
 
-        // Lắng nghe sự kiện click trên từng mục gợi ý
         this.dropdown.querySelectorAll('.autocomplete-item').forEach(el => {
             el.addEventListener('click', () => {
                 const val = el.getAttribute('data-val');

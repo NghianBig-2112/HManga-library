@@ -37,13 +37,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Đường dẫn thư mục lưu trữ ảnh bìa cục bộ (cover-images)
-COVER_DIR = Path(__file__).parent.parent / "cover-images"
-COVER_DIR.mkdir(parents=True, exist_ok=True)
-
-# Đường dẫn thư mục giao diện tĩnh Frontend (HTML, CSS, JS, icon)
+# Đường dẫn thư mục giao diện tĩnh Frontend (HTML, CSS, JS, assets)
 FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
 FRONTEND_DIR.mkdir(parents=True, exist_ok=True)
+
+# Đường dẫn thư mục lưu trữ ảnh bìa cục bộ (frontend/assets)
+COVER_DIR = FRONTEND_DIR / "assets"
+COVER_DIR.mkdir(parents=True, exist_ok=True)
 
 # 1. Đăng ký các API Routers
 app.include_router(comics_router)      # API quản lý truyện (danh sách, chi tiết, thêm, xóa)

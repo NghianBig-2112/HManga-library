@@ -8,104 +8,95 @@
   4. Hiển thị ảnh bìa tải từ server (/api/covers/{filename}) kèm ảnh dự phòng (rem.jpg) nếu lỗi.
 -->
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HManga Library — Thư viện truyện tranh cá nhân</title>
+    <title>HManga Library — Personal Manga Library</title>
     <!-- Favicon website -->
-    <link rel="icon" type="image/jpeg" href="rem.jpg">
+    <link rel="icon" type="image/jpeg" href="assets/rem.jpg">
     <!-- File stylesheet dùng chung -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 1. Thanh điều hướng trên cùng (Navbar) -->
+    <!-- 1. Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
-            <!-- Logo thương hiệu và tên ứng dụng -->
+            <!-- Brand logo & app title -->
             <a href="index.html" class="nav-brand">
-                <img src="rem.jpg" alt="HManga Logo" class="nav-logo">
+                <img src="assets/rem.jpg" alt="HManga Logo" class="nav-logo">
                 <span class="nav-brand-text">HManga</span>
             </a>
 
-            <!-- Thanh tìm kiếm chính giữa Navbar dạng Quick Search & Advanced Button -->
+            <!-- Search bar & Advanced Search Button -->
             <div class="nav-center">
                 <form class="quick-search-form" id="quickSearchForm" action="search.html" method="GET" autocomplete="off" onsubmit="event.preventDefault();">
                     <div class="quick-search-wrapper">
-                        <img src="data-icon/search.png" alt="Search" class="quick-search-icon">
-                        <input type="search" name="s" id="inputQuickSearch" class="quick-search-input" placeholder="Tìm tên truyện..." autocomplete="off">
+                        <input type="search" name="s" id="inputQuickSearch" class="quick-search-input" placeholder="Search comics..." autocomplete="off">
                     </div>
                     <a href="search.html" id="btnGoAdvanced" class="btn-go-advanced" title="Advanced Search">
-                        <svg class="bolt-icon" viewBox="0 0 24 24">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                        </svg>
-                        <span>Advanced<span class="btn-text-hide-mobile"> Search</span></span>
+                        <span>Advanced Search</span>
                     </a>
                 </form>
             </div>
 
-            <!-- Các nút hành động bên phải Navbar -->
+            <!-- Right navigation actions -->
             <div class="nav-links">
-                <a href="genres.html" class="nav-link">🏷️ Thể loại</a>
-                <a href="authors.html" class="nav-link">✍️ Tác giả</a>
+                <a href="genres.html" class="nav-link">Genres</a>
+                <a href="authors.html" class="nav-link">Authors</a>
                 <a href="add.html" class="btn-add">
-                    <img src="data-icon/plus.png" alt="Thêm" class="nav-icon">
-                    <span>Thêm truyện</span>
+                    <span>Add Comic</span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- 2. Khu vực nội dung chính (Main Content) -->
+    <!-- 2. Main Content Area -->
     <main class="main-content">
-        <!-- Tiêu đề trang và số lượng truyện hiện có -->
+        <!-- Page Title & Count -->
         <div class="page-header" style="text-align: center;">
-            <h1 class="page-title" style="justify-content: center;">Thư Viện Truyện</h1>
-            <p class="page-subtitle" id="comic-count">Đang tải danh sách...</p>
+            <h1 class="page-title" style="justify-content: center;">Comic Library</h1>
+            <p class="page-subtitle" id="comic-count">Loading library...</p>
         </div>
 
-        <!-- Lưới hiển thị danh sách thẻ truyện (Comic Cards Grid) -->
+        <!-- Comic Cards Grid -->
         <div id="comic-grid" class="comic-grid">
             <div style="grid-column: 1 / -1; text-align: center; padding: 60px 0; color: var(--text-dim);">
-                ⏳ Đang tải thư viện truyện...
+                Loading comic library...
             </div>
         </div>
     </main>
 
-    <!-- Nạp file JavaScript tiện ích dùng chung -->
+    <!-- Load JavaScript utilities -->
     <script src="app.js"></script>
     <script>
         let searchQuery = '';
         let debounceTimer;
 
         /**
-         * Tải danh sách truyện từ Backend API và hiển thị lên lưới giao diện
+         * Load comics from backend API and render grid
          */
         async function loadComics() {
             const grid = document.getElementById('comic-grid');
             const countEl = document.getElementById('comic-count');
             
             try {
-                // Gọi API lấy danh sách truyện (có thể kèm từ khóa tìm kiếm)
                 const comics = await api.getComics({ q: searchQuery });
-                countEl.textContent = `${comics.length} bộ truyện trong thư viện`;
+                countEl.textContent = `${comics.length} comics in library`;
 
-                // Nếu thư viện còn trống
                 if (comics.length === 0) {
                     grid.innerHTML = `
                         <div style="grid-column: 1 / -1; text-align: center; padding: 80px 20px;">
-                            <p style="font-size: 18px; color: var(--text-muted); margin-bottom: 8px;">Chưa có bộ truyện nào</p>
-                            <p style="font-size: 14px; color: var(--text-dim); margin-bottom: 20px;">Bắt đầu bằng cách thêm một bộ truyện mới từ nhentai</p>
-                            <a href="add.html" class="btn btn-primary">+ Thêm truyện ngay</a>
+                            <p style="font-size: 18px; color: var(--text-muted); margin-bottom: 8px;">No comics found in library</p>
+                            <p style="font-size: 14px; color: var(--text-dim); margin-bottom: 20px;">Start by adding a new comic</p>
+                            <a href="add.html" class="btn btn-primary">Add Comic Now</a>
                         </div>
                     `;
                     return;
                 }
 
-                // Render danh sách các thẻ truyện (Comic Cards)
                 grid.innerHTML = comics.map(comic => {
                     const coverUrl = api.getCoverUrl(comic.cover_filename);
-                    // Hiển thị tối đa 3 thể loại đầu tiên, nếu nhiều hơn thì hiển thị thêm badge +N
                     const genresHtml = (comic.genres || []).slice(0, 3).map(g => 
                         `<span class="tag-chip">${g}</span>`
                     ).join('') + ((comic.genres && comic.genres.length > 3) ? `<span class="tag-chip">+${comic.genres.length - 3}</span>` : '');
@@ -116,14 +107,14 @@
                         <div class="comic-card" onclick="window.location.href='detail.html?id=${comic.id}'" style="cursor: pointer;">
                             <div class="card-thumb-wrapper">
                                 ${comic.gallery_id ? `<span class="card-id-badge">${comic.gallery_id}</span>` : ''}
-                                <button type="button" class="btn-card-delete" onclick="handleDeleteComicCard(event, ${comic.id}, '${titleSafe}')" title="Xóa bộ truyện này">
-                                    🗑️
+                                <button type="button" class="btn-card-delete" onclick="handleDeleteComicCard(event, ${comic.id}, '${titleSafe}')" title="Delete this comic">
+                                    Delete
                                 </button>
-                                <img src="${coverUrl}" alt="${titleSafe}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='rem.jpg'">
+                                <img src="${coverUrl}" alt="${titleSafe}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='assets/rem.jpg'">
                             </div>
                             <div class="card-body">
                                 <div class="card-title" title="${titleSafe}">${comic.title}</div>
-                                <div class="card-author">${comic.author || 'Tác giả chưa rõ'}</div>
+                                <div class="card-author">${comic.author || 'Unknown Author'}</div>
                                 <div class="card-tags">${genresHtml}</div>
                             </div>
                         </div>
@@ -133,14 +124,14 @@
             } catch (err) {
                 grid.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 60px 0; color: var(--danger);">
-                        ❌ Không thể kết nối tới máy chủ backend. Vui lòng đảm bảo backend đang chạy tại port 8000!
+                        Cannot connect to backend server. Please ensure backend is running on port 8000!
                     </div>
                 `;
             }
         }
 
         /**
-         * Xóa nhanh bộ truyện trực tiếp từ thẻ truyện trên trang chủ
+         * Quick delete comic card directly from homepage
          */
         function handleDeleteComicCard(event, comicId, title) {
             if (event) {
@@ -149,15 +140,15 @@
             }
 
             showConfirmModal({
-                title: '🗑️ Xác nhận xóa bộ truyện',
-                message: `Bạn có chắc chắn muốn xóa vĩnh viễn bộ truyện <strong>"${title}"</strong> không?<br><br><span style="color: var(--danger); font-size: 13px;">⚠️ Hành động này sẽ xóa toàn bộ các chương và file ảnh bìa liên quan, không thể khôi phục!</span>`,
-                confirmText: '🗑️ Xóa vĩnh viễn',
-                cancelText: 'Hủy bỏ',
+                title: 'Confirm Delete Comic',
+                message: `Are you sure you want to permanently delete <strong>"${title}"</strong>?<br><br><span style="color: var(--danger); font-size: 13px;">This action will delete all chapters and associated cover images, and cannot be undone!</span>`,
+                confirmText: 'Delete Permanently',
+                cancelText: 'Cancel',
                 type: 'danger',
                 onConfirm: async () => {
                     await api.deleteComic(comicId);
-                    showToast(`Đã xóa bộ truyện "${title}" thành công!`, 'success');
-                    loadComics(); // Tải lại danh sách truyện ngay lập tức
+                    showToast(`Comic "${title}" deleted successfully!`, 'success');
+                    loadComics();
                 }
             });
         }

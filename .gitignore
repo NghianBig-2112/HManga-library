@@ -27,8 +27,7 @@ out/
 .turbo/
 
 # ===== Runtime & Local Downloads =====
-cover-images/*
-!cover-images/rem.jpg
+
 
 # ===== OS =====
 .DS_Store

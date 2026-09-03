@@ -34,7 +34,7 @@ def get_comic(comic_id: str):
     """
     comic = service.get_comic_detail(comic_id)
     if not comic:
-        raise HTTPException(status_code=404, detail="Không tìm thấy bộ truyện")
+        raise HTTPException(status_code=404, detail="Comic not found")
     return comic
 
 @router.post("", response_model=ComicDetailResponse)
@@ -53,7 +53,7 @@ def update_comic(comic_id: str, comic: ComicUpdate):
     """
     updated = service.update_comic(comic_id, comic)
     if not updated:
-        raise HTTPException(status_code=404, detail="Không tìm thấy bộ truyện để cập nhật")
+        raise HTTPException(status_code=404, detail="Comic not found to update")
     return updated
 
 @router.delete("/{comic_id}")
@@ -64,8 +64,8 @@ def delete_comic(comic_id: str):
     """
     success = service.delete_comic(comic_id)
     if not success:
-        raise HTTPException(status_code=404, detail="Không tìm thấy bộ truyện để xóa")
-    return {"message": "Đã xóa bộ truyện thành công"}
+        raise HTTPException(status_code=404, detail="Comic not found to delete")
+    return {"message": "Comic deleted successfully"}
 
 @router.get("/check/{gallery_id}")
 def check_comic_exists(gallery_id: str):
