@@ -24,6 +24,7 @@
         <div class="nav-container">
             <!-- Tên web -->
             <a href="index.html" class="nav-brand" title="Trang chủ HManga">
+                <img src="assets/rem.jpg" alt="Rem" class="nav-logo">
                 <span class="nav-brand-text">HManga</span>
             </a>
 
@@ -132,7 +133,7 @@
     <script src="app.js?v=3.1"></script>
     <script>
         // Trạng thái lọc hiện tại
-        let selectedGenre = null;
+        let selectedGenres = []; // Mảng danh sách các thể loại đang chọn
         let selectedAuthor = null;
         let searchQuery = '';
         let debounceTimer = null;
@@ -171,11 +172,12 @@
 
             try {
                 let comics = [];
-                // Sử dụng api.searchComics để kết hợp q, genre, author
-                if (searchQuery || selectedGenre || selectedAuthor) {
+                // Sử dụng api.searchComics để kết hợp q, genres, author
+                const hasFilter = searchQuery || (selectedGenres && selectedGenres.length > 0) || selectedAuthor;
+                if (hasFilter) {
                     comics = await api.searchComics({
                         q: searchQuery || undefined,
-                        genre: selectedGenre || undefined,
+                        genre: selectedGenres.length > 0 ? selectedGenres.join(',') : undefined,
                         author: selectedAuthor || undefined
                     });
                 } else {
@@ -212,13 +214,15 @@
         function updateFilterUI() {
             const badges = [];
 
-            if (selectedGenre) {
-                badges.push(`
-                    <span class="home-active-filter-badge">
-                        Thể loại: ${selectedGenre}
-                        <button type="button" class="btn-clear-filter" onclick="selectGenre(null)" title="Bỏ lọc thể loại">&times;</button>
-                    </span>
-                `);
+            if (selectedGenres && selectedGenres.length > 0) {
+                selectedGenres.forEach(g => {
+                    badges.push(`
+                        <span class="home-active-filter-badge">
+                            Thể loại: ${g}
+                            <button type="button" class="btn-clear-filter" onclick="toggleGenre('${g.replace(/'/g, "\\'")}')" title="Bỏ lọc thể loại này">&times;</button>
+                        </span>
+                    `);
+                });
             }
 
             if (selectedAuthor) {
@@ -260,8 +264,10 @@
                 document.getElementById('sidebar-genre-total').textContent = allGenres.length;
 
                 // Nếu thể loại đang lọc không còn truyện nào (đã bị xóa)
-                if (selectedGenre && !allGenres.some(g => g.name.toLowerCase() === selectedGenre.toLowerCase())) {
-                    selectedGenre = null;
+                if (selectedGenres.length > 0) {
+                    selectedGenres = selectedGenres.filter(sg =>
+                        allGenres.some(g => g.name.toLowerCase() === sg.toLowerCase())
+                    );
                 }
 
                 renderSidebarGenres();
@@ -292,9 +298,9 @@
                 list = list.filter(g => g.name.toLowerCase().includes(filterText));
             }
 
-            const isAllActive = !selectedGenre;
+            const isAllActive = selectedGenres.length === 0;
             let html = `
-                <div class="sidebar-item ${isAllActive ? 'active' : ''}" onclick="selectGenre(null)">
+                <div class="sidebar-item ${isAllActive ? 'active' : ''}" onclick="clearGenreFilters()">
                     <span class="sidebar-item-name">Tất cả thể loại</span>
                 </div>
             `;
@@ -303,10 +309,10 @@
                 html += `<div style="padding: 8px 10px; font-size: 12px; color: var(--text-dim);">Không có thể loại nào</div>`;
             } else {
                 html += list.map(g => {
-                    const isActive = selectedGenre && selectedGenre.toLowerCase() === g.name.toLowerCase();
+                    const isActive = selectedGenres.some(sg => sg.toLowerCase() === g.name.toLowerCase());
                     const count = g.comic_count || 0;
                     return `
-                        <div class="sidebar-item ${isActive ? 'active' : ''}" onclick="selectGenre('${g.name.replace(/'/g, "\\'")}')">
+                        <div class="sidebar-item ${isActive ? 'active' : ''}" onclick="toggleGenre('${g.name.replace(/'/g, "\\'")}')">
                             <span class="sidebar-item-name" title="${g.name}">${g.name}</span>
                             <span class="sidebar-count-pill">${count}</span>
                         </div>
@@ -352,10 +358,33 @@
         /**
          * 4. BỘ LỌC TƯƠNG TÁC
          */
-        function selectGenre(genreName) {
-            selectedGenre = genreName;
+        function toggleGenre(genreName) {
+            if (!genreName) {
+                clearGenreFilters();
+                return;
+            }
+            const index = selectedGenres.findIndex(g => g.toLowerCase() === genreName.toLowerCase());
+            if (index >= 0) {
+                selectedGenres.splice(index, 1);
+            } else {
+                selectedGenres.push(genreName);
+            }
             renderSidebarGenres();
             loadComics();
+        }
+
+        function clearGenreFilters() {
+            selectedGenres = [];
+            renderSidebarGenres();
+            loadComics();
+        }
+
+        function selectGenre(genreName) {
+            if (!genreName) {
+                clearGenreFilters();
+            } else {
+                toggleGenre(genreName);
+            }
         }
 
         function selectAuthor(authorName) {
@@ -371,7 +400,7 @@
         }
 
         function clearAllFilters() {
-            selectedGenre = null;
+            selectedGenres = [];
             selectedAuthor = null;
             searchQuery = '';
             if (searchInput) searchInput.value = '';
@@ -562,7 +591,8 @@
             if (searchInput) searchInput.value = searchQuery;
         }
         if (urlParams.get('genre')) {
-            selectedGenre = urlParams.get('genre');
+            const rawGenres = urlParams.get('genre');
+            selectedGenres = rawGenres.split(',').map(g => g.trim()).filter(Boolean);
         }
         if (urlParams.get('author')) {
             selectedAuthor = urlParams.get('author');

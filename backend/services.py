@@ -171,10 +171,18 @@ def get_all_comics(genre: str = None, q: str = None, author: str = None):
         _attach_authors(conn, comics)
 
         if genre:
-            comics = [
-                c for c in comics
-                if any(g.lower() == genre.lower() for g in c.get("genres", []))
-            ]
+            if isinstance(genre, list):
+                genre_list = [g.strip().lower() for g in genre if g and g.strip()]
+            else:
+                genre_list = [g.strip().lower() for g in str(genre).split(",") if g.strip()]
+            if genre_list:
+                comics = [
+                    c for c in comics
+                    if all(
+                        any(g == cg.lower() for cg in c.get("genres", []))
+                        for g in genre_list
+                    )
+                ]
 
         if author:
             clean_author = author.strip().lower()
@@ -634,7 +642,18 @@ def search_comics(q: str = None, genre: str = None, author: str = None):
         _attach_authors(conn, comics)
 
         if genre:
-            comics = [c for c in comics if any(g.lower() == genre.lower() for g in c.get("genres", []))]
+            if isinstance(genre, list):
+                genre_list = [g.strip().lower() for g in genre if g and g.strip()]
+            else:
+                genre_list = [g.strip().lower() for g in str(genre).split(",") if g.strip()]
+            if genre_list:
+                comics = [
+                    c for c in comics
+                    if all(
+                        any(g == cg.lower() for cg in c.get("genres", []))
+                        for g in genre_list
+                    )
+                ]
 
         return comics
     finally:

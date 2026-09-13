@@ -115,7 +115,10 @@ const api = {
     // --- COMICS ---
     async getComics(params = {}) {
         const query = new URLSearchParams();
-        if (params.genre) query.set('genre', params.genre);
+        if (params.genre) {
+            query.set('genre', Array.isArray(params.genre) ? params.genre.join(',') : params.genre);
+        }
+        if (params.author) query.set('author', params.author);
         if (params.q) query.set('q', params.q);
         const res = await fetch(`${API_BASE}/api/comics${query.toString() ? '?' + query.toString() : ''}`);
         if (!res.ok) throw new Error('Không thể tải danh sách truyện');
@@ -217,7 +220,9 @@ const api = {
     async searchComics(params = {}) {
         const query = new URLSearchParams();
         if (params.q) query.set('q', params.q);
-        if (params.genre) query.set('genre', params.genre);
+        if (params.genre) {
+            query.set('genre', Array.isArray(params.genre) ? params.genre.join(',') : params.genre);
+        }
         if (params.author) query.set('author', params.author);
         const res = await fetch(`${API_BASE}/api/search?${query.toString()}`);
         if (!res.ok) throw new Error('Tìm kiếm thất bại');
