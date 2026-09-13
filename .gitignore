@@ -27,7 +27,10 @@ out/
 .turbo/
 
 # ===== Runtime & Local Downloads =====
-
+*.db
+*.sqlite
+*.sqlite3
+!backend/data_cache/backup.json
 
 # ===== OS =====
 .DS_Store

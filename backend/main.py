@@ -1,34 +1,28 @@
 """
-HManga Library - Backend Entrypoint (FastAPI)
-==============================================
-Tập tin khởi chạy chính của ứng dụng backend FastAPI.
-Nhiệm vụ:
-- Khởi tạo FastAPI application và cấu hình CORS middleware.
-- Đăng ký các router RESTful API cho Comics, Chapters, Images, Search, Genres, Authors.
-- Cung cấp (Mount) thư mục ảnh bìa (cover images) và toàn bộ giao diện tĩnh Frontend.
+HManga Library - Backend (FastAPI)
+===================================
+Tất cả routes API và cấu hình server.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-# Import các router từ các module chức năng
-from modules.comics.router import router as comics_router
-from modules.chapters.router import router as chapters_router
-from modules.images.router import router as images_router
-from modules.search.router import router as search_router
-from modules.genres.router import router as genres_router
-from modules.authors.router import router as authors_router
-
-# Khởi tạo ứng dụng FastAPI
-app = FastAPI(
-    title="HManga Library API",
-    description="API quản lý và đọc thư viện truyện cá nhân HManga",
-    version="1.0.0"
+from database import init_db
+from models import (
+    ComicAddByIdRequest,
+    ChapterAddByIdRequest, ChapterUpdate,
 )
+import services
 
-# Cấu hình CORS Middleware cho phép gọi API từ nhiều nguồn (phù hợp khi chạy dev / local)
+# Khởi tạo database & Tự động phục hồi nếu có file backup.json
+init_db()
+services.auto_restore_if_empty()
+
+# Khởi tạo app
+app = FastAPI(title="HManga Library API", version="3.0.0")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -37,24 +31,116 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Đường dẫn thư mục giao diện tĩnh Frontend (HTML, CSS, JS, assets)
+
+# ==================== COMICS ====================
+
+@app.get("/api/comics")
+def get_comics(genre: str = None, q: str = None, author: str = None):
+    return services.get_all_comics(genre=genre, q=q, author=author)
+
+
+@app.get("/api/comics/preview/{gallery_id}")
+def preview_comic(gallery_id: int):
+    return services.preview_comic_by_id(gallery_id)
+
+
+@app.get("/api/comics/{comic_id}")
+def get_comic(comic_id: int):
+    result = services.get_comic_detail(comic_id)
+    if not result:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Comic not found")
+    return result
+
+
+@app.post("/api/comics/add-by-id")
+async def add_comic_by_id(data: ComicAddByIdRequest):
+    return await services.create_comic_by_id(data.gallery_id)
+
+
+@app.delete("/api/comics/{comic_id}")
+def delete_comic(comic_id: int):
+    success = services.delete_comic(comic_id)
+    if not success:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Comic not found")
+    return {"message": "Comic deleted successfully"}
+
+
+# ==================== CHAPTERS ====================
+
+@app.post("/api/comics/{comic_id}/chapters/add-by-id")
+def add_chapter_by_id(comic_id: int, data: ChapterAddByIdRequest):
+    return services.create_chapter_by_id(
+        comic_id, data.gallery_id,
+        chapter_number=data.chapter_number,
+        title=data.title
+    )
+
+
+@app.get("/api/chapters/{chapter_id}")
+def get_chapter(chapter_id: int):
+    result = services.get_chapter_by_id(chapter_id)
+    if not result:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Chapter not found")
+    return result
+
+
+@app.put("/api/chapters/{chapter_id}")
+def update_chapter(chapter_id: int, data: ChapterUpdate):
+    result = services.update_chapter(chapter_id, data)
+    if not result:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Chapter not found")
+    return result
+
+
+@app.delete("/api/chapters/{chapter_id}")
+def delete_chapter(chapter_id: int):
+    services.delete_chapter(chapter_id)
+    return {"message": "Chapter deleted successfully"}
+
+
+@app.get("/api/chapters/{chapter_id}/pages")
+def get_chapter_pages(chapter_id: int):
+    return services.generate_pages(chapter_id)
+
+
+# ==================== GENRES ====================
+
+@app.get("/api/genres")
+def get_genres():
+    return services.get_all_genres()
+
+
+@app.get("/api/genres/{genre_id}/comics")
+def get_comics_by_genre(genre_id: int):
+    return services.get_comics_by_genre_id(genre_id)
+
+
+# ==================== AUTHORS ====================
+
+@app.get("/api/authors")
+def get_authors():
+    return services.get_all_authors()
+
+
+@app.get("/api/authors/{author_name}/comics")
+def get_comics_by_author(author_name: str):
+    return services.get_comics_by_author(author_name)
+
+
+# ==================== SEARCH ====================
+
+@app.get("/api/search")
+def search(q: str = None, genre: str = None, author: str = None):
+    return services.search_comics(q=q, genre=genre, author=author)
+
+
+# ==================== STATIC FILES ====================
+
 FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
 FRONTEND_DIR.mkdir(parents=True, exist_ok=True)
 
-# Đường dẫn thư mục lưu trữ ảnh bìa cục bộ (frontend/assets)
-COVER_DIR = FRONTEND_DIR / "assets"
-COVER_DIR.mkdir(parents=True, exist_ok=True)
-
-# 1. Đăng ký các API Routers
-app.include_router(comics_router)      # API quản lý truyện (danh sách, chi tiết, thêm, xóa)
-app.include_router(chapters_router)    # API quản lý chapter truyện
-app.include_router(images_router)      # API giải mã URL ảnh & proxy ảnh tránh chặn referrer
-app.include_router(search_router)      # API tìm kiếm nâng cao theo tên, tác giả, thể loại
-app.include_router(genres_router)      # API quản lý thể loại (genres)
-app.include_router(authors_router)     # API quản lý tác giả
-
-# 2. Mount thư mục tĩnh phục vụ xem ảnh bìa cục bộ (/api/covers/{filename})
-app.mount("/api/covers", StaticFiles(directory=str(COVER_DIR)), name="covers")
-
-# 3. Mount thư mục tĩnh cho toàn bộ giao diện Frontend (/ -> index.html, style.css, ...)
 app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

@@ -8,173 +8,568 @@
   4. Hiển thị ảnh bìa tải từ server (/api/covers/{filename}) kèm ảnh dự phòng (rem.jpg) nếu lỗi.
 -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HManga Library — Personal Manga Library</title>
+    <title>HManga — Thư Viện Manga</title>
     <!-- Favicon website -->
     <link rel="icon" type="image/jpeg" href="assets/rem.jpg">
-    <!-- File stylesheet dùng chung -->
-    <link rel="stylesheet" href="style.css">
+    <!-- File stylesheet dùng chung (kèm version chống lưu cache cũ) -->
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
-    <!-- 1. Navigation Bar -->
+    <!-- ==================== 1. HEADER / NAVBAR ==================== -->
     <nav class="navbar">
         <div class="nav-container">
-            <!-- Brand logo & app title -->
-            <a href="index.html" class="nav-brand">
-                <img src="assets/rem.jpg" alt="HManga Logo" class="nav-logo">
+            <!-- Tên web -->
+            <a href="index.html" class="nav-brand" title="Trang chủ HManga">
                 <span class="nav-brand-text">HManga</span>
             </a>
 
-            <!-- Search bar & Advanced Search Button -->
-            <div class="nav-center">
-                <form class="quick-search-form" id="quickSearchForm" action="search.html" method="GET" autocomplete="off" onsubmit="event.preventDefault();">
-                    <div class="quick-search-wrapper">
-                        <input type="search" name="s" id="inputQuickSearch" class="quick-search-input" placeholder="Search comics..." autocomplete="off">
-                    </div>
-                    <a href="search.html" id="btnGoAdvanced" class="btn-go-advanced" title="Advanced Search">
-                        <span>Advanced Search</span>
-                    </a>
+            <!-- Header Controls: Ô tìm kiếm, button tìm, ô nhập ID thêm truyện, button thêm -->
+            <div class="header-actions-wrapper">
+                <!-- 1. Ô tìm kiếm truyện + Button tìm truyện -->
+                <form class="header-search-box" id="headerSearchForm" onsubmit="event.preventDefault(); doSearch();">
+                    <input type="search" id="headerSearchInput" class="header-search-input" placeholder="Tìm kiếm truyện, tác giả..." autocomplete="off">
+                    <button type="submit" id="btnHeaderSearch" class="btn-header-action btn-search-submit" title="Tìm truyện">
+                        Tìm
+                    </button>
                 </form>
-            </div>
 
-            <!-- Right navigation actions -->
-            <div class="nav-links">
-                <a href="genres.html" class="nav-link">Genres</a>
-                <a href="authors.html" class="nav-link">Authors</a>
-                <a href="add.html" class="btn-add">
-                    <span>Add Comic</span>
-                </a>
+                <!-- 2. Ô nhập ID để tìm truyện + Button tìm -->
+                <form class="header-add-box" id="headerAddForm" onsubmit="event.preventDefault(); doFindById();">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" id="headerAddInput" class="header-add-input" placeholder="Nhập ID (VD: 48410)..." autocomplete="off">
+                    <button type="submit" id="btnHeaderAdd" class="btn-header-action btn-add-submit" title="Tìm truyện bằng ID">
+                        Tìm
+                    </button>
+                </form>
             </div>
         </div>
     </nav>
 
-    <!-- 2. Main Content Area -->
-    <main class="main-content">
-        <!-- Page Title & Count -->
-        <div class="page-header" style="text-align: center;">
-            <h1 class="page-title" style="justify-content: center;">Comic Library</h1>
-            <p class="page-subtitle" id="comic-count">Loading library...</p>
-        </div>
+    <!-- ==================== 2. MAIN 2-COLUMN LAYOUT ==================== -->
+    <div class="home-layout">
+        <!-- CỘT TRÁI: Thể loại & Tác giả (Sidebar) -->
+        <aside class="home-sidebar">
+            <!-- PHẦN 1: THỂ LOẠI -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                    <span class="sidebar-section-title">
+                        Thể loại
+                    </span>
+                    <span class="sidebar-count-pill" id="sidebar-genre-total">0</span>
+                </div>
+                <!-- Ô lọc nhanh thể loại -->
+                <input type="text" id="filter-genre-input" class="sidebar-filter-input" placeholder="Lọc thể loại..." autocomplete="off">
+                <!-- Danh sách thể loại -->
+                <div class="sidebar-list" id="sidebar-genres-list">
+                    <div style="padding: 12px; text-align: center; color: var(--text-dim); font-size: 12px;">
+                        Đang tải thể loại...
+                    </div>
+                </div>
+            </div>
 
-        <!-- Comic Cards Grid -->
-        <div id="comic-grid" class="comic-grid">
-            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 0; color: var(--text-dim);">
-                Loading comic library...
+            <!-- PHẦN 2: TÁC GIẢ -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                    <span class="sidebar-section-title">
+                        Tác giả
+                    </span>
+                    <span class="sidebar-count-pill" id="sidebar-author-total">0</span>
+                </div>
+                <!-- Ô lọc nhanh tác giả -->
+                <input type="text" id="filter-author-input" class="sidebar-filter-input" placeholder="Lọc tác giả..." autocomplete="off">
+                <!-- Danh sách tác giả -->
+                <div class="sidebar-list" id="sidebar-authors-list">
+                    <div style="padding: 12px; text-align: center; color: var(--text-dim); font-size: 12px;">
+                        Đang tải tác giả...
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CỘT PHẢI: Danh sách truyện -->
+        <section class="home-main">
+            <!-- Header thông tin truyện & Bộ lọc đang kích hoạt -->
+            <div class="home-main-header">
+                <div class="home-main-title-box">
+                    <h1 class="home-main-title" id="main-section-title">Thư Viện Truyện</h1>
+                    <!-- Badges bộ lọc đang chọn -->
+                    <div id="active-filters-container" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
+                </div>
+                <div class="home-main-count" id="comic-count">
+                    Đang tải thư viện...
+                </div>
+            </div>
+
+            <!-- Lưới hiển thị các thẻ truyện -->
+            <div id="comic-grid" class="comic-grid">
+                <div style="grid-column: 1 / -1; text-align: center; padding: 60px 0; color: var(--text-dim);">
+                    Đang tải danh sách truyện...
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== MODAL: XEM TRƯỚC KẾT QUẢ TÌM TRUYỆN THEO ID ==================== -->
+    <div id="modal-preview-comic" class="modal-overlay">
+        <div class="modal-card" style="max-width: 540px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Kết quả tìm truyện</h3>
+                <button type="button" class="modal-close" onclick="closePreviewModal()">&times;</button>
+            </div>
+            <div id="preview-modal-body">
+                <!-- Nội dung chi tiết truyện preview -->
+            </div>
+            <div class="modal-actions" id="preview-modal-actions">
+                <!-- Nút hành động -->
             </div>
         </div>
-    </main>
+    </div>
 
-    <!-- Load JavaScript utilities -->
-    <script src="app.js"></script>
+    <!-- Nạp file JavaScript tiện ích dùng chung -->
+    <script src="app.js?v=3.1"></script>
     <script>
+        // Trạng thái lọc hiện tại
+        let selectedGenre = null;
+        let selectedAuthor = null;
         let searchQuery = '';
-        let debounceTimer;
+        let debounceTimer = null;
+
+        let allGenres = [];
+        let allAuthors = [];
+
+        // DOM Elements
+        const searchInput = document.getElementById('headerSearchInput');
+        const addInput = document.getElementById('headerAddInput');
+        const btnAdd = document.getElementById('btnHeaderAdd');
+        const btnAddIcon = document.getElementById('btnHeaderAddIcon');
+        const btnAddText = document.getElementById('btnHeaderAddText');
+
+        const comicGrid = document.getElementById('comic-grid');
+        const comicCountEl = document.getElementById('comic-count');
+        const sectionTitleEl = document.getElementById('main-section-title');
+        const activeFiltersEl = document.getElementById('active-filters-container');
+
+        const genresListEl = document.getElementById('sidebar-genres-list');
+        const authorsListEl = document.getElementById('sidebar-authors-list');
+        const filterGenreInput = document.getElementById('filter-genre-input');
+        const filterAuthorInput = document.getElementById('filter-author-input');
 
         /**
-         * Load comics from backend API and render grid
+         * 1. TẢI VÀ HIỂN THỊ DANH SÁCH TRUYỆN
          */
         async function loadComics() {
-            const grid = document.getElementById('comic-grid');
-            const countEl = document.getElementById('comic-count');
-            
+            comicGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--text-dim);">
+                    Đang tải danh sách truyện...
+                </div>
+            `;
+
+            updateFilterUI();
+
             try {
-                const comics = await api.getComics({ q: searchQuery });
-                countEl.textContent = `${comics.length} comics in library`;
+                let comics = [];
+                // Sử dụng api.searchComics để kết hợp q, genre, author
+                if (searchQuery || selectedGenre || selectedAuthor) {
+                    comics = await api.searchComics({
+                        q: searchQuery || undefined,
+                        genre: selectedGenre || undefined,
+                        author: selectedAuthor || undefined
+                    });
+                } else {
+                    comics = await api.getComics();
+                }
+
+                comicCountEl.textContent = `${comics.length} bộ truyện`;
 
                 if (comics.length === 0) {
-                    grid.innerHTML = `
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 80px 20px;">
-                            <p style="font-size: 18px; color: var(--text-muted); margin-bottom: 8px;">No comics found in library</p>
-                            <p style="font-size: 14px; color: var(--text-dim); margin-bottom: 20px;">Start by adding a new comic</p>
-                            <a href="add.html" class="btn btn-primary">Add Comic Now</a>
+                    comicGrid.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 70px 20px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px dashed var(--border-color);">
+                            <p style="font-size: 17px; color: var(--text-muted); margin-bottom: 8px;">Không tìm thấy bộ truyện nào phù hợp</p>
+                            <p style="font-size: 13.5px; color: var(--text-dim); margin-bottom: 18px;">Hãy thử thay đổi từ khóa tìm kiếm hoặc bỏ chọn bộ lọc</p>
+                            <button type="button" onclick="clearAllFilters()" class="btn btn-secondary btn-sm">Xóa tất cả bộ lọc</button>
                         </div>
                     `;
                     return;
                 }
 
-                grid.innerHTML = comics.map(comic => {
-                    const coverUrl = api.getCoverUrl(comic.cover_filename);
-                    const genresHtml = (comic.genres || []).slice(0, 3).map(g => 
-                        `<span class="tag-chip">${g}</span>`
-                    ).join('') + ((comic.genres && comic.genres.length > 3) ? `<span class="tag-chip">+${comic.genres.length - 3}</span>` : '');
-
-                    const titleSafe = (comic.title || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-
-                    return `
-                        <div class="comic-card" onclick="window.location.href='detail.html?id=${comic.id}'" style="cursor: pointer;">
-                            <div class="card-thumb-wrapper">
-                                ${comic.gallery_id ? `<span class="card-id-badge">${comic.gallery_id}</span>` : ''}
-                                <button type="button" class="btn-card-delete" onclick="handleDeleteComicCard(event, ${comic.id}, '${titleSafe}')" title="Delete this comic">
-                                    Delete
-                                </button>
-                                <img src="${coverUrl}" alt="${titleSafe}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='assets/rem.jpg'">
-                            </div>
-                            <div class="card-body">
-                                <div class="card-title" title="${titleSafe}">${comic.title}</div>
-                                <div class="card-author">${comic.author || 'Unknown Author'}</div>
-                                <div class="card-tags">${genresHtml}</div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
+                comicGrid.innerHTML = comics.map(renderComicCard).join('');
 
             } catch (err) {
-                grid.innerHTML = `
+                comicGrid.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 60px 0; color: var(--danger);">
-                        Cannot connect to backend server. Please ensure backend is running on port 8000!
+                        Không thể kết nối đến máy chủ: ${err.message}. Đảm bảo server đang chạy trên cổng 8000!
                     </div>
                 `;
             }
         }
 
         /**
-         * Quick delete comic card directly from homepage
+         * 2. CẬP NHẬT HEADER & BADGES BỘ LỌC
          */
-        function handleDeleteComicCard(event, comicId, title) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
+        function updateFilterUI() {
+            const badges = [];
+
+            if (selectedGenre) {
+                badges.push(`
+                    <span class="home-active-filter-badge">
+                        Thể loại: ${selectedGenre}
+                        <button type="button" class="btn-clear-filter" onclick="selectGenre(null)" title="Bỏ lọc thể loại">&times;</button>
+                    </span>
+                `);
             }
 
-            showConfirmModal({
-                title: 'Confirm Delete Comic',
-                message: `Are you sure you want to permanently delete <strong>"${title}"</strong>?<br><br><span style="color: var(--danger); font-size: 13px;">This action will delete all chapters and associated cover images, and cannot be undone!</span>`,
-                confirmText: 'Delete Permanently',
-                cancelText: 'Cancel',
-                type: 'danger',
-                onConfirm: async () => {
-                    await api.deleteComic(comicId);
-                    showToast(`Comic "${title}" deleted successfully!`, 'success');
-                    loadComics();
+            if (selectedAuthor) {
+                badges.push(`
+                    <span class="home-active-filter-badge">
+                        Tác giả: ${selectedAuthor}
+                        <button type="button" class="btn-clear-filter" onclick="selectAuthor(null)" title="Bỏ lọc tác giả">&times;</button>
+                    </span>
+                `);
+            }
+
+            if (searchQuery) {
+                badges.push(`
+                    <span class="home-active-filter-badge">
+                        Tìm: "${searchQuery}"
+                        <button type="button" class="btn-clear-filter" onclick="clearSearch()" title="Xóa từ khóa tìm kiếm">&times;</button>
+                    </span>
+                `);
+            }
+
+            if (badges.length > 0) {
+                sectionTitleEl.textContent = 'Kết Quả Lọc';
+                activeFiltersEl.innerHTML = badges.join('') + `
+                    <button type="button" onclick="clearAllFilters()" class="btn btn-secondary btn-sm" style="font-size: 11px; padding: 3px 8px;">Xóa hết</button>
+                `;
+            } else {
+                sectionTitleEl.textContent = 'Thư Viện Truyện';
+                activeFiltersEl.innerHTML = '';
+            }
+        }
+
+        /**
+         * 3. TẢI VÀ HIỂN THỊ SIDEBAR (THỂ LOẠI & TÁC GIẢ)
+         */
+        async function loadSidebarData() {
+            // Tải thể loại
+            try {
+                allGenres = await api.getGenres();
+                document.getElementById('sidebar-genre-total').textContent = allGenres.length;
+
+                // Nếu thể loại đang lọc không còn truyện nào (đã bị xóa)
+                if (selectedGenre && !allGenres.some(g => g.name.toLowerCase() === selectedGenre.toLowerCase())) {
+                    selectedGenre = null;
                 }
-            });
+
+                renderSidebarGenres();
+            } catch (e) {
+                genresListEl.innerHTML = `<div style="padding: 10px; color: var(--danger); font-size: 12px;">Lỗi tải thể loại</div>`;
+            }
+
+            // Tải tác giả
+            try {
+                allAuthors = await api.getAuthors();
+                document.getElementById('sidebar-author-total').textContent = allAuthors.length;
+
+                // Nếu tác giả đang lọc không còn truyện nào (đã bị xóa)
+                if (selectedAuthor && !allAuthors.some(a => a.name.toLowerCase() === selectedAuthor.toLowerCase())) {
+                    selectedAuthor = null;
+                }
+
+                renderSidebarAuthors();
+            } catch (e) {
+                authorsListEl.innerHTML = `<div style="padding: 10px; color: var(--danger); font-size: 12px;">Lỗi tải tác giả</div>`;
+            }
         }
 
-        // Đọc từ khóa tìm kiếm ban đầu từ URL Query (nếu người dùng chuyển từ trang khác sang)
-        const urlParams = new URLSearchParams(window.location.search);
-        const initialQuery = urlParams.get('q') || urlParams.get('s');
-        const searchInput = document.getElementById('inputQuickSearch');
+        function renderSidebarGenres() {
+            const filterText = (filterGenreInput?.value || '').trim().toLowerCase();
+            let list = allGenres;
+            if (filterText) {
+                list = list.filter(g => g.name.toLowerCase().includes(filterText));
+            }
 
-        if (initialQuery && searchInput) {
-            searchQuery = initialQuery;
-            searchInput.value = initialQuery;
+            const isAllActive = !selectedGenre;
+            let html = `
+                <div class="sidebar-item ${isAllActive ? 'active' : ''}" onclick="selectGenre(null)">
+                    <span class="sidebar-item-name">Tất cả thể loại</span>
+                </div>
+            `;
+
+            if (list.length === 0) {
+                html += `<div style="padding: 8px 10px; font-size: 12px; color: var(--text-dim);">Không có thể loại nào</div>`;
+            } else {
+                html += list.map(g => {
+                    const isActive = selectedGenre && selectedGenre.toLowerCase() === g.name.toLowerCase();
+                    const count = g.comic_count || 0;
+                    return `
+                        <div class="sidebar-item ${isActive ? 'active' : ''}" onclick="selectGenre('${g.name.replace(/'/g, "\\'")}')">
+                            <span class="sidebar-item-name" title="${g.name}">${g.name}</span>
+                            <span class="sidebar-count-pill">${count}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            genresListEl.innerHTML = html;
         }
 
-        // Lắng nghe sự kiện gõ phím trên ô tìm kiếm nhanh (kèm Debounce 300ms)
+        function renderSidebarAuthors() {
+            const filterText = (filterAuthorInput?.value || '').trim().toLowerCase();
+            let list = allAuthors;
+            if (filterText) {
+                list = list.filter(a => a.name.toLowerCase().includes(filterText));
+            }
+
+            const isAllActive = !selectedAuthor;
+            let html = `
+                <div class="sidebar-item ${isAllActive ? 'active' : ''}" onclick="selectAuthor(null)">
+                    <span class="sidebar-item-name">Tất cả tác giả</span>
+                </div>
+            `;
+
+            if (list.length === 0) {
+                html += `<div style="padding: 8px 10px; font-size: 12px; color: var(--text-dim);">Không có tác giả nào</div>`;
+            } else {
+                html += list.map(a => {
+                    const isActive = selectedAuthor && selectedAuthor.toLowerCase() === a.name.toLowerCase();
+                    const count = a.comic_count || 0;
+                    return `
+                        <div class="sidebar-item ${isActive ? 'active' : ''}" onclick="selectAuthor('${a.name.replace(/'/g, "\\'")}')">
+                            <span class="sidebar-item-name" title="${a.name}">${a.name}</span>
+                            <span class="sidebar-count-pill">${count}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            authorsListEl.innerHTML = html;
+        }
+
+        /**
+         * 4. BỘ LỌC TƯƠNG TÁC
+         */
+        function selectGenre(genreName) {
+            selectedGenre = genreName;
+            renderSidebarGenres();
+            loadComics();
+        }
+
+        function selectAuthor(authorName) {
+            selectedAuthor = authorName;
+            renderSidebarAuthors();
+            loadComics();
+        }
+
+        function clearSearch() {
+            searchQuery = '';
+            if (searchInput) searchInput.value = '';
+            loadComics();
+        }
+
+        function clearAllFilters() {
+            selectedGenre = null;
+            selectedAuthor = null;
+            searchQuery = '';
+            if (searchInput) searchInput.value = '';
+            renderSidebarGenres();
+            renderSidebarAuthors();
+            loadComics();
+        }
+
+        function doSearch() {
+            searchQuery = searchInput.value.trim();
+            loadComics();
+        }
+
+        /**
+         * 5. TÌM TRUYỆN BẰNG ID VÀ HIỂN THỊ XEM TRƯỚC
+         */
+        function openPreviewModal() {
+            const modal = document.getElementById('modal-preview-comic');
+            if (modal) modal.classList.add('active');
+        }
+
+        function closePreviewModal() {
+            const modal = document.getElementById('modal-preview-comic');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function showPreviewModal(preview) {
+            const bodyEl = document.getElementById('preview-modal-body');
+            const actionsEl = document.getElementById('preview-modal-actions');
+            if (!bodyEl || !actionsEl) return;
+
+            const titleSafe = (preview.title || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const coverUrl = preview.local_cover_filename 
+                ? api.getCoverUrl(preview.local_cover_filename) 
+                : (preview.cover_url || 'assets/rem.jpg');
+
+            let authorsStr = 'Chưa rõ';
+            if (preview.authors && Array.isArray(preview.authors) && preview.authors.length > 0) {
+                authorsStr = preview.authors.join(', ');
+            } else if (preview.author) {
+                authorsStr = preview.author;
+            }
+
+            let genresHtml = '<span style="color: var(--text-dim); font-size: 12px;">Không có thể loại</span>';
+            if (preview.genres && Array.isArray(preview.genres) && preview.genres.length > 0) {
+                genresHtml = preview.genres.map(g => `<span class="tag-chip">${g}</span>`).join(' ');
+            }
+
+            const statusBadge = preview.is_already_added
+                ? `<span style="font-size: 12px; font-weight: 600; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); padding: 3px 8px; border-radius: 6px;">Đã có trong thư viện</span>`
+                : `<span style="font-size: 12px; font-weight: 600; background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); padding: 3px 8px; border-radius: 6px;">Chưa có trong thư viện</span>`;
+
+            bodyEl.innerHTML = `
+                <div style="display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start;">
+                    <div style="width: 120px; flex-shrink: 0;">
+                        <img src="${coverUrl}" alt="${titleSafe}" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); display: block;" referrerpolicy="no-referrer" onerror="this.src='assets/rem.jpg'">
+                    </div>
+                    <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <span style="font-family: monospace; font-weight: 700; font-size: 13px; color: var(--primary); background: rgba(99, 102, 241, 0.15); padding: 2px 8px; border-radius: 6px;">#${preview.id}</span>
+                            ${statusBadge}
+                        </div>
+                        <h4 style="font-size: 15px; font-weight: 700; color: #ffffff; line-height: 1.4; word-break: break-word;">${preview.title}</h4>
+                        <div style="font-size: 13px; color: var(--text-muted);">
+                            <strong style="color: var(--text-main);">Tác giả:</strong> ${authorsStr}
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-muted);">
+                            <strong style="color: var(--text-main);">Số trang:</strong> ${preview.num_pages || '?'} trang
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size: 12.5px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px;">Thể loại:</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px; max-height: 120px; overflow-y: auto;">
+                        ${genresHtml}
+                    </div>
+                </div>
+            `;
+
+            if (preview.is_already_added) {
+                actionsEl.innerHTML = `
+                    <button type="button" class="btn btn-secondary" onclick="closePreviewModal()">Đóng</button>
+                    <a href="detail.html?id=${preview.existing_comic_id}" class="btn btn-primary">Xem chi tiết truyện</a>
+                `;
+            } else {
+                actionsEl.innerHTML = `
+                    <button type="button" class="btn btn-secondary" onclick="closePreviewModal()">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="btn-confirm-add" onclick="confirmAddFromPreview(${preview.id})">Thêm vào thư viện</button>
+                `;
+            }
+
+            openPreviewModal();
+        }
+
+        async function confirmAddFromPreview(galleryId) {
+            const btn = document.getElementById('btn-confirm-add');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Đang thêm vào thư viện...';
+            }
+
+            try {
+                const newComic = await api.addComicById(galleryId);
+                showToast(`Đã thêm thành công: "${newComic.title}"!`, 'success');
+                closePreviewModal();
+                if (addInput) addInput.value = '';
+                await loadSidebarData();
+                await loadComics();
+            } catch (err) {
+                showToast(err.message || 'Lỗi khi thêm truyện vào thư viện!', 'error');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Thêm vào thư viện';
+                }
+            }
+        }
+
+        async function doFindById() {
+            const rawId = addInput.value.trim();
+            const galleryId = parseInt(rawId, 10);
+
+            if (!galleryId || isNaN(galleryId) || galleryId <= 0) {
+                showToast('Vui lòng nhập mã ID truyện hợp lệ!', 'warning');
+                addInput.focus();
+                return;
+            }
+
+            // Trạng thái đang tìm
+            btnAdd.disabled = true;
+            addInput.disabled = true;
+            btnAdd.textContent = 'Đang tìm...';
+
+            showToast(`Đang tìm thông tin truyện #${galleryId}...`, 'info');
+
+            try {
+                const preview = await api.previewComicById(galleryId);
+                showPreviewModal(preview);
+            } catch (err) {
+                showToast(err.message || 'Không tìm thấy truyện với ID này!', 'error');
+            } finally {
+                btnAdd.disabled = false;
+                addInput.disabled = false;
+                btnAdd.textContent = 'Tìm';
+            }
+        }
+
+        // ==================== LẮNG NGHE SỰ KIỆN ====================
+
+        // Debounce Live Search khi gõ trên ô tìm kiếm
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     searchQuery = e.target.value.trim();
                     loadComics();
-                }, 300);
+                }, 350);
             });
         }
 
-        // Tải danh sách truyện khi trang được mở
+        // Lọc danh sách thể loại trên sidebar
+        if (filterGenreInput) {
+            filterGenreInput.addEventListener('input', renderSidebarGenres);
+        }
+
+        // Lọc danh sách tác giả trên sidebar
+        if (filterAuthorInput) {
+            filterAuthorInput.addEventListener('input', renderSidebarAuthors);
+        }
+
+        // Đóng modal xem trước khi click ra ngoài nền mờ hoặc bấm phím ESC
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('modal-preview-comic');
+            if (e.target === modal) {
+                closePreviewModal();
+            }
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePreviewModal();
+            }
+        });
+
+        // Khởi tạo từ URL params (nếu có)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('q') || urlParams.get('s')) {
+            searchQuery = urlParams.get('q') || urlParams.get('s');
+            if (searchInput) searchInput.value = searchQuery;
+        }
+        if (urlParams.get('genre')) {
+            selectedGenre = urlParams.get('genre');
+        }
+        if (urlParams.get('author')) {
+            selectedAuthor = urlParams.get('author');
+        }
+
+        // Tải trang chủ
+        loadSidebarData();
         loadComics();
     </script>
 </body>

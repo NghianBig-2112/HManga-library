@@ -1,9 +1,5 @@
 fastapi
 uvicorn
 pydantic
-pydantic-settings
-supabase
-python-dotenv
 aiofiles
 httpx
-
