@@ -247,9 +247,10 @@
                 scrollView.innerHTML = '<div style="padding:40px; color:var(--text-dim);">Không tìm thấy trang nào.</div>';
                 return;
             }
-            scrollView.innerHTML = pageUrls.map((url, i) =>
-                `<div class="reader-page-wrapper" id="page-wrapper-${i}" data-page="${i + 1}">
-                    <img src="${url}" 
+            scrollView.innerHTML = pageUrls.map((url, i) => {
+                const src = url.startsWith('http') ? url : `${API_BASE}${url}`;
+                return `<div class="reader-page-wrapper" id="page-wrapper-${i}" data-page="${i + 1}">
+                    <img src="${src}" 
                          alt="Trang ${i + 1}" 
                          data-page="${i + 1}" 
                          class="reading-image" 
@@ -257,8 +258,8 @@
                          referrerpolicy="no-referrer"
                          onload="if(this.naturalWidth&&this.naturalHeight){this.style.aspectRatio=this.naturalWidth+' / '+this.naturalHeight;}"
                          onerror="handleImageFallback(this)">
-                </div>`
-            ).join('');
+                </div>`;
+            }).join('');
         }
 
         /**
@@ -268,7 +269,8 @@
             if (pageUrls.length === 0) return;
             const img = document.getElementById('single-page-img');
             img.dataset.triedExts = '';
-            img.src = pageUrls[currentPageIndex];
+            const curUrl = pageUrls[currentPageIndex];
+            img.src = curUrl.startsWith('http') ? curUrl : `${API_BASE}${curUrl}`;
             img.alt = `Trang ${currentPageIndex + 1}`;
             img.setAttribute('data-page', currentPageIndex + 1);
             img.style.display = 'block';

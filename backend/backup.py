@@ -23,8 +23,9 @@ import aiofiles
 from database import get_db as get_db_connection
 
 # Đường dẫn file
-DATA_CACHE_DIR = Path(__file__).parent / "data_cache"
-BACKUP_FILE = DATA_CACHE_DIR / "backup.json"
+DATA_DIR = Path(__file__).parent / "data"
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+BACKUP_FILE = DATA_DIR / "backup.json"
 COVER_DIR = Path(__file__).parent.parent / "frontend" / "assets"
 
 
@@ -129,7 +130,7 @@ def save_backup_file(filepath: Path = BACKUP_FILE) -> str:
     """
     Xuất dữ liệu và lưu vào file backup.json trên đĩa.
     """
-    DATA_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
     data = export_library_data()
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
@@ -137,7 +138,7 @@ def save_backup_file(filepath: Path = BACKUP_FILE) -> str:
 
 
 async def _download_cover_if_missing(cover_filename: str, base_url: str):
-    """Tải lại ảnh bìa nếu file ảnh chưa tồn tại trên máy."""
+    """Tải lại ảnh bìa nếu file ảnh chưa tồn tại trên máy (vượt qua bộ chặn ISP)."""
     if not cover_filename or not base_url:
         return
     COVER_DIR.mkdir(parents=True, exist_ok=True)
@@ -146,15 +147,9 @@ async def _download_cover_if_missing(cover_filename: str, base_url: str):
         return
 
     try:
-        async with httpx.AsyncClient(timeout=15.0) as client:
-            headers = {
-                "User-Agent": "Mozilla/5.0",
-                "Referer": "https://nhentai.net/"
-            }
-            res = await client.get(base_url, headers=headers)
-            if res.status_code == 200:
-                async with aiofiles.open(cover_path, "wb") as f:
-                    await f.write(res.content)
+        from nhentai import get_nhentai_image_proxy_data
+        data, _ = get_nhentai_image_proxy_data(base_url)
+        cover_path.write_bytes(data)
     except Exception as e:
         print(f"[Backup] Khong the tai lai anh bia {cover_filename}: {e}")
 

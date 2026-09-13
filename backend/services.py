@@ -5,6 +5,8 @@ Toàn bộ business logic cho Comics, Chapters, Genres, Authors, Images.
 """
 
 import re
+import shutil
+import urllib.parse
 from pathlib import Path
 from fastapi import HTTPException
 import httpx
@@ -17,6 +19,7 @@ from nhentai import (
     fetch_nhentai_gallery,
     fetch_nhentai_explore,
     fetch_nhentai_online_pages,
+    get_nhentai_image_proxy_data,
 )
 from backup import (
     save_backup_file,
@@ -696,89 +699,43 @@ def search_comics(q: str = None, genre: str = None, author: str = None):
 
 # ==================== IMAGES (NỘI BỘ) ====================
 
+def get_nhentai_image_proxy_service(url: str) -> tuple[bytes, str]:
+    """Tải ảnh proxy từ NHentai trực tiếp vào bộ nhớ RAM (0 byte ổ đĩa)."""
+    return get_nhentai_image_proxy_data(url)
+
+
 async def download_cover(url: str, comic_id: int):
-    """Tải ảnh bìa từ URL về frontend/assets/ và cập nhật DB."""
+    """Tải ảnh bìa từ URL về frontend/assets/ và cập nhật DB (bỏ qua chặn ISP)."""
     COVER_DIR.mkdir(parents=True, exist_ok=True)
 
-    parts = [p for p in url.split("/") if p]
-    if len(parts) < 2:
-        raise HTTPException(status_code=400, detail="Invalid URL format")
+    # Nếu URL là proxy nội bộ, trích xuất URL gốc
+    clean_url = url
+    if "image-proxy" in url:
+        parsed_q = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
+        if "url" in parsed_q:
+            clean_url = parsed_q["url"][0]
 
-    gallery_id = parts[-2]
-
-    # Tạo URL trang 1 chất lượng cao
-    def to_page_one(u, high_res=True):
-        clean = re.sub(r'\.(jpg|jpeg|png|webp)\.webp$', '.webp', u.strip(), flags=re.IGNORECASE)
-        m = re.search(r'^(.*\/)(\d+)([a-zA-Z]*)(\.\w+)(\?.*)?$', clean)
-        if m:
-            prefix = m.group(1)
-            suffix = m.group(3) or ''
-            ext = m.group(4)
-            if high_res and suffix.lower() == 't':
-                suffix = ''
-            result = f"{prefix}1{suffix}{ext}"
-            if high_res:
-                result = re.sub(r'://t(\d*)\.nhentai\.net/', r'://i\1.nhentai.net/', result)
-            return result
-        return u
-
-    exts = ["webp", "jpg", "png", "jpeg"]
-    high_res = to_page_one(url, True)
-    thumb = to_page_one(url, False)
-
-    urls_to_try = []
-    for ext in exts:
-        u = re.sub(r'\.\w+(\?.*)?$', f'.{ext}', high_res)
-        if u not in urls_to_try:
-            urls_to_try.append(u)
-    for ext in exts:
-        u = re.sub(r'\.\w+(\?.*)?$', f'.{ext}', thumb)
-        if u not in urls_to_try:
-            urls_to_try.append(u)
+    parts = [p for p in clean_url.split("/") if p]
+    gallery_id = parts[-2] if len(parts) >= 2 else str(comic_id)
 
     try:
-        async with httpx.AsyncClient(timeout=15.0) as client:
-            parsed = urlparse(url)
-            headers = {
-                "User-Agent": "Mozilla/5.0",
-                "Referer": f"https://{parsed.netloc}/" if parsed.netloc else "https://nhentai.net/"
-            }
-
-            response = None
-            successful_url = None
-            for target in urls_to_try:
-                try:
-                    res = await client.get(target, headers=headers)
-                    if res.status_code == 200:
-                        response = res
-                        successful_url = target
-                        break
-                except Exception:
-                    pass
-
-            if not response or response.status_code != 200:
-                raise HTTPException(status_code=400, detail="Cannot download cover image")
-
-            m_ext = re.search(r'\.([a-zA-Z0-9]+)(\?.*)?$', successful_url)
-            actual_ext = m_ext.group(1).lower() if m_ext else "jpg"
-            filename = f"{gallery_id}.{actual_ext}"
-            filepath = COVER_DIR / filename
-
-            async with aiofiles.open(filepath, "wb") as f:
-                await f.write(response.content)
-
-        conn = get_db()
-        try:
-            conn.execute("UPDATE comics SET cover_filename = ? WHERE id = ?", (filename, comic_id))
-            conn.commit()
-        finally:
-            conn.close()
-
-        return {"message": "Cover downloaded", "filename": filename}
-    except HTTPException:
-        raise
+        data, media_type = get_nhentai_image_proxy_data(clean_url)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=400, detail=f"Không thể tải ảnh bìa: {e}")
+
+    actual_ext = "webp" if "webp" in media_type else ("png" if "png" in media_type else "jpg")
+    filename = f"{gallery_id}.{actual_ext}"
+    filepath = COVER_DIR / filename
+    filepath.write_bytes(data)
+
+    conn = get_db()
+    try:
+        conn.execute("UPDATE comics SET cover_filename = ? WHERE id = ?", (filename, comic_id))
+        conn.commit()
+    finally:
+        conn.close()
+
+    return {"message": "Cover downloaded", "filename": filename}
 
 
 # ==================== NHENTAI EXPLORE & ONLINE READER ====================

@@ -11,7 +11,7 @@ Dự án sử dụng **Kiến trúc phân tầng phẳng (Flat Layered Architect
 ```
 HManga-library/
 ├── backend/                       ← FastAPI (Python) — Clean Layered
-│   ├── data_cache/                ← Thư mục lưu dữ liệu SQLite & Backup
+│   ├── data/                      ← Thư mục lưu dữ liệu SQLite & Backup
 │   │   ├── manga.db               ← File cơ sở dữ liệu SQLite duy nhất (tự động tạo)
 │   │   └── backup.json            ← Tự động sao lưu dữ liệu dạng JSON
 │   ├── database.py                ← Kết nối SQLite (get_db) & DDL tạo bảng
@@ -77,8 +77,8 @@ Truy cập: **http://localhost:8000** (hoặc `http://127.0.0.1:8000`)
 ---
 
 ## 🔄 Sao lưu dữ liệu
-Toàn bộ dữ liệu của bạn nằm trong file `backend/data_cache/manga.db` và được tự động backup ra `backend/data_cache/backup.json`:
-- Sao chép file: `backend/data_cache/manga.db` (hoặc `backup.json`)
+Toàn bộ dữ liệu của bạn nằm trong file `backend/data/manga.db` và được tự động backup ra `backend/data/backup.json`:
+- Sao chép file: `backend/data/manga.db` (hoặc `backup.json`)
 - Sao chép thư mục ảnh bìa: `frontend/assets/`
 
 ---

@@ -7,8 +7,10 @@ Khởi tạo và quản lý kết nối cơ sở dữ liệu SQLite cục bộ.
 import sqlite3
 from pathlib import Path
 
-# Đường dẫn đến file cơ sở dữ liệu SQLite
-DB_PATH = Path(__file__).parent / "data_cache" / "manga.db"
+# Đường dẫn đến file cơ sở dữ liệu SQLite (thư mục dữ liệu vĩnh viễn, không phải cache)
+DATA_DIR = Path(__file__).parent / "data"
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+DB_PATH = DATA_DIR / "manga.db"
 
 
 def get_db() -> sqlite3.Connection:

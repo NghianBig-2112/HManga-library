@@ -30,7 +30,8 @@ out/
 *.db
 *.sqlite
 *.sqlite3
-!backend/data_cache/backup.json
+backend/data/*.db
+!backend/data/backup.json
 
 # Bỏ qua ảnh bìa truyện tải về (chỉ giữ lại ảnh giao diện tĩnh)
 frontend/assets/*

@@ -5,6 +5,7 @@ Tất cả routes API và cấu hình server.
 """
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -149,6 +150,20 @@ def nhentai_explore(page: int = 1, sort: str = "date", q: str = None):
 @app.get("/api/nhentai/gallery/{gallery_id}/pages")
 def nhentai_gallery_pages(gallery_id: int):
     return services.get_nhentai_online_gallery_service(gallery_id)
+
+
+@app.get("/api/nhentai/image-proxy")
+def nhentai_image_proxy(url: str):
+    data, media_type = services.get_nhentai_image_proxy_service(url)
+    return Response(
+        content=data,
+        media_type=media_type,
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+            "Expires": "0"
+        }
+    )
 
 
 # ==================== STATIC FILES ====================

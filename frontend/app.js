@@ -295,6 +295,15 @@ const api = {
 // ==================== 4. IMAGE FALLBACK ====================
 function handleImageFallback(img, onFinalFail) {
     if (!img || !img.src) return;
+    if (img.src.includes('rem.jpg')) return;
+
+    // Nếu là URL proxy nội bộ gặp lỗi, chuyển ngay về ảnh mặc định Rem
+    if (img.src.includes('/api/nhentai/image-proxy')) {
+        img.onerror = null;
+        img.src = 'assets/rem.jpg';
+        if (typeof onFinalFail === 'function') onFinalFail(img);
+        return;
+    }
     
     const candidateExts = ['webp', 'jpg', 'png', 'jpeg'];
     let tried = (img.dataset.triedExts || '').split(',').filter(Boolean);
