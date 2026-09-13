@@ -4,8 +4,8 @@ Pydantic Models
 Tất cả schema request/response cho API.
 """
 
-from typing import Optional, List
-from pydantic import BaseModel, model_validator
+from typing import Optional
+from pydantic import BaseModel
 
 
 # ==================== COMICS ====================

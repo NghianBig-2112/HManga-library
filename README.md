@@ -27,7 +27,6 @@ HManga-library/
 │   ├── index.html                 ← Trang chủ: Header đa năng + Bố cục 2 cột (Sidebar & Truyện)
 │   ├── detail.html                ← Chi tiết truyện & Quản lý Chapter (Thêm/Sửa/Xóa chapter, Xóa truyện)
 │   ├── reader.html                ← Trình đọc truyện (Webtoon cuộn dọc / Manga từng trang)
-│   ├── backup.html                ← Trang sao lưu & phục hồi cơ sở dữ liệu
 │   ├── style.css                  ← Toàn bộ stylesheet giao diện Dark Theme hiện đại
 │   └── app.js                     ← API Client, Toast, Confirm modal dùng chung
 └── README.md
@@ -89,8 +88,7 @@ Toàn bộ dữ liệu của bạn nằm trong file `backend/data_cache/manga.db
 ### 1. Trang chủ thông minh (`/index.html`)
 - **Header Đa Năng:**
   - Ô tìm kiếm truyện (Live search hoặc nhấn nút Tìm / Enter).
-  - Ô nhập ID truyện (VD: `524984`) + Nút **Thêm**: tự động cào thông tin, tạo Chapter 1 và tải ảnh bìa về máy ngay tức thì.
-  - Nút truy cập nhanh trang Sao lưu.
+  - Ô nhập ID truyện (VD: `524984`) + Nút **Tìm**: xem trước thông tin truyện, sau đó thêm vào thư viện nếu muốn.
 - **Bố cục 2 Cột (2-Column Layout):**
   - **Cột trái (Sidebar):** Danh mục Thể loại và Tác giả kèm số lượng truyện; lọc truyện ngay chỉ với một cú nhấp chuột.
   - **Cột phải (Lưới truyện):** Hiển thị danh sách truyện, số lượng và các tag bộ lọc đang áp dụng kèm nút xóa lọc nhanh.
@@ -106,9 +104,9 @@ Toàn bộ dữ liệu của bạn nằm trong file `backend/data_cache/manga.db
 - Chỉnh sửa số thứ tự / tiêu đề chapter hoặc xóa chapter.
 - Xóa bộ truyện (tự động dọn dẹp cơ sở dữ liệu và xóa file ảnh bìa local).
 
-### 4. Sao lưu & Phục hồi (`/backup.html`)
-- Tải file sao lưu JSON về máy tính.
-- Phục hồi cơ sở dữ liệu từ file sao lưu có sẵn hoặc upload file JSON lên hệ thống.
+### 4. Sao lưu tự động
+- Mỗi khi thêm/xóa truyện hoặc chương, hệ thống tự động xuất file `backup.json`.
+- Khi clone repo mới về và khởi chạy server, nếu database trống, hệ thống tự khôi phục dữ liệu từ `backup.json` và tải lại ảnh bìa.
 
 
 ---
@@ -120,6 +118,8 @@ Toàn bộ dữ liệu của bạn nằm trong file `backend/data_cache/manga.db
 | `comics` | Thông tin bộ truyện (tên, tác giả, cover, gallery_id, source_url) |
 | `genres` | Danh sách thể loại (UNIQUE name) |
 | `comic_genres` | Bảng liên kết nhiều-nhiều giữa truyện và thể loại (`ON DELETE CASCADE`) |
+| `authors` | Danh sách tác giả (UNIQUE name) |
+| `comic_authors` | Bảng liên kết nhiều-nhiều giữa truyện và tác giả (`ON DELETE CASCADE`) |
 | `chapters` | Chương truyện (`base_url` + `start_page` + `end_page`) |
 
 ---

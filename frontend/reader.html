@@ -132,20 +132,6 @@
                     } catch {}
                 }
 
-                // Fallback scan across comics if needed
-                if (!foundComic) {
-                    const allComics = await api.getComics();
-                    for (const c of allComics) {
-                        const detail = await api.getComic(c.id);
-                        const ch = detail.chapters?.find(item => item.id === chapterId);
-                        if (ch) {
-                            foundComic = detail;
-                            foundChapter = ch;
-                            break;
-                        }
-                    }
-                }
-
                 if (foundComic) {
                     comicId = foundComic.id;
                     document.getElementById('comic-header-title').textContent = foundComic.title;
@@ -168,7 +154,7 @@
                     }
 
                     // Setup Next Chapter
-                    if (curIndex < sortedChaps.length - 1) {
+                    if (curIndex >= 0 && curIndex < sortedChaps.length - 1) {
                         nextChapterId = sortedChaps[curIndex + 1].id;
                         document.getElementById('header-next-chap').style.display = 'inline-flex';
                         document.getElementById('header-next-chap').onclick = () => { window.location.href = `reader.html?id=${nextChapterId}&comic_id=${comicId}`; };
@@ -316,6 +302,7 @@
         // 3. Lăn con chuột (Mouse Wheel) để chuyển trang khi ở chế độ từng trang
         window.addEventListener('wheel', (e) => {
             if (currentMode !== 'page') return;
+            if (document.getElementById('global-confirm-modal')?.classList.contains('active')) return;
             e.preventDefault(); // Ngăn cuộn trang mặc định
 
             if (isWheelThrottled) return;
@@ -334,7 +321,13 @@
         // 4. Phím mũi tên trên bàn phím
         window.addEventListener('keydown', (e) => {
             if (currentMode !== 'page') return;
-            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+            if (document.getElementById('global-confirm-modal')?.classList.contains('active')) return;
+            if (e.key === ' ') {
+                e.preventDefault();
+                goToNextPage();
+                return;
+            }
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                 goToNextPage();
             } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                 goToPrevPage();

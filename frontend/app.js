@@ -294,19 +294,19 @@ function renderComicCard(comic) {
     const genresHtml = (comic.genres || []).slice(0, 3).map(g =>
         `<span class="tag-chip">${g}</span>`
     ).join('') + ((comic.genres && comic.genres.length > 3) ? `<span class="tag-chip">+${comic.genres.length - 3}</span>` : '');
-    const titleSafe = (comic.title || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    const titleAttr = (comic.title || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
     return `
         <div class="comic-card" onclick="window.location.href='detail.html?id=${comic.id}'" style="cursor: pointer;">
             <div class="card-thumb-wrapper">
                 ${comic.gallery_id ? `<span class="card-id-badge">${comic.gallery_id}</span>` : ''}
-                <button type="button" class="btn-card-delete" onclick="handleDeleteComicCard(event, ${comic.id}, '${titleSafe}')" title="Xóa bộ truyện này">
+                <button type="button" class="btn-card-delete" data-comic-id="${comic.id}" data-title="${titleAttr}" onclick="handleDeleteComicCard(event)" title="Xóa bộ truyện này">
                     Xóa
                 </button>
-                <img src="${coverUrl}" alt="${titleSafe}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='assets/rem.jpg'">
+                <img src="${coverUrl}" alt="${titleAttr}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='assets/rem.jpg'">
             </div>
             <div class="card-body">
-                <div class="card-title" title="${titleSafe}">${comic.title}</div>
+                <div class="card-title" title="${titleAttr}">${comic.title}</div>
                 <div class="card-author">${comic.author || 'Chưa rõ tác giả'}</div>
                 <div class="card-tags">${genresHtml}</div>
             </div>
@@ -319,9 +319,12 @@ function renderComicCard(comic) {
  * Xóa truyện từ thẻ card — hàm dùng chung cho tất cả các trang.
  * Mỗi trang cần định nghĩa hàm loadComics() hoặc tương đương để refresh danh sách.
  */
-function handleDeleteComicCard(event, comicId, title) {
+function handleDeleteComicCard(event) {
     event.stopPropagation();
     event.preventDefault();
+    const btn = event.currentTarget;
+    const comicId = parseInt(btn.dataset.comicId, 10);
+    const title = btn.dataset.title || 'bộ truyện này';
     showConfirmModal({
         title: 'Xác nhận xóa truyện',
         message: `Bạn có chắc chắn muốn xóa bộ truyện <b>"${title}"</b> khỏi thư viện không?<br>Hành động này không thể hoàn tác!`,

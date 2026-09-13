@@ -250,11 +250,11 @@ def restore_backup_data(data: dict, redownload_covers: bool = True) -> dict:
             # Khôi phục các chương
             chapters = c.get("chapters", [])
             for ch in chapters:
-                ch_num = float(ch.get("chapter_number", 1.0))
+                ch_num = float(ch.get("chapter_number") or 1.0)
                 ch_title = ch.get("title") or f"Chương {int(ch_num) if ch_num == int(ch_num) else ch_num}"
                 base_url = ch.get("base_url") or ""
-                start_p = int(ch.get("start_page", 1))
-                end_p = int(ch.get("end_page", 1))
+                start_p = int(ch.get("start_page") or 1)
+                end_p = int(ch.get("end_page") or start_p or 1)
 
                 # Kiểm tra chương trùng
                 ch_exists = conn.execute(
@@ -269,9 +269,11 @@ def restore_backup_data(data: dict, redownload_covers: bool = True) -> dict:
                     )
                     restored_chapters += 1
 
-                # Chuẩn bị danh sách ảnh bìa cần tải
-                if redownload_covers and cover_filename and base_url:
-                    covers_to_download.append((cover_filename, base_url))
+            # Chuẩn bị danh sách ảnh bìa cần tải (chỉ thêm 1 lần cho mỗi truyện)
+            if redownload_covers and cover_filename and chapters:
+                first_base_url = chapters[0].get("base_url") or ""
+                if first_base_url:
+                    covers_to_download.append((cover_filename, first_base_url))
 
         conn.commit()
     finally:
@@ -280,8 +282,12 @@ def restore_backup_data(data: dict, redownload_covers: bool = True) -> dict:
     # Tải lại ảnh bìa nếu thiếu (chạy ngầm bất đồng bộ)
     if redownload_covers and covers_to_download:
         try:
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = None
+
+            if loop and loop.is_running():
                 for c_file, b_url in covers_to_download:
                     asyncio.create_task(_download_cover_if_missing(c_file, b_url))
             else:

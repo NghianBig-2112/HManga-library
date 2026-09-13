@@ -11,6 +11,7 @@ import httpx
 import aiofiles
 from urllib.parse import urlparse
 
+import sqlite3
 from database import get_db
 from nhentai import fetch_nhentai_gallery
 from backup import (
@@ -152,45 +153,20 @@ def _chapter_with_total(ch: dict) -> dict:
 
 def get_all_comics(genre: str = None, q: str = None, author: str = None):
     """Lấy danh sách truyện, hỗ trợ tìm kiếm theo tên, lọc theo thể loại và tác giả."""
+    if q or genre or author:
+        return search_comics(q=q, genre=genre, author=author)
+
     conn = get_db()
     try:
-        if q:
-            rows = conn.execute(
-                "SELECT id, title, author, cover_filename, source_url, gallery_id FROM comics WHERE title LIKE ? ORDER BY id ASC",
-                (f"%{q}%",)
-            ).fetchall()
-        else:
-            rows = conn.execute(
-                "SELECT id, title, author, cover_filename, source_url, gallery_id FROM comics ORDER BY id ASC"
-            ).fetchall()
+        rows = conn.execute(
+            "SELECT id, title, author, cover_filename, source_url, gallery_id FROM comics ORDER BY id ASC"
+        ).fetchall()
         comics = [dict(r) for r in rows]
         if not comics:
             return []
 
         _attach_genres(conn, comics)
         _attach_authors(conn, comics)
-
-        if genre:
-            if isinstance(genre, list):
-                genre_list = [g.strip().lower() for g in genre if g and g.strip()]
-            else:
-                genre_list = [g.strip().lower() for g in str(genre).split(",") if g.strip()]
-            if genre_list:
-                comics = [
-                    c for c in comics
-                    if all(
-                        any(g == cg.lower() for cg in c.get("genres", []))
-                        for g in genre_list
-                    )
-                ]
-
-        if author:
-            clean_author = author.strip().lower()
-            comics = [
-                c for c in comics
-                if any(a.lower() == clean_author for a in c.get("authors", []))
-            ]
-
         return comics
     finally:
         conn.close()
@@ -422,12 +398,15 @@ def create_chapter_by_id(comic_id: int, gallery_id: int, chapter_number: float =
         if not title:
             title = f"Chương {int(chapter_number) if chapter_number == int(chapter_number) else chapter_number}"
 
-        cur = conn.execute(
-            "INSERT INTO chapters (comic_id, chapter_number, title, base_url, start_page, end_page) VALUES (?, ?, ?, ?, ?, ?)",
-            (comic_id, float(chapter_number), title, base_url, 1, num_pages)
-        )
-        new_id = cur.lastrowid
-        conn.commit()
+        try:
+            cur = conn.execute(
+                "INSERT INTO chapters (comic_id, chapter_number, title, base_url, start_page, end_page) VALUES (?, ?, ?, ?, ?, ?)",
+                (comic_id, float(chapter_number), title, base_url, 1, num_pages)
+            )
+            new_id = cur.lastrowid
+            conn.commit()
+        except sqlite3.IntegrityError:
+            raise HTTPException(status_code=400, detail=f"Chương số {chapter_number} đã tồn tại trong bộ truyện này!")
 
         row = conn.execute("SELECT * FROM chapters WHERE id = ?", (new_id,)).fetchone()
         ch = dict(row)
@@ -449,8 +428,11 @@ def update_chapter(chapter_id: int, chapter_data):
         if update_dict:
             clauses = [f"{k} = ?" for k in update_dict]
             values = list(update_dict.values()) + [chapter_id]
-            conn.execute(f"UPDATE chapters SET {', '.join(clauses)} WHERE id = ?", values)
-            conn.commit()
+            try:
+                conn.execute(f"UPDATE chapters SET {', '.join(clauses)} WHERE id = ?", values)
+                conn.commit()
+            except sqlite3.IntegrityError:
+                raise HTTPException(status_code=400, detail="Số thứ tự chapter này đã bị trùng trong bộ truyện!")
 
         row = conn.execute("SELECT * FROM chapters WHERE id = ?", (chapter_id,)).fetchone()
         if not row:
@@ -611,7 +593,7 @@ def search_comics(q: str = None, genre: str = None, author: str = None):
         params = []
 
         if q:
-            clean_q = q.strip().replace(',', '').replace('(', '').replace(')', '')
+            clean_q = q.strip()
             where.append("(c.title LIKE ? OR c.cover_filename LIKE ? OR c.source_url LIKE ? OR c.gallery_id LIKE ?)")
             p = f"%{clean_q}%"
             params.extend([p, p, p, p])

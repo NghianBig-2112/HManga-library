@@ -48,7 +48,6 @@ def preview_comic(gallery_id: int):
 def get_comic(comic_id: int):
     result = services.get_comic_detail(comic_id)
     if not result:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Comic not found")
     return result
 
@@ -62,7 +61,6 @@ async def add_comic_by_id(data: ComicAddByIdRequest):
 def delete_comic(comic_id: int):
     success = services.delete_comic(comic_id)
     if not success:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Comic not found")
     return {"message": "Comic deleted successfully"}
 
@@ -82,7 +80,6 @@ def add_chapter_by_id(comic_id: int, data: ChapterAddByIdRequest):
 def get_chapter(chapter_id: int):
     result = services.get_chapter_by_id(chapter_id)
     if not result:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Chapter not found")
     return result
 
@@ -91,7 +88,6 @@ def get_chapter(chapter_id: int):
 def update_chapter(chapter_id: int, data: ChapterUpdate):
     result = services.update_chapter(chapter_id, data)
     if not result:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Chapter not found")
     return result
 

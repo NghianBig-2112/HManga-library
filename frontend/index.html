@@ -145,8 +145,7 @@
         const searchInput = document.getElementById('headerSearchInput');
         const addInput = document.getElementById('headerAddInput');
         const btnAdd = document.getElementById('btnHeaderAdd');
-        const btnAddIcon = document.getElementById('btnHeaderAddIcon');
-        const btnAddText = document.getElementById('btnHeaderAddText');
+
 
         const comicGrid = document.getElementById('comic-grid');
         const comicCountEl = document.getElementById('comic-count');
@@ -200,6 +199,7 @@
                 comicGrid.innerHTML = comics.map(renderComicCard).join('');
 
             } catch (err) {
+                comicCountEl.textContent = 'Lỗi kết nối';
                 comicGrid.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 60px 0; color: var(--danger);">
                         Không thể kết nối đến máy chủ: ${err.message}. Đảm bảo server đang chạy trên cổng 8000!
@@ -404,6 +404,8 @@
             selectedAuthor = null;
             searchQuery = '';
             if (searchInput) searchInput.value = '';
+            if (filterGenreInput) filterGenreInput.value = '';
+            if (filterAuthorInput) filterAuthorInput.value = '';
             renderSidebarGenres();
             renderSidebarAuthors();
             loadComics();
@@ -590,17 +592,20 @@
             searchQuery = urlParams.get('q') || urlParams.get('s');
             if (searchInput) searchInput.value = searchQuery;
         }
-        if (urlParams.get('genre')) {
-            const rawGenres = urlParams.get('genre');
-            selectedGenres = rawGenres.split(',').map(g => g.trim()).filter(Boolean);
+        const genreParam = urlParams.get('genre') || urlParams.get('genres');
+        if (genreParam) {
+            selectedGenres = genreParam.split(',').map(g => g.trim()).filter(Boolean);
         }
-        if (urlParams.get('author')) {
-            selectedAuthor = urlParams.get('author');
+        if (urlParams.get('author') || urlParams.get('authors')) {
+            selectedAuthor = urlParams.get('author') || urlParams.get('authors');
         }
 
-        // Tải trang chủ
-        loadSidebarData();
-        loadComics();
+        // Tải trang chủ tuần tự để đảm bảo dữ liệu thể loại/tác giả đồng bộ trước khi load truyện
+        async function initPage() {
+            await loadSidebarData();
+            await loadComics();
+        }
+        initPage();
     </script>
 </body>
 </html>
