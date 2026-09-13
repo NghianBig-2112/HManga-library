@@ -94,6 +94,10 @@
                 <img src="assets/rem.jpg" alt="Rem" class="nav-logo">
                 <span class="nav-brand-text">HManga</span>
             </a>
+            <div class="nav-menu-links" style="display: flex; align-items: center; gap: 8px;">
+                <a href="index.html" class="nav-menu-btn">Thư viện</a>
+                <a href="discover.html" class="nav-menu-btn">Khám phá NHentai</a>
+            </div>
         </div>
     </nav>
 
@@ -118,31 +122,67 @@
     <div id="modal-add-chapter" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <h3 class="modal-title">Thêm Chapter Mới (Chỉ cần nhập ID)</h3>
+                <h3 class="modal-title">Thêm Chapter Mới</h3>
                 <button type="button" class="modal-close" onclick="closeModal('modal-add-chapter')">&times;</button>
             </div>
+
+            <!-- Tab chuyển chế độ: Tách từ truyện này / Nhập ID khác -->
+            <div style="display: flex; background: rgba(6, 10, 24, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px; margin-bottom: 18px;">
+                <button type="button" id="tab-add-split" onclick="switchAddChapterMode('split')" class="btn btn-sm" style="flex: 1; background: var(--primary); color: #fff; font-weight: 600; border-radius: 6px;">Tách từ truyện này</button>
+                <button type="button" id="tab-add-nhentai" onclick="switchAddChapterMode('nhentai')" class="btn btn-sm" style="flex: 1; background: transparent; color: var(--text-muted); font-weight: 500; border-radius: 6px;">Nhập ID NHentai khác</button>
+            </div>
+
             <form id="form-add-chapter">
-                <div class="form-group">
-                    <label class="form-label">Mã số ID của Chapter trên NHentai *</label>
-                    <input type="text" inputmode="numeric" pattern="[0-9]*" id="new-chap-gallery-id" class="form-control" placeholder="Ví dụ: 524984" required autofocus>
-                    <div style="margin-top: 6px; font-size: 12px; color: var(--text-dim);">
-                        Hệ thống sẽ tự động lấy toàn bộ số trang và link ảnh từ ID này.
+                <!-- Chế độ 1: Tách từ truyện này (mặc định) -->
+                <div id="add-chap-split-fields">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Số thứ tự Chapter *</label>
+                            <input type="number" id="new-chap-split-num" class="form-control" step="0.5" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tiêu đề Chapter (Tùy chọn)</label>
+                            <input type="text" id="new-chap-split-title" class="form-control" placeholder="Tùy chọn...">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Trang bắt đầu *</label>
+                            <input type="number" id="new-chap-split-start-page" class="form-control" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Trang kết thúc *</label>
+                            <input type="number" id="new-chap-split-end-page" class="form-control" min="1" placeholder="Nhập số trang cuối...">
+                        </div>
+                    </div>
+                    <div id="split-hint-text" style="margin-top: -6px; margin-bottom: 14px; font-size: 12px; color: var(--text-dim);"></div>
+                </div>
+
+                <!-- Chế độ 2: Nhập ID NHentai khác -->
+                <div id="add-chap-nhentai-fields" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Mã số ID của Chapter trên NHentai *</label>
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" id="new-chap-gallery-id" class="form-control" placeholder="Ví dụ: 524984">
+                        <div style="margin-top: 6px; font-size: 12px; color: var(--text-dim);">
+                            Hệ thống sẽ tự động lấy toàn bộ số trang và link ảnh từ ID này.
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Số thứ tự Chapter *</label>
+                            <input type="number" id="new-chap-num" class="form-control" step="0.5" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tiêu đề Chapter (Tùy chọn)</label>
+                            <input type="text" id="new-chap-title" class="form-control" placeholder="Tùy chọn...">
+                        </div>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Số thứ tự Chapter *</label>
-                        <input type="number" id="new-chap-num" class="form-control" step="0.5" min="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Tiêu đề Chapter (Tùy chọn)</label>
-                        <input type="text" id="new-chap-title" class="form-control" placeholder="Tùy chọn...">
-                    </div>
-                </div>
+
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('modal-add-chapter')">Hủy</button>
                     <button type="submit" id="btn-submit-add-chap" class="btn btn-primary">
-                        <span id="btn-add-chap-text">Thêm Chapter</span>
+                        <span id="btn-add-chap-text">Lưu Chapter</span>
                     </button>
                 </div>
             </form>
@@ -293,49 +333,142 @@
             }
         }
         // ==================== THÊM CHAPTER ====================
+        let addChapterMode = 'split'; // 'split' hoặc 'nhentai'
+
+        function switchAddChapterMode(mode) {
+            addChapterMode = mode;
+            const tabSplit = document.getElementById('tab-add-split');
+            const tabNhentai = document.getElementById('tab-add-nhentai');
+            const splitFields = document.getElementById('add-chap-split-fields');
+            const nhentaiFields = document.getElementById('add-chap-nhentai-fields');
+            const btnText = document.getElementById('btn-add-chap-text');
+
+            if (mode === 'split') {
+                tabSplit.style.cssText = 'flex: 1; background: var(--primary); color: #fff; font-weight: 600; border-radius: 6px;';
+                tabNhentai.style.cssText = 'flex: 1; background: transparent; color: var(--text-muted); font-weight: 500; border-radius: 6px;';
+                splitFields.style.display = 'block';
+                nhentaiFields.style.display = 'none';
+                btnText.textContent = 'Lưu Chapter';
+                setTimeout(() => document.getElementById('new-chap-split-end-page')?.focus(), 80);
+            } else {
+                tabNhentai.style.cssText = 'flex: 1; background: var(--primary); color: #fff; font-weight: 600; border-radius: 6px;';
+                tabSplit.style.cssText = 'flex: 1; background: transparent; color: var(--text-muted); font-weight: 500; border-radius: 6px;';
+                nhentaiFields.style.display = 'block';
+                splitFields.style.display = 'none';
+                btnText.textContent = 'Thêm Chapter';
+                setTimeout(() => document.getElementById('new-chap-gallery-id')?.focus(), 80);
+            }
+        }
+
         document.getElementById('btn-open-add-chapter').addEventListener('click', () => {
             const chapters = currentComic?.chapters || [];
             const nextNum = chapters.length > 0 ? Math.max(...chapters.map(c => c.chapter_number || 0)) + 1 : 1;
+
+            // Tìm trang kết thúc của chapter cao nhất hiện tại để gợi ý trang bắt đầu cho chapter mới
+            const sortedChaps = [...chapters].sort((a, b) => a.chapter_number - b.chapter_number);
+            const lastChap = sortedChaps.length > 0 ? sortedChaps[sortedChaps.length - 1] : null;
+            const suggestedStart = lastChap ? (lastChap.end_page || lastChap.start_page || 1) + 1 : 1;
+
+            // Điền sẵn thông tin chế độ tách từ truyện này
+            document.getElementById('new-chap-split-num').value = nextNum;
+            document.getElementById('new-chap-split-title').value = '';
+            document.getElementById('new-chap-split-start-page').value = suggestedStart;
+            document.getElementById('new-chap-split-end-page').value = '';
+
+            const hintEl = document.getElementById('split-hint-text');
+            if (lastChap) {
+                hintEl.textContent = `Gợi ý: Chương ${lastChap.chapter_number} trước đó kết thúc ở trang ${lastChap.end_page || lastChap.start_page}.`;
+            } else {
+                hintEl.textContent = '';
+            }
+
+            // Điền sẵn thông tin chế độ nhập ID NHentai
             document.getElementById('new-chap-num').value = nextNum;
             document.getElementById('new-chap-gallery-id').value = '';
             document.getElementById('new-chap-title').value = '';
 
+            // Mặc định chọn Tách từ truyện này nếu truyện đã có sẵn chapter
+            switchAddChapterMode(chapters.length > 0 ? 'split' : 'nhentai');
+
             openModal('modal-add-chapter');
-            setTimeout(() => document.getElementById('new-chap-gallery-id').focus(), 100);
         });
 
         document.getElementById('form-add-chapter').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const rawId = document.getElementById('new-chap-gallery-id').value.trim();
-            const galleryId = parseInt(rawId, 10);
-            if (!galleryId || isNaN(galleryId) || galleryId <= 0) {
-                showToast('Vui lòng nhập mã ID Chapter hợp lệ!', 'warning');
-                return;
-            }
-
-            const chapterNum = parseFloat(document.getElementById('new-chap-num').value);
-            const title = document.getElementById('new-chap-title').value.trim();
-
             const btnSubmit = document.getElementById('btn-submit-add-chap');
             const btnText = document.getElementById('btn-add-chap-text');
-            btnSubmit.disabled = true;
-            btnText.textContent = 'Đang tải dữ liệu chapter...';
 
-            try {
-                showToast(`Đang lấy dữ liệu từ NHentai cho Chapter #${galleryId}...`, 'info');
-                const newCh = await api.addChapterById(comicId, {
-                    gallery_id: galleryId,
-                    chapter_number: chapterNum,
-                    title: title || undefined
-                });
-                closeModal('modal-add-chapter');
-                showToast(`Đã thêm thành công Chapter ${chapterNum} (${newCh.total_pages || 0} trang)!`, 'success');
-                loadComicDetail();
-            } catch (err) {
-                showToast(err.message, 'error');
-            } finally {
-                btnSubmit.disabled = false;
-                btnText.textContent = 'Thêm Chapter';
+            if (addChapterMode === 'split') {
+                const chapterNum = parseFloat(document.getElementById('new-chap-split-num').value);
+                const title = document.getElementById('new-chap-split-title').value.trim();
+                const startPage = parseInt(document.getElementById('new-chap-split-start-page').value, 10);
+                const endPage = parseInt(document.getElementById('new-chap-split-end-page').value, 10);
+
+                if (isNaN(chapterNum) || chapterNum < 0) {
+                    showToast('Vui lòng nhập số thứ tự chapter hợp lệ!', 'warning');
+                    return;
+                }
+                if (!startPage || isNaN(startPage) || startPage < 1) {
+                    showToast('Trang bắt đầu phải là số lớn hơn hoặc bằng 1!', 'warning');
+                    return;
+                }
+                if (!endPage || isNaN(endPage) || endPage < startPage) {
+                    showToast('Trang kết thúc phải là số hợp lệ và lớn hơn hoặc bằng trang bắt đầu!', 'warning');
+                    document.getElementById('new-chap-split-end-page').focus();
+                    return;
+                }
+
+                btnSubmit.disabled = true;
+                btnText.textContent = 'Đang lưu chapter...';
+
+                try {
+                    const newCh = await api.addChapterInternal(comicId, {
+                        chapter_number: chapterNum,
+                        title: title || undefined,
+                        start_page: startPage,
+                        end_page: endPage
+                    });
+                    closeModal('modal-add-chapter');
+                    showToast(`Đã tạo thành công Chapter ${chapterNum} (từ trang ${startPage} đến ${endPage})!`, 'success');
+                    loadComicDetail();
+                } catch (err) {
+                    showToast(err.message, 'error');
+                } finally {
+                    btnSubmit.disabled = false;
+                    btnText.textContent = 'Lưu Chapter';
+                }
+
+            } else {
+                // Chế độ nhập ID NHentai khác
+                const rawId = document.getElementById('new-chap-gallery-id').value.trim();
+                const galleryId = parseInt(rawId, 10);
+                if (!galleryId || isNaN(galleryId) || galleryId <= 0) {
+                    showToast('Vui lòng nhập mã ID Chapter hợp lệ!', 'warning');
+                    return;
+                }
+
+                const chapterNum = parseFloat(document.getElementById('new-chap-num').value);
+                const title = document.getElementById('new-chap-title').value.trim();
+
+                btnSubmit.disabled = true;
+                btnText.textContent = 'Đang tải dữ liệu chapter...';
+
+                try {
+                    showToast(`Đang lấy dữ liệu từ NHentai cho Chapter #${galleryId}...`, 'info');
+                    const newCh = await api.addChapterById(comicId, {
+                        gallery_id: galleryId,
+                        chapter_number: chapterNum,
+                        title: title || undefined
+                    });
+                    closeModal('modal-add-chapter');
+                    showToast(`Đã thêm thành công Chapter ${chapterNum} (${newCh.total_pages || 0} trang)!`, 'success');
+                    loadComicDetail();
+                } catch (err) {
+                    showToast(err.message, 'error');
+                } finally {
+                    btnSubmit.disabled = false;
+                    btnText.textContent = 'Thêm Chapter';
+                }
             }
         });
 

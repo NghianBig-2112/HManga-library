@@ -35,13 +35,14 @@
             </div>
 
             <!-- Center: Mode Switch (Vertical Scroll / Single Page) -->
-            <div style="display:flex; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:2px; flex-shrink:0;">
-                <button type="button" id="mode-scroll-btn" class="btn btn-sm" style="background:var(--primary); color:#fff;">Cuộn dọc</button>
-                <button type="button" id="mode-page-btn" class="btn btn-sm" style="background:transparent; color:var(--text-muted);">Từng trang</button>
+            <div style="display:flex; background:var(--bg-card); border:1.5px solid rgba(255, 255, 255, 0.35); border-radius:8px; padding:2px; flex-shrink:0;">
+                <button type="button" id="mode-scroll-btn" class="btn btn-sm" style="background:var(--primary); color:#fff; border: 1.5px solid #818cf8;">Cuộn dọc</button>
+                <button type="button" id="mode-page-btn" class="btn btn-sm" style="background:transparent; color:var(--text-muted); border: 1.5px solid transparent;">Từng trang</button>
             </div>
 
-            <!-- Right: Page Counter & Prev / Next Chapter -->
+            <!-- Right: Page Counter & Prev / Next Chapter & Save Online -->
             <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                <button type="button" id="header-save-online" class="btn btn-sm" style="display:none; background: rgba(16, 185, 129, 0.2); border: 1.5px solid #10b981; color: #6ee7b7; font-weight: 600;">Lưu vào máy</button>
                 <span id="header-page-counter" class="page-badge-pill" style="display:none;">1 / 1</span>
                 <button type="button" id="header-prev-chap" class="btn btn-secondary btn-sm" style="display:none;" title="Chương trước">Chương trước</button>
                 <button type="button" id="header-next-chap" class="btn btn-primary btn-sm" style="display:none;" title="Chương sau">Chương sau</button>
@@ -88,6 +89,7 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const chapterId = parseInt(urlParams.get('id'), 10);
+        const onlineGalleryId = parseInt(urlParams.get('gallery_id'), 10);
         
         let currentMode = 'scroll'; // 'scroll' hoặc 'page'
         let pageUrls = [];          // Danh sách link ảnh của chương
@@ -101,11 +103,72 @@
          * Khởi tạo trình đọc truyện
          */
         async function initReader() {
-            if (!chapterId) {
-                document.getElementById('scroll-view').innerHTML = '<div style="text-align:center; padding:60px 0; color:var(--danger);">Mã chapter không hợp lệ!</div>';
+            if (!chapterId && !onlineGalleryId) {
+                document.getElementById('comic-header-title').textContent = 'Lỗi truy cập';
+                document.getElementById('scroll-view').innerHTML = '<div style="text-align:center; padding:60px 0; color:var(--danger);">Mã chapter hoặc ID truyện không hợp lệ!</div>';
                 return;
             }
 
+            if (onlineGalleryId) {
+                // ================= CHẾ ĐỘ ĐỌC ONLINE TỪ NHENTAI =================
+                try {
+                    document.getElementById('comic-header-title').textContent = 'Đang tải thông tin online...';
+                    const gallery = await api.getNhentaiGalleryPages(onlineGalleryId);
+
+                    pageUrls = gallery.pages || [];
+                    document.getElementById('comic-header-title').textContent = gallery.title;
+                    document.getElementById('chapter-header-badge').textContent = `• #${onlineGalleryId} (${gallery.num_pages} trang)`;
+                    document.getElementById('btn-back-detail').href = 'discover.html';
+                    document.getElementById('nav-comic-center').href = 'discover.html';
+                    document.getElementById('nav-comic-center').textContent = 'Khám phá NHentai';
+
+                    // Xử lý nút "Lưu vào máy"
+                    const saveBtn = document.getElementById('header-save-online');
+                    if (saveBtn) {
+                        saveBtn.style.display = 'inline-flex';
+                        if (gallery.is_already_added) {
+                            saveBtn.textContent = 'Đã lưu';
+                            saveBtn.disabled = true;
+                            saveBtn.style.background = 'rgba(220, 38, 38, 0.22)';
+                            saveBtn.style.border = '1.5px solid #ef4444';
+                            saveBtn.style.color = '#fca5a5';
+                            saveBtn.style.cursor = 'default';
+                            saveBtn.style.opacity = '1';
+                        } else {
+                            saveBtn.onclick = async () => {
+                                saveBtn.disabled = true;
+                                saveBtn.textContent = 'Đang lưu...';
+                                try {
+                                    showToast(`Đang thêm #${onlineGalleryId} vào thư viện...`, 'info');
+                                    await api.addComicById(onlineGalleryId);
+                                    showToast('Đã lưu truyện vào thư viện thành công!', 'success');
+                                    saveBtn.textContent = 'Đã lưu';
+                                    saveBtn.style.background = 'rgba(220, 38, 38, 0.22)';
+                                    saveBtn.style.border = '1.5px solid #ef4444';
+                                    saveBtn.style.color = '#fca5a5';
+                                    saveBtn.style.cursor = 'default';
+                                    saveBtn.style.opacity = '1';
+                                } catch (e) {
+                                    showToast(e.message || 'Lỗi lưu truyện', 'error');
+                                    saveBtn.disabled = false;
+                                    saveBtn.textContent = 'Lưu vào máy';
+                                }
+                            };
+                        }
+                    }
+
+                    renderScrollView();
+                    updateSinglePageView();
+                    updateModeUI();
+
+                } catch (err) {
+                    document.getElementById('comic-header-title').textContent = 'Lỗi kết nối NHentai';
+                    document.getElementById('scroll-view').innerHTML = `<div style="text-align:center; padding:60px 0; color:var(--danger);">Không thể tải truyện từ NHentai: ${err.message}</div>`;
+                }
+                return;
+            }
+
+            // ================= CHẾ ĐỘ ĐỌC TRUYỆN TRONG THƯ VIỆN =================
             try {
                 // 1. Fetch page image URLs from Backend
                 pageUrls = await api.getChapterPages(chapterId);

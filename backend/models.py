@@ -22,6 +22,13 @@ class ChapterAddByIdRequest(BaseModel):
     title: Optional[str] = None
 
 
+class ChapterCreateInternal(BaseModel):
+    chapter_number: float
+    title: Optional[str] = None
+    start_page: int = 1
+    end_page: int
+
+
 class ChapterUpdate(BaseModel):
     title: Optional[str] = None
     chapter_number: Optional[float] = None

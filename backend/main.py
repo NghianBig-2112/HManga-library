@@ -12,7 +12,7 @@ from pathlib import Path
 from database import init_db
 from models import (
     ComicAddByIdRequest,
-    ChapterAddByIdRequest, ChapterUpdate,
+    ChapterAddByIdRequest, ChapterCreateInternal, ChapterUpdate,
 )
 import services
 
@@ -76,6 +76,11 @@ def add_chapter_by_id(comic_id: int, data: ChapterAddByIdRequest):
     )
 
 
+@app.post("/api/comics/{comic_id}/chapters")
+def add_chapter_internal(comic_id: int, data: ChapterCreateInternal):
+    return services.create_chapter_from_comic(comic_id, data)
+
+
 @app.get("/api/chapters/{chapter_id}")
 def get_chapter(chapter_id: int):
     result = services.get_chapter_by_id(chapter_id)
@@ -132,6 +137,18 @@ def get_comics_by_author(author_name: str):
 @app.get("/api/search")
 def search(q: str = None, genre: str = None, author: str = None):
     return services.search_comics(q=q, genre=genre, author=author)
+
+
+# ==================== NHENTAI EXPLORE & ONLINE ====================
+
+@app.get("/api/nhentai/explore")
+def nhentai_explore(page: int = 1, sort: str = "date", q: str = None):
+    return services.get_nhentai_explore_service(page=page, sort=sort, q=q)
+
+
+@app.get("/api/nhentai/gallery/{gallery_id}/pages")
+def nhentai_gallery_pages(gallery_id: int):
+    return services.get_nhentai_online_gallery_service(gallery_id)
 
 
 # ==================== STATIC FILES ====================

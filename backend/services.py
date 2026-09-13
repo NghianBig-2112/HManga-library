@@ -13,7 +13,11 @@ from urllib.parse import urlparse
 
 import sqlite3
 from database import get_db
-from nhentai import fetch_nhentai_gallery
+from nhentai import (
+    fetch_nhentai_gallery,
+    fetch_nhentai_explore,
+    fetch_nhentai_online_pages,
+)
 from backup import (
     save_backup_file,
     restore_backup_from_file,
@@ -420,6 +424,54 @@ def create_chapter_by_id(comic_id: int, gallery_id: int, chapter_number: float =
     return ch
 
 
+def create_chapter_from_comic(comic_id: int, data):
+    """Tạo chapter mới tách từ chính bộ truyện hiện tại (kế thừa base_url đã có)."""
+    start_page = int(data.start_page or 1)
+    end_page = int(data.end_page or start_page)
+    if start_page < 1:
+        raise HTTPException(status_code=400, detail="Trang bắt đầu phải lớn hơn hoặc bằng 1!")
+    if end_page < start_page:
+        raise HTTPException(status_code=400, detail="Trang kết thúc phải lớn hơn hoặc bằng trang bắt đầu!")
+
+    conn = get_db()
+    try:
+        check = conn.execute("SELECT id FROM comics WHERE id = ?", (comic_id,)).fetchone()
+        if not check:
+            raise HTTPException(status_code=404, detail=f"Không tìm thấy bộ truyện với ID: {comic_id}")
+
+        ch_row = conn.execute(
+            "SELECT base_url FROM chapters WHERE comic_id = ? AND base_url IS NOT NULL AND base_url != '' ORDER BY id ASC LIMIT 1",
+            (comic_id,)
+        ).fetchone()
+
+        if not ch_row:
+            raise HTTPException(status_code=400, detail="Bộ truyện này chưa có chapter nào để kế thừa đường dẫn ảnh!")
+
+        base_url = ch_row["base_url"]
+        chapter_number = float(data.chapter_number)
+        title = data.title.strip() if data.title and data.title.strip() else f"Chương {int(chapter_number) if chapter_number == int(chapter_number) else chapter_number}"
+
+        try:
+            cur = conn.execute(
+                "INSERT INTO chapters (comic_id, chapter_number, title, base_url, start_page, end_page) VALUES (?, ?, ?, ?, ?, ?)",
+                (comic_id, chapter_number, title, base_url, start_page, end_page)
+            )
+            new_id = cur.lastrowid
+            conn.commit()
+        except sqlite3.IntegrityError:
+            raise HTTPException(status_code=400, detail=f"Chương số {chapter_number} đã tồn tại trong bộ truyện này!")
+
+        row = conn.execute("SELECT * FROM chapters WHERE id = ?", (new_id,)).fetchone()
+        ch = _chapter_with_total(dict(row))
+    finally:
+        conn.close()
+
+    # Tự động sao lưu
+    trigger_auto_backup()
+
+    return ch
+
+
 def update_chapter(chapter_id: int, chapter_data):
     """Cập nhật thông tin chapter."""
     update_dict = {k: v for k, v in chapter_data.model_dump().items() if v is not None}
@@ -727,3 +779,40 @@ async def download_cover(url: str, comic_id: int):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==================== NHENTAI EXPLORE & ONLINE READER ====================
+
+def get_nhentai_explore_service(page: int = 1, sort: str = "date", q: str = None) -> dict:
+    """Lấy danh sách truyện khám phá từ NHentai và đối chiếu với database SQLite."""
+    data = fetch_nhentai_explore(page=page, sort=sort, query=q)
+
+    # Lấy danh sách ID đã lưu trong SQLite
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT id, gallery_id FROM comics WHERE gallery_id IS NOT NULL").fetchall()
+        saved_map = {str(r["gallery_id"]): r["id"] for r in rows if r["gallery_id"]}
+    finally:
+        conn.close()
+
+    for item in data.get("result", []):
+        str_id = str(item.get("id"))
+        item["is_already_added"] = str_id in saved_map
+        item["existing_comic_id"] = saved_map.get(str_id)
+
+    return data
+
+
+def get_nhentai_online_gallery_service(gallery_id: int) -> dict:
+    """Lấy dữ liệu truyện để đọc online trực tiếp không cần lưu vào máy."""
+    data = fetch_nhentai_online_pages(gallery_id)
+
+    conn = get_db()
+    try:
+        row = conn.execute("SELECT id FROM comics WHERE gallery_id = ?", (str(gallery_id),)).fetchone()
+        data["is_already_added"] = row is not None
+        data["existing_comic_id"] = row["id"] if row else None
+    finally:
+        conn.close()
+
+    return data

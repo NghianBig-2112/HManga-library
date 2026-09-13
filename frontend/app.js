@@ -176,6 +176,19 @@ const api = {
         return res.json();
     },
 
+    async addChapterInternal(comicId, data) {
+        const res = await fetch(`${API_BASE}/api/comics/${comicId}/chapters`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.detail || 'Lỗi khi thêm chapter');
+        }
+        return res.json();
+    },
+
     async updateChapter(chapterId, data) {
         const res = await fetch(`${API_BASE}/api/chapters/${chapterId}`, {
             method: 'PUT',
@@ -252,6 +265,29 @@ const api = {
     async getComicsByAuthor(authorName) {
         const res = await fetch(`${API_BASE}/api/authors/${encodeURIComponent(authorName)}/comics`);
         if (!res.ok) throw new Error('Không thể tải danh sách truyện theo tác giả');
+        return res.json();
+    },
+
+    // --- NHENTAI ONLINE EXPLORE & READ ---
+    async getNhentaiExplore(params = {}) {
+        const query = new URLSearchParams();
+        if (params.page) query.set('page', params.page);
+        if (params.sort) query.set('sort', params.sort);
+        if (params.q) query.set('q', params.q);
+        const res = await fetch(`${API_BASE}/api/nhentai/explore?${query.toString()}`);
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể tải danh sách từ NHentai');
+        }
+        return res.json();
+    },
+
+    async getNhentaiGalleryPages(galleryId) {
+        const res = await fetch(`${API_BASE}/api/nhentai/gallery/${galleryId}/pages`);
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể tải thông tin đọc online');
+        }
         return res.json();
     }
 };
