@@ -249,22 +249,10 @@ const api = {
         return res.json();
     },
 
-    async getComicsByGenre(genreId) {
-        const res = await fetch(`${API_BASE}/api/genres/${genreId}/comics`);
-        if (!res.ok) throw new Error('Không thể tải danh sách truyện theo thể loại');
-        return res.json();
-    },
-
     // --- AUTHORS ---
     async getAuthors() {
         const res = await fetch(`${API_BASE}/api/authors`);
         if (!res.ok) throw new Error('Không thể tải danh sách tác giả');
-        return res.json();
-    },
-
-    async getComicsByAuthor(authorName) {
-        const res = await fetch(`${API_BASE}/api/authors/${encodeURIComponent(authorName)}/comics`);
-        if (!res.ok) throw new Error('Không thể tải danh sách truyện theo tác giả');
         return res.json();
     },
 

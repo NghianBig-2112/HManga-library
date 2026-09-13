@@ -6,7 +6,6 @@ Hỗ trợ sao lưu tự động, đồng bộ Git, tải lại ảnh bìa và C
 """
 
 import json
-import sqlite3
 from pathlib import Path
 from datetime import datetime
 import sys
@@ -17,8 +16,6 @@ if sys.stdout and hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     except Exception:
         pass
-import httpx
-import aiofiles
 
 from database import get_db as get_db_connection
 
@@ -344,7 +341,6 @@ def get_backup_info(filepath: Path = BACKUP_FILE) -> dict:
 
 # ==================== CLI USAGE ====================
 if __name__ == "__main__":
-    import sys
     args = sys.argv[1:]
     if not args or args[0] == "export":
         print("[INFO] Đang trích xuất dữ liệu ra file backup.json...")

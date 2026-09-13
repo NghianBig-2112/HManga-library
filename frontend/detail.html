@@ -4,10 +4,9 @@
   Nhiệm vụ:
   1. Hiển thị thông tin tổng quan của bộ truyện: Ảnh bìa, Tên truyện, Tác giả, Thể loại.
   2. Hiển thị danh sách các chương (Chapters) kèm số trang và liên kết vào trình đọc (reader.html).
-  3. Cung cấp Modal Sửa thông tin truyện (Đổi tên, Tác giả với AuthorAutocomplete, Thể loại với GenreSelector).
-  4. Cung cấp Modal Thêm chương mới cho bộ truyện.
-  5. Cung cấp Modal Chỉnh sửa chương (Đổi số thứ tự chương, đổi tên chương).
-  6. Cung cấp chức năng Xóa chương và Xóa vĩnh viễn toàn bộ bộ truyện.
+  3. Cung cấp Modal Thêm chương mới cho bộ truyện (bằng NHentai ID hoặc tách từ truyện hiện tại).
+  4. Cung cấp Modal Chỉnh sửa chương (Đổi số thứ tự chương, đổi tên chương).
+  5. Cung cấp chức năng Xóa chương và Xóa vĩnh viễn toàn bộ bộ truyện.
 -->
 <!DOCTYPE html>
 <html lang="vi">
@@ -18,7 +17,7 @@
     <!-- Favicon website -->
     <link rel="icon" type="image/jpeg" href="assets/rem.jpg">
     <!-- Stylesheet dùng chung -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=3.2">
     <style>
         .detail-header {
             display: flex;
@@ -227,7 +226,7 @@
     </div>
 
     <!-- Nạp file JavaScript tiện ích dùng chung -->
-    <script src="app.js?v=3.1"></script>
+    <script src="app.js?v=3.2"></script>
     <script>
         // Lấy ID bộ truyện từ Query Parameter (VD: detail.html?id=5)
         const urlParams = new URLSearchParams(window.location.search);

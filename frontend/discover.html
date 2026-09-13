@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Khám Phá NHentai — HManga Library</title>
     <link rel="icon" type="image/jpeg" href="assets/rem.jpg">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=3.2">
     <style>
         /* Card action buttons */
         .online-card-actions {
@@ -804,7 +804,7 @@
                 }
 
                 grid.innerHTML = items.map(item => {
-                    const titleSafe = (item.title || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                    const titleSafe = (item.title || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                     const isSaved = item.is_already_added;
                     const coverSrc = item.cover_url.startsWith('http') ? item.cover_url : `${API_BASE}${item.cover_url}`;
 
@@ -820,7 +820,7 @@
                                 <img src="${coverSrc}" alt="${titleSafe}" class="card-thumb" loading="lazy" referrerpolicy="no-referrer" onerror="handleImageFallback(this)">
                             </div>
                             <div class="card-body">
-                                <div class="card-title" title="${titleSafe}" onclick="window.location.href='reader.html?gallery_id=${item.id}'" style="cursor: pointer;">${item.title}</div>
+                                <div class="card-title" title="${titleSafe}" onclick="window.location.href='reader.html?gallery_id=${item.id}'" style="cursor: pointer;">${titleSafe}</div>
                                 <div class="card-author" style="font-size: 12px; color: var(--text-dim);">NHentai ID: #${item.id}</div>
                             </div>
                             <div class="online-card-actions">
@@ -926,6 +926,9 @@
 
         // Khởi động trang: Tải sidebar thư viện và truyện online
         updateLangUI();
+        document.querySelectorAll('.sort-pill-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.sort === currentSort);
+        });
         loadSidebarLibraryData();
         loadOnlineComics();
     </script>

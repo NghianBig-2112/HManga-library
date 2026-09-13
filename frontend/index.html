@@ -4,8 +4,8 @@
   Nhiệm vụ:
   1. Hiển thị danh sách tất cả các bộ truyện đã lưu trong thư viện dưới dạng lưới thẻ (Grid Cards).
   2. Thanh tìm kiếm nhanh thời gian thực (Live Search với Debounce 300ms chống spam request).
-  3. Thanh điều hướng (Navbar) với logo thương hiệu, ô tìm kiếm trung tâm và liên kết trang (Thể loại, Tác giả, Thêm truyện).
-  4. Hiển thị ảnh bìa tải từ server (/api/covers/{filename}) kèm ảnh dự phòng (rem.jpg) nếu lỗi.
+  3. Thanh điều hướng (Navbar) với logo thương hiệu, ô tìm kiếm, ô nhập ID và 2 nút chuyển trang (Thư viện / Khám phá NHentai).
+  4. Hiển thị ảnh bìa tải từ server kèm ảnh dự phòng (rem.jpg) nếu lỗi.
 -->
 <!DOCTYPE html>
 <html lang="vi">
@@ -16,7 +16,7 @@
     <!-- Favicon website -->
     <link rel="icon" type="image/jpeg" href="assets/rem.jpg">
     <!-- File stylesheet dùng chung (kèm version chống lưu cache cũ) -->
-    <link rel="stylesheet" href="style.css?v=3.0">
+    <link rel="stylesheet" href="style.css?v=3.2">
 </head>
 <body>
     <!-- ==================== 1. HEADER / NAVBAR ==================== -->
@@ -136,7 +136,7 @@
     </div>
 
     <!-- Nạp file JavaScript tiện ích dùng chung -->
-    <script src="app.js?v=3.1"></script>
+    <script src="app.js?v=3.2"></script>
     <script>
         // Trạng thái lọc hiện tại
         let selectedGenres = []; // Mảng danh sách các thể loại đang chọn
@@ -385,13 +385,6 @@
             loadComics();
         }
 
-        function selectGenre(genreName) {
-            if (!genreName) {
-                clearGenreFilters();
-            } else {
-                toggleGenre(genreName);
-            }
-        }
 
         function selectAuthor(authorName) {
             selectedAuthor = authorName;
@@ -440,7 +433,7 @@
             const actionsEl = document.getElementById('preview-modal-actions');
             if (!bodyEl || !actionsEl) return;
 
-            const titleSafe = (preview.title || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const titleSafe = (preview.title || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const coverUrl = preview.local_cover_filename 
                 ? api.getCoverUrl(preview.local_cover_filename) 
                 : (preview.cover_url || 'assets/rem.jpg');
@@ -471,7 +464,7 @@
                             <span style="font-family: monospace; font-weight: 700; font-size: 13px; color: var(--primary); background: rgba(99, 102, 241, 0.15); padding: 2px 8px; border-radius: 6px;">#${preview.id}</span>
                             ${statusBadge}
                         </div>
-                        <h4 style="font-size: 15px; font-weight: 700; color: #ffffff; line-height: 1.4; word-break: break-word;">${preview.title}</h4>
+                        <h4 style="font-size: 15px; font-weight: 700; color: #ffffff; line-height: 1.4; word-break: break-word;">${titleSafe}</h4>
                         <div style="font-size: 13px; color: var(--text-muted);">
                             <strong style="color: var(--text-main);">Tác giả:</strong> ${authorsStr}
                         </div>

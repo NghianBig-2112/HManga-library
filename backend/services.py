@@ -5,13 +5,9 @@ Toàn bộ business logic cho Comics, Chapters, Genres, Authors, Images.
 """
 
 import re
-import shutil
 import urllib.parse
 from pathlib import Path
 from fastapi import HTTPException
-import httpx
-import aiofiles
-from urllib.parse import urlparse
 
 import sqlite3
 from database import get_db

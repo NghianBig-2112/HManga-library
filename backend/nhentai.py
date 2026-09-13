@@ -9,10 +9,7 @@ import json
 import re
 import urllib.parse
 import urllib.request
-import hashlib
-import threading
 import math
-from pathlib import Path
 from fastapi import HTTPException
 
 # Số lượng truyện cố định trên 1 trang khám phá
