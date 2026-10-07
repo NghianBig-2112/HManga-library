@@ -115,13 +115,17 @@ const api = {
     // --- COMICS ---
     async getComics(params = {}) {
         const query = new URLSearchParams();
-        if (params.genre) {
-            query.set('genre', Array.isArray(params.genre) ? params.genre.join(',') : params.genre);
-        }
-        if (params.author) query.set('author', params.author);
+        if (params.folder_id) query.set('folder_id', params.folder_id);
+        if (params.author_id) query.set('author_id', params.author_id);
         if (params.q) query.set('q', params.q);
         const res = await fetch(`${API_BASE}/api/comics${query.toString() ? '?' + query.toString() : ''}`);
         if (!res.ok) throw new Error('Không thể tải danh sách truyện');
+        return res.json();
+    },
+
+    async getDiscoverFilters() {
+        const res = await fetch(`${API_BASE}/api/discover/filters`);
+        if (!res.ok) throw new Error('Không thể tải bộ lọc khám phá');
         return res.json();
     },
 
@@ -140,11 +144,17 @@ const api = {
         return res.json();
     },
 
-    async addComicById(galleryId) {
+    async addComicById(galleryId, options = {}) {
+        const body = {
+            gallery_id: parseInt(galleryId, 10)
+        };
+        if (options && options.folder_id) body.folder_id = parseInt(options.folder_id, 10);
+        if (options && options.pages_per_chapter) body.pages_per_chapter = parseInt(options.pages_per_chapter, 10);
+
         const res = await fetch(`${API_BASE}/api/comics/add-by-id`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ gallery_id: parseInt(galleryId, 10) })
+            body: JSON.stringify(body)
         });
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
@@ -223,9 +233,13 @@ const api = {
         return res.json();
     },
 
-    // --- COVERS ---
-    getCoverUrl(filename) {
+    // --- COVERS (ZERO-STORAGE IN-MEMORY PROXY) ---
+    getCoverUrl(filename, galleryId) {
+        if (galleryId) {
+            return `/api/nhentai/image-proxy?url=${encodeURIComponent(`https://t3.nhentai.net/galleries/${galleryId}/thumb.webp`)}`;
+        }
         if (!filename) return 'assets/rem.jpg';
+        if (filename.startsWith('http') || filename.startsWith('/api/')) return filename;
         return `assets/${filename}`;
     },
 
@@ -237,6 +251,7 @@ const api = {
             query.set('genre', Array.isArray(params.genre) ? params.genre.join(',') : params.genre);
         }
         if (params.author) query.set('author', params.author);
+        if (params.folder_id) query.set('folder_id', params.folder_id);
         const res = await fetch(`${API_BASE}/api/search?${query.toString()}`);
         if (!res.ok) throw new Error('Tìm kiếm thất bại');
         return res.json();
@@ -276,6 +291,140 @@ const api = {
             const err = await res.json().catch(() => ({}));
             throw new Error(err.detail || 'Không thể tải thông tin đọc online');
         }
+        return res.json();
+    },
+
+    // --- FOLDERS (SPOTIFY-STYLE) ---
+    async getFolders() {
+        const res = await fetch(`${API_BASE}/api/folders`);
+        if (!res.ok) throw new Error('Không thể tải danh sách thư mục');
+        return res.json();
+    },
+
+    async createFolder(data) {
+        const res = await fetch(`${API_BASE}/api/folders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể tạo thư mục');
+        }
+        return res.json();
+    },
+
+    async updateFolder(folderId, data) {
+        const res = await fetch(`${API_BASE}/api/folders/${folderId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể cập nhật thư mục');
+        }
+        return res.json();
+    },
+
+    async deleteFolder(folderId) {
+        const res = await fetch(`${API_BASE}/api/folders/${folderId}`, { method: 'DELETE' });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể xóa thư mục');
+        }
+        return res.json();
+    },
+
+    async addComicToFolder(folderId, comicId) {
+        const res = await fetch(`${API_BASE}/api/folders/${folderId}/comics`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ comic_id: comicId })
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể thêm truyện vào thư mục');
+        }
+        return res.json();
+    },
+
+    async removeComicFromFolder(folderId, comicId) {
+        const res = await fetch(`${API_BASE}/api/folders/${folderId}/comics/${comicId}`, { method: 'DELETE' });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể gỡ truyện khỏi thư mục');
+        }
+        return res.json();
+    },
+
+    // --- SMART CHAPTER SEGMENTATION ---
+    async splitComicChapters(comicId, pagesPerChapter) {
+        const res = await fetch(`${API_BASE}/api/comics/${comicId}/split-chapters`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pages_per_chapter: pagesPerChapter })
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể chia chapter');
+        }
+        return res.json();
+    },
+
+    // --- FAVORITES (NHENTAI TWO-WAY) ---
+    async getFavorites(params = {}) {
+        const query = new URLSearchParams();
+        if (params.page) query.set('page', params.page);
+        if (params.q) query.set('q', params.q);
+        const res = await fetch(`${API_BASE}/api/nhentai/favorites?${query.toString()}`);
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể tải danh sách Favorites (Yêu cầu API Key)');
+        }
+        return res.json();
+    },
+
+    async addFavorite(galleryId) {
+        const res = await fetch(`${API_BASE}/api/nhentai/gallery/${galleryId}/favorite`, { method: 'POST' });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể thêm vào Favorites (Yêu cầu API Key)');
+        }
+        return res.json();
+    },
+
+    async removeFavorite(galleryId) {
+        const res = await fetch(`${API_BASE}/api/nhentai/gallery/${galleryId}/favorite`, { method: 'DELETE' });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể gỡ khỏi Favorites (Yêu cầu API Key)');
+        }
+        return res.json();
+    },
+
+    async checkFavorite(galleryId) {
+        const res = await fetch(`${API_BASE}/api/nhentai/gallery/${galleryId}/favorite`);
+        if (!res.ok) return { is_favorite: false };
+        return res.json();
+    },
+
+    async saveFromFavorite(data) {
+        const res = await fetch(`${API_BASE}/api/comics/save-from-favorite`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Không thể lưu truyện vào thư viện');
+        }
+        return res.json();
+    },
+
+    async getNhentaiStatus() {
+        const res = await fetch(`${API_BASE}/api/nhentai/status`);
+        if (!res.ok) return { configured: false, valid: false };
         return res.json();
     }
 };
@@ -323,24 +472,28 @@ function handleImageFallback(img, onFinalFail) {
 
 // ==================== 5. RENDER COMIC CARD ====================
 function renderComicCard(comic) {
-    const coverUrl = api.getCoverUrl(comic.cover_filename);
+    const coverUrl = comic.cover_url || api.getCoverUrl(comic.cover_filename, comic.gallery_id);
     const genresHtml = (comic.genres || []).slice(0, 3).map(g =>
         `<span class="tag-chip">${g}</span>`
     ).join('') + ((comic.genres && comic.genres.length > 3) ? `<span class="tag-chip">+${comic.genres.length - 3}</span>` : '');
     const titleAttr = (comic.title || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const folderBadges = (comic.folders || []).slice(0, 2).map(f =>
+        `<span class="badge text-bg-secondary" style="font-size: 10px; font-weight: 500; opacity: 0.9;"><i class="bi bi-folder2 me-1"></i>${f}</span>`
+    ).join(' ');
 
     return `
         <div class="comic-card" onclick="window.location.href='detail.html?id=${comic.id}'" style="cursor: pointer;">
             <div class="card-thumb-wrapper">
-                ${comic.gallery_id ? `<span class="card-id-badge">${comic.gallery_id}</span>` : ''}
+                ${comic.gallery_id ? `<span class="card-id-badge">#${comic.gallery_id}</span>` : ''}
                 <button type="button" class="btn-card-delete" data-comic-id="${comic.id}" data-title="${titleAttr}" onclick="handleDeleteComicCard(event)" title="Xóa bộ truyện này">
-                    Xóa
+                    <i class="bi bi-trash3"></i> Xóa
                 </button>
                 <img src="${coverUrl}" alt="${titleAttr}" class="card-thumb" referrerpolicy="no-referrer" onerror="this.src='assets/rem.jpg'">
             </div>
             <div class="card-body">
                 <div class="card-title" title="${titleAttr}">${comic.title}</div>
                 <div class="card-author">${comic.author || 'Chưa rõ tác giả'}</div>
+                ${folderBadges ? `<div class="d-flex gap-1 flex-wrap mb-1">${folderBadges}</div>` : ''}
                 <div class="card-tags">${genresHtml}</div>
             </div>
         </div>

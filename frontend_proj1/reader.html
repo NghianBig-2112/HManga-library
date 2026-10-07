@@ -1,51 +1,65 @@
-<!--
-  HManga Library — Trình Đọc Truyện (reader.html)
-  ===============================================
-  - Chế độ Cuộn dọc: Xem danh sách toàn bộ trang ảnh liên tục.
-  - Chế độ Từng trang: Xem ảnh full màn hình (không cần kéo chuột).
-    + Nhấp nửa bên phải: Trang tiếp theo.
-    + Nhấp nửa bên trái: Trang trước.
-    + Lăn con chuột (Wheel): Chuyển trang mượt mà.
-    + Phím mũi tên trên bàn phím.
-    + Góc trên bên phải hiển thị số trang hiện tại và nút Chương trước / Chương sau.
--->
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đọc Truyện — HManga Library</title>
     <link rel="icon" type="image/jpeg" href="assets/rem.jpg">
-    <link rel="stylesheet" href="style.css?v=3.2">
+    <!-- Bootstrap 5.3 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3.5">
     <style>
         body { margin: 0; padding: 0; overflow-x: hidden; }
+        .reader-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+        }
     </style>
 </head>
 <body>
     <!-- 1. Sticky Reader Toolbar -->
     <header class="reader-toolbar">
-        <div class="reader-toolbar-inner">
+        <div class="d-flex align-items-center justify-content-between gap-3">
             <!-- Left: Back Button & Comic Title + Chapter -->
-            <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
-                <a id="btn-back-detail" href="index.html" class="btn btn-secondary btn-sm" style="flex-shrink:0;">Quay lại</a>
-                <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                    <span id="comic-header-title" style="font-weight:700; color:var(--text-main); font-size:14px;">Đang tải...</span>
-                    <span id="chapter-header-badge" style="color:var(--primary); font-size:13px; font-weight:600; margin-left:4px;"></span>
+            <div class="d-flex align-items-center gap-2 overflow-hidden flex-grow-1" style="min-width: 0;">
+                <a id="btn-back-detail" href="index.html" class="btn btn-secondary btn-sm flex-shrink-0">
+                    <i class="bi bi-arrow-left me-1"></i>Quay lại
+                </a>
+                <div class="overflow-hidden text-truncate">
+                    <span id="comic-header-title" class="fw-bold text-light small">Đang tải...</span>
+                    <span id="chapter-header-badge" class="text-primary small fw-semibold ms-1"></span>
                 </div>
             </div>
 
             <!-- Center: Mode Switch (Vertical Scroll / Single Page) -->
-            <div style="display:flex; background:var(--bg-card); border:1.5px solid rgba(255, 255, 255, 0.35); border-radius:8px; padding:2px; flex-shrink:0;">
-                <button type="button" id="mode-scroll-btn" class="btn btn-sm" style="background:var(--primary); color:#fff; border: 1.5px solid #818cf8;">Cuộn dọc</button>
-                <button type="button" id="mode-page-btn" class="btn btn-sm" style="background:transparent; color:var(--text-muted); border: 1.5px solid transparent;">Từng trang</button>
+            <div class="btn-group btn-group-sm flex-shrink-0" role="group">
+                <button type="button" id="mode-scroll-btn" class="btn btn-primary">
+                    <i class="bi bi-view-stacked me-1"></i>Cuộn dọc
+                </button>
+                <button type="button" id="mode-page-btn" class="btn btn-outline-secondary">
+                    <i class="bi bi-file-earmark me-1"></i>Từng trang
+                </button>
             </div>
 
-            <!-- Right: Page Counter & Prev / Next Chapter & Save Online -->
-            <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
-                <button type="button" id="header-save-online" class="btn btn-sm" style="display:none; background: rgba(16, 185, 129, 0.2); border: 1.5px solid #10b981; color: #6ee7b7; font-weight: 600;">Lưu vào máy</button>
-                <span id="header-page-counter" class="page-badge-pill" style="display:none;">1 / 1</span>
-                <button type="button" id="header-prev-chap" class="btn btn-secondary btn-sm" style="display:none;" title="Chương trước">Chương trước</button>
-                <button type="button" id="header-next-chap" class="btn btn-primary btn-sm" style="display:none;" title="Chương sau">Chương sau</button>
+            <!-- Right: Page Counter & Prev / Next Chapter & Favorite Online -->
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                <button type="button" id="header-fav-online" class="btn btn-sm btn-outline-danger" style="display:none;" title="Yêu thích trên NHentai">
+                    <i class="bi bi-heart"></i> <span id="fav-online-text">Yêu thích</span>
+                </button>
+                <span id="header-page-counter" class="badge bg-dark-subtle border py-2 px-3 small" style="display:none;">1 / 1</span>
+                <button type="button" id="header-prev-chap" class="btn btn-secondary btn-sm" style="display:none;" title="Chương trước">
+                    <i class="bi bi-chevron-left me-1"></i>Trước
+                </button>
+                <button type="button" id="header-next-chap" class="btn btn-primary btn-sm" style="display:none;" title="Chương sau">
+                    Sau<i class="bi bi-chevron-right ms-1"></i>
+                </button>
             </div>
         </div>
     </header>
@@ -55,7 +69,10 @@
         
         <!-- Mode 1: Continuous Vertical Scroll -->
         <div id="scroll-view" class="scroll-mode-view">
-            <div style="text-align:center; padding:80px 0; color:var(--text-dim);">Đang kết nối và tải ảnh...</div>
+            <div style="text-align:center; padding:80px 0; color:var(--text-dim);">
+                <div class="spinner-border text-primary mb-2" role="status"></div>
+                <div>Đang kết nối và tải ảnh...</div>
+            </div>
         </div>
 
         <!-- Mode 2: Single Page View -->
@@ -63,7 +80,7 @@
             <div class="page-mode-wrapper">
                 <!-- Left Click Zone (Previous Page) -->
                 <div class="click-zone click-zone-left" id="zone-prev" title="Nhấp hoặc cuộn lên để xem trang trước">
-                    <span class="click-hint-icon">Trang trước</span>
+                    <span class="click-hint-icon"><i class="bi bi-chevron-left"></i> Trang trước</span>
                 </div>
 
                 <!-- Comic Page Image -->
@@ -71,21 +88,28 @@
 
                 <!-- Right Click Zone (Next Page) -->
                 <div class="click-zone click-zone-right" id="zone-next" title="Nhấp hoặc cuộn xuống để xem trang tiếp theo">
-                    <span class="click-hint-icon">Trang sau</span>
+                    <span class="click-hint-icon">Trang sau <i class="bi bi-chevron-right"></i></span>
                 </div>
             </div>
         </div>
 
         <!-- Bottom Navigation Bar for Vertical Scroll Mode -->
         <div class="chapter-nav-bar" id="scroll-bottom-nav" style="display:none;">
-            <button type="button" id="nav-prev-chap" class="btn btn-secondary" style="visibility:hidden;">Chương trước</button>
-            <a id="nav-comic-center" href="index.html" class="btn btn-secondary btn-sm" style="color:var(--text-muted);">Chi tiết truyện</a>
-            <button type="button" id="nav-next-chap" class="btn btn-primary" style="visibility:hidden;">Chương sau</button>
+            <button type="button" id="nav-prev-chap" class="btn btn-secondary" style="visibility:hidden;">
+                <i class="bi bi-chevron-left me-1"></i>Chương trước
+            </button>
+            <a id="nav-comic-center" href="index.html" class="btn btn-secondary btn-sm" style="color:var(--text-muted);">
+                <i class="bi bi-info-circle me-1"></i>Chi tiết truyện
+            </a>
+            <button type="button" id="nav-next-chap" class="btn btn-primary" style="visibility:hidden;">
+                Chương sau<i class="bi bi-chevron-right ms-1"></i>
+            </button>
         </div>
     </div>
 
-    <!-- Nạp thư viện API và JavaScript -->
-    <script src="app.js?v=3.2"></script>
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js?v=3.5"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const chapterId = parseInt(urlParams.get('id'), 10);
@@ -97,11 +121,9 @@
         let comicId = null;         // ID bộ truyện
         let prevChapterId = null;   // ID chương trước
         let nextChapterId = null;   // ID chương sau
-        let isWheelThrottled = false; // Tránh lăn chuột quá nhanh
+        let isWheelThrottled = false;
+        let isOnlineFav = false;
 
-        /**
-         * Khởi tạo trình đọc truyện
-         */
         async function initReader() {
             if (!chapterId && !onlineGalleryId) {
                 document.getElementById('comic-header-title').textContent = 'Lỗi truy cập';
@@ -120,41 +142,35 @@
                     document.getElementById('chapter-header-badge').textContent = `• #${onlineGalleryId} (${gallery.num_pages} trang)`;
                     document.getElementById('btn-back-detail').href = 'discover.html';
                     document.getElementById('nav-comic-center').href = 'discover.html';
-                    document.getElementById('nav-comic-center').textContent = 'Khám phá NHentai';
+                    document.getElementById('nav-comic-center').innerHTML = '<i class="bi bi-compass me-1"></i>Khám phá NHentai';
 
-                    // Xử lý nút "Lưu vào máy"
-                    const saveBtn = document.getElementById('header-save-online');
-                    if (saveBtn) {
-                        saveBtn.style.display = 'inline-flex';
-                        if (gallery.is_already_added) {
-                            saveBtn.textContent = 'Đã lưu';
-                            saveBtn.disabled = true;
-                            saveBtn.style.background = 'rgba(220, 38, 38, 0.22)';
-                            saveBtn.style.border = '1.5px solid #ef4444';
-                            saveBtn.style.color = '#fca5a5';
-                            saveBtn.style.cursor = 'default';
-                            saveBtn.style.opacity = '1';
-                        } else {
-                            saveBtn.onclick = async () => {
-                                saveBtn.disabled = true;
-                                saveBtn.textContent = 'Đang lưu...';
-                                try {
-                                    showToast(`Đang thêm #${onlineGalleryId} vào thư viện...`, 'info');
-                                    await api.addComicById(onlineGalleryId);
-                                    showToast('Đã lưu truyện vào thư viện thành công!', 'success');
-                                    saveBtn.textContent = 'Đã lưu';
-                                    saveBtn.style.background = 'rgba(220, 38, 38, 0.22)';
-                                    saveBtn.style.border = '1.5px solid #ef4444';
-                                    saveBtn.style.color = '#fca5a5';
-                                    saveBtn.style.cursor = 'default';
-                                    saveBtn.style.opacity = '1';
-                                } catch (e) {
-                                    showToast(e.message || 'Lỗi lưu truyện', 'error');
-                                    saveBtn.disabled = false;
-                                    saveBtn.textContent = 'Lưu vào máy';
+                    // Xử lý nút "❤️ Yêu thích" (NHentai Favorites - tuân thủ quy tắc 4.4)
+                    const favBtn = document.getElementById('header-fav-online');
+                    const favText = document.getElementById('fav-online-text');
+                    if (favBtn) {
+                        favBtn.style.display = 'inline-flex';
+                        favBtn.onclick = async () => {
+                            favBtn.disabled = true;
+                            try {
+                                if (isOnlineFav) {
+                                    await api.removeFavorite(onlineGalleryId);
+                                    isOnlineFav = false;
+                                    favBtn.className = 'btn btn-sm btn-outline-danger';
+                                    favBtn.innerHTML = '<i class="bi bi-heart me-1"></i>Yêu thích';
+                                    showToast(`Đã bỏ yêu thích #${onlineGalleryId} trên NHentai!`, 'info');
+                                } else {
+                                    await api.addFavorite(onlineGalleryId);
+                                    isOnlineFav = true;
+                                    favBtn.className = 'btn btn-sm btn-danger';
+                                    favBtn.innerHTML = '<i class="bi bi-heart-fill me-1"></i>Đã thích';
+                                    showToast(`Đã thêm #${onlineGalleryId} vào NHentai Favorites! Vào Thư viện > Favorites để lưu vào thư mục riêng.`, 'success');
                                 }
-                            };
-                        }
+                            } catch (e) {
+                                showToast(e.message || 'Lỗi cập nhật Favorites', 'error');
+                            } finally {
+                                favBtn.disabled = false;
+                            }
+                        };
                     }
 
                     renderScrollView();
@@ -170,10 +186,8 @@
 
             // ================= CHẾ ĐỘ ĐỌC TRUYỆN TRONG THƯ VIỆN =================
             try {
-                // 1. Fetch page image URLs from Backend
                 pageUrls = await api.getChapterPages(chapterId);
 
-                // 2. Fetch comic info and resolve previous / next chapter
                 let foundComic = null;
                 let foundChapter = null;
                 let paramComicId = parseInt(urlParams.get('comic_id'), 10);
@@ -228,7 +242,6 @@
                     }
                 }
 
-                // Render both modes
                 renderScrollView();
                 updateSinglePageView();
                 updateModeUI();
@@ -238,9 +251,6 @@
             }
         }
 
-        /**
-         * Render vertical scroll mode
-         */
         function renderScrollView() {
             const scrollView = document.getElementById('scroll-view');
             if (pageUrls.length === 0) {
@@ -262,9 +272,6 @@
             }).join('');
         }
 
-        /**
-         * Update single page view
-         */
         function updateSinglePageView() {
             if (pageUrls.length === 0) return;
             const img = document.getElementById('single-page-img');
@@ -279,9 +286,6 @@
             counter.textContent = `Trang ${currentPageIndex + 1} / ${pageUrls.length}`;
         }
 
-        /**
-         * Page navigation
-         */
         function goToNextPage() {
             if (currentPageIndex < pageUrls.length - 1) {
                 currentPageIndex++;
@@ -318,9 +322,6 @@
             }
         }
 
-        /**
-         * Cập nhật giao diện khi đổi chế độ
-         */
         function updateModeUI() {
             const scrollBtn = document.getElementById('mode-scroll-btn');
             const pageBtn = document.getElementById('mode-page-btn');
@@ -330,15 +331,15 @@
             const scrollNav = document.getElementById('scroll-bottom-nav');
 
             if (currentMode === 'scroll') {
-                scrollBtn.style.cssText = 'background:var(--primary); color:#fff;';
-                pageBtn.style.cssText = 'background:transparent; color:var(--text-muted);';
+                scrollBtn.className = 'btn btn-primary';
+                pageBtn.className = 'btn btn-outline-secondary';
                 scrollView.style.display = 'flex';
                 pageView.style.display = 'none';
                 pageCounter.style.display = 'none';
                 scrollNav.style.display = 'flex';
             } else {
-                pageBtn.style.cssText = 'background:var(--primary); color:#fff;';
-                scrollBtn.style.cssText = 'background:transparent; color:var(--text-muted);';
+                pageBtn.className = 'btn btn-primary';
+                scrollBtn.className = 'btn btn-outline-secondary';
                 scrollView.style.display = 'none';
                 pageView.style.display = 'flex';
                 pageCounter.style.display = 'inline-block';
@@ -347,9 +348,6 @@
             }
         }
 
-        // ==================== CÁC SỰ KIỆN TƯƠNG TÁC ====================
-
-        // 1. Nút chuyển đổi chế độ Cuộn / Từng trang
         document.getElementById('mode-scroll-btn').addEventListener('click', () => {
             currentMode = 'scroll';
             updateModeUI();
@@ -360,15 +358,13 @@
             updateModeUI();
         });
 
-        // 2. Nhấp vùng Trái / Phải để chuyển trang
         document.getElementById('zone-prev').addEventListener('click', goToPrevPage);
         document.getElementById('zone-next').addEventListener('click', goToNextPage);
 
-        // 3. Lăn con chuột (Mouse Wheel) để chuyển trang khi ở chế độ từng trang
         window.addEventListener('wheel', (e) => {
             if (currentMode !== 'page') return;
             if (document.getElementById('global-confirm-modal')?.classList.contains('active')) return;
-            e.preventDefault(); // Ngăn cuộn trang mặc định
+            e.preventDefault();
 
             if (isWheelThrottled) return;
 
@@ -383,7 +379,6 @@
             }
         }, { passive: false });
 
-        // 4. Phím mũi tên trên bàn phím
         window.addEventListener('keydown', (e) => {
             if (currentMode !== 'page') return;
             if (document.getElementById('global-confirm-modal')?.classList.contains('active')) return;
@@ -399,7 +394,6 @@
             }
         });
 
-        // Khởi chạy trình đọc truyện khi trang sẵn sàng
         initReader();
     </script>
 </body>

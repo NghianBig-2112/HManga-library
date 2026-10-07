@@ -1,6 +1,6 @@
 """
-HManga Library - Backend (FastAPI)
-===================================
+HManga Library - Backend (FastAPI with Supabase)
+================================================
 Tất cả routes API và cấu hình server.
 """
 
@@ -13,7 +13,10 @@ from pathlib import Path
 from database import init_db
 from models import (
     ComicAddByIdRequest,
+    SaveFavoriteToLibraryRequest,
     ChapterAddByIdRequest, ChapterCreateInternal, ChapterUpdate,
+    SplitChapterRequest, CustomSplitChapterRequest,
+    FolderCreate, FolderUpdate, FolderAddComicRequest,
 )
 import services
 
@@ -22,7 +25,7 @@ init_db()
 services.auto_restore_if_empty()
 
 # Khởi tạo app
-app = FastAPI(title="HManga Library API", version="3.0.0")
+app = FastAPI(title="HManga Library API", version="4.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,8 +39,8 @@ app.add_middleware(
 # ==================== COMICS ====================
 
 @app.get("/api/comics")
-def get_comics(genre: str = None, q: str = None, author: str = None):
-    return services.get_all_comics(genre=genre, q=q, author=author)
+def get_comics(q: str = None, author_id: int = None, folder_id: int = None):
+    return services.get_all_comics(folder_id=folder_id, author_id=author_id, q=q)
 
 
 @app.get("/api/comics/preview/{gallery_id}")
@@ -55,7 +58,30 @@ def get_comic(comic_id: int):
 
 @app.post("/api/comics/add-by-id")
 async def add_comic_by_id(data: ComicAddByIdRequest):
-    return await services.create_comic_by_id(data.gallery_id)
+    return await services.create_comic_by_id(
+        data.gallery_id,
+        folder_id=data.folder_id,
+        pages_per_chapter=data.pages_per_chapter
+    )
+
+
+@app.post("/api/comics/save-from-favorite")
+async def save_from_favorite(data: SaveFavoriteToLibraryRequest):
+    return await services.create_comic_by_id(
+        data.gallery_id,
+        folder_id=data.folder_id,
+        pages_per_chapter=data.pages_per_chapter
+    )
+
+
+@app.post("/api/comics/{comic_id}/split-chapters")
+def split_comic_chapters(comic_id: int, data: SplitChapterRequest):
+    return services.split_comic_chapters(comic_id, data.pages_per_chapter)
+
+
+@app.post("/api/comics/{comic_id}/custom-split-chapters")
+def custom_split_comic_chapters(comic_id: int, data: CustomSplitChapterRequest):
+    return services.custom_split_comic_chapters(comic_id, [c.model_dump() for c in data.chapters])
 
 
 @app.delete("/api/comics/{comic_id}")
@@ -109,35 +135,62 @@ def get_chapter_pages(chapter_id: int):
     return services.generate_pages(chapter_id)
 
 
-# ==================== GENRES ====================
-
-@app.get("/api/genres")
-def get_genres():
-    return services.get_all_genres()
-
-
-@app.get("/api/genres/{genre_id}/comics")
-def get_comics_by_genre(genre_id: int):
-    return services.get_comics_by_genre_id(genre_id)
-
-
-# ==================== AUTHORS ====================
+# ==================== AUTHORS (QUẢN LÝ TÁC GIẢ) ====================
 
 @app.get("/api/authors")
 def get_authors():
     return services.get_all_authors()
 
 
-@app.get("/api/authors/{author_name}/comics")
-def get_comics_by_author(author_name: str):
-    return services.get_comics_by_author(author_name)
+@app.get("/api/authors/{author_id}/comics")
+def get_comics_by_author(author_id: str):
+    return services.get_comics_by_author(author_id)
+
+
+# ==================== DISCOVER FILTERS (TÁC GIẢ & THỂ LOẠI TỪ THƯ VIỆN) ====================
+
+@app.get("/api/discover/filters")
+def get_discover_filters():
+    return services.get_saved_tags_for_discover()
 
 
 # ==================== SEARCH ====================
 
 @app.get("/api/search")
-def search(q: str = None, genre: str = None, author: str = None):
-    return services.search_comics(q=q, genre=genre, author=author)
+def search(q: str = None, author_id: int = None, folder_id: int = None):
+    return services.search_comics(q=q, author_id=author_id, folder_id=folder_id)
+
+
+# ==================== FOLDERS (SPOTIFY-STYLE) ====================
+
+@app.get("/api/folders")
+def get_folders():
+    return services.get_all_folders()
+
+
+@app.post("/api/folders")
+def create_folder(data: FolderCreate):
+    return services.create_folder(data.name, data.description)
+
+
+@app.put("/api/folders/{folder_id}")
+def update_folder(folder_id: int, data: FolderUpdate):
+    return services.update_folder(folder_id, data.name, data.description)
+
+
+@app.delete("/api/folders/{folder_id}")
+def delete_folder(folder_id: int):
+    return services.delete_folder(folder_id)
+
+
+@app.post("/api/folders/{folder_id}/comics")
+def add_comic_to_folder(folder_id: int, data: FolderAddComicRequest):
+    return services.add_comic_to_folder(folder_id, data.comic_id)
+
+
+@app.delete("/api/folders/{folder_id}/comics/{comic_id}")
+def remove_comic_from_folder(folder_id: int, comic_id: int):
+    return services.remove_comic_from_folder(folder_id, comic_id)
 
 
 # ==================== NHENTAI EXPLORE & ONLINE ====================
@@ -159,11 +212,34 @@ def nhentai_image_proxy(url: str):
         content=data,
         media_type=media_type,
         headers={
-            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
-            "Pragma": "no-cache",
-            "Expires": "0"
+            "Cache-Control": "public, max-age=86400",
         }
     )
+
+
+@app.get("/api/nhentai/favorites")
+def nhentai_favorites(page: int = 1, q: str = None):
+    return services.get_nhentai_favorites_service(page=page, q=q)
+
+
+@app.post("/api/nhentai/gallery/{gallery_id}/favorite")
+def nhentai_add_favorite(gallery_id: int):
+    return services.add_nhentai_favorite_service(gallery_id)
+
+
+@app.delete("/api/nhentai/gallery/{gallery_id}/favorite")
+def nhentai_remove_favorite(gallery_id: int):
+    return services.remove_nhentai_favorite_service(gallery_id)
+
+
+@app.get("/api/nhentai/gallery/{gallery_id}/favorite")
+def nhentai_check_favorite(gallery_id: int):
+    return services.check_nhentai_favorite_service(gallery_id)
+
+
+@app.get("/api/nhentai/status")
+def nhentai_status():
+    return services.get_nhentai_api_status_service()
 
 
 # ==================== STATIC FILES ====================

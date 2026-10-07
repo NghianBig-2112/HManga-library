@@ -1358,3 +1358,112 @@ body {
         width: 100% !important;
     }
 }
+
+/* ==================== SPOTIFY-STYLE SIDEBAR & FOLDERS ==================== */
+.spotify-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    border: 1px solid transparent;
+    user-select: none;
+    margin-bottom: 3px;
+}
+
+.spotify-nav-item:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.spotify-nav-item.active {
+    color: #ffffff;
+    background: rgba(99, 102, 241, 0.22);
+    border-color: rgba(99, 102, 241, 0.5);
+    font-weight: 600;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.spotify-folder-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    border: 1px solid transparent;
+    user-select: none;
+    margin-bottom: 2px;
+}
+
+.spotify-folder-item:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.spotify-folder-item.active {
+    color: #ffffff;
+    background: rgba(99, 102, 241, 0.25);
+    border-color: #6366f1;
+    font-weight: 600;
+}
+
+.spotify-folder-item .folder-actions {
+    display: none;
+    align-items: center;
+    gap: 4px;
+}
+
+.spotify-folder-item:hover .folder-actions,
+.spotify-folder-item.active .folder-actions {
+    display: flex;
+}
+
+.btn-folder-action {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    padding: 2px 4px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+}
+
+.btn-folder-action:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-folder-action.text-danger:hover {
+    color: #f87171 !important;
+    background: rgba(239, 68, 68, 0.2);
+}
+
+/* Glassmorphism modal styling */
+.modal-content {
+    background: rgba(15, 23, 42, 0.92) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+

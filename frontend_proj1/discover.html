@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Khám Phá NHentai — HManga Library</title>
     <link rel="icon" type="image/jpeg" href="assets/rem.jpg">
-    <link rel="stylesheet" href="style.css?v=3.2">
+    <!-- Bootstrap 5.3 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3.5">
     <style>
         /* Card action buttons */
         .online-card-actions {
@@ -26,6 +29,10 @@
             cursor: pointer;
             border: 1.5px solid rgba(255, 255, 255, 0.35);
             transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
 
         .btn-online-read {
@@ -40,29 +47,23 @@
             color: #fff;
         }
 
-        .btn-online-save {
-            background: rgba(16, 185, 129, 0.15);
-            border-color: #10b981;
-            color: #6ee7b7;
+        .btn-online-fav {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: #ef4444;
+            color: #fca5a5;
         }
 
-        .btn-online-save:hover {
-            background: #059669;
-            border-color: #34d399;
+        .btn-online-fav:hover {
+            background: #ef4444;
+            border-color: #f87171;
             color: #fff;
         }
 
-        .btn-online-saved {
-            background: rgba(220, 38, 38, 0.22);
-            border-color: #ef4444;
-            color: #fca5a5;
-            font-weight: 700;
-            cursor: default;
-        }
-
-        .btn-online-saved:disabled {
-            opacity: 1;
-            cursor: default;
+        .btn-online-fav.active {
+            background: #ef4444;
+            border-color: #f87171;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
         }
 
         /* Language selection radio/pills in sidebar: 3 columns */
@@ -258,17 +259,18 @@
 </head>
 <body>
     <!-- ==================== 1. HEADER / NAVBAR ==================== -->
-    <nav class="navbar">
-        <div class="nav-container">
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="nav-container w-100">
             <a href="index.html" class="nav-brand" title="Trang chủ HManga">
                 <img src="assets/rem.jpg" alt="Rem" class="nav-logo">
                 <span class="nav-brand-text">HManga</span>
+                <span class="badge text-bg-indigo ms-1 d-none d-sm-inline-block" style="font-size: 11px; background: rgba(99, 102, 241, 0.25); border: 1px solid rgba(99, 102, 241, 0.5); color: #c7d2fe;">Khám phá NHentai</span>
             </a>
 
             <!-- Menu chuyển trang: Thư viện / Khám phá NHentai -->
-            <div class="nav-menu-links" style="display: flex; align-items: center; gap: 8px;">
-                <a href="index.html" class="nav-menu-btn">Thư viện</a>
-                <a href="discover.html" class="nav-menu-btn active">Khám phá NHentai</a>
+            <div class="nav-menu-links d-flex align-items-center gap-2">
+                <a href="index.html" class="nav-menu-btn"><i class="bi bi-collection-play me-1"></i>Thư viện</a>
+                <a href="discover.html" class="nav-menu-btn active"><i class="bi bi-compass me-1"></i>Khám phá NHentai</a>
             </div>
 
             <!-- Header Controls: Ô tìm kiếm từ khóa NHentai -->
@@ -276,7 +278,7 @@
                 <form class="header-search-box" id="nhentaiSearchForm" onsubmit="event.preventDefault(); triggerKeywordSearch();" style="width: 380px;">
                     <input type="search" id="nhentaiSearchInput" class="header-search-input" placeholder="Tìm kiếm từ khóa trên NHentai..." autocomplete="off">
                     <button type="submit" class="btn-header-action btn-search-submit" title="Tìm kiếm trên NHentai">
-                        Tìm
+                        <i class="bi bi-search"></i>
                     </button>
                 </form>
             </div>
@@ -290,7 +292,7 @@
             <!-- MỤC 1: LỰA CHỌN NGÔN NGỮ (Tất cả, English, Japanese) -->
             <div class="sidebar-section">
                 <div class="sidebar-section-header">
-                    <span class="sidebar-section-title">Ngôn ngữ</span>
+                    <span class="sidebar-section-title"><i class="bi bi-translate me-1 text-info"></i>Ngôn ngữ</span>
                 </div>
                 <div class="lang-options-grid">
                     <button type="button" class="lang-option-btn active" data-lang="" onclick="selectLanguage('')">Tất cả</button>
@@ -299,170 +301,153 @@
                 </div>
             </div>
 
-            <!-- MỤC 2: THỂ LOẠI (LẤY TỪ THƯ VIỆN, KHÔNG HIỆN SỐ LƯỢNG) -->
+            <!-- MỤC 2: THỂ LOẠI (LỌC 3 NẤC: CHỌN / LOẠI TRỪ) -->
             <div class="sidebar-section">
-                <div class="sidebar-section-header">
-                    <span class="sidebar-section-title">Thể loại</span>
-                    <span style="font-size: 11px; color: var(--text-dim);">1: Chọn | 2: Loại trừ</span>
+                <div class="sidebar-section-header d-flex justify-content-between align-items-center">
+                    <span class="sidebar-section-title"><i class="bi bi-tags me-1 text-primary"></i>Thể loại</span>
+                    <span class="sidebar-count-pill" id="discover-genre-count">0</span>
                 </div>
-                <!-- Ô lọc nhanh thể loại -->
-                <input type="text" id="filter-genre-input" class="sidebar-filter-input" placeholder="Tìm trong thể loại..." autocomplete="off">
-                <!-- Danh sách thể loại từ thư viện -->
-                <div class="sidebar-list" id="sidebar-genres-list">
+                <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 8px;">
+                    💡 Nhấp 1: <span class="text-primary fw-bold">Chọn</span> | Nhấp 2: <span class="text-danger fw-bold">Loại trừ</span> | Nhấp 3: Bỏ
+                </div>
+                <input type="text" id="filter-genre-input" class="sidebar-filter-input" placeholder="Lọc thể loại..." autocomplete="off">
+                <div class="sidebar-list" id="discover-genres-list" style="max-height: 250px;">
                     <div style="padding: 12px; text-align: center; color: var(--text-dim); font-size: 12px;">
-                        Đang tải thể loại từ thư viện...
+                        Đang tải thể loại...
                     </div>
                 </div>
             </div>
 
-            <!-- MỤC 3: TÁC GIẢ (LẤY TỪ THƯ VIỆN, KHÔNG HIỆN SỐ LƯỢNG) -->
+            <!-- MỤC 3: TÁC GIẢ (LỌC 3 NẤC: CHỌN / LOẠI TRỪ) -->
             <div class="sidebar-section">
-                <div class="sidebar-section-header">
-                    <span class="sidebar-section-title">Tác giả</span>
-                    <span style="font-size: 11px; color: var(--text-dim);">1: Chọn | 2: Loại trừ</span>
+                <div class="sidebar-section-header d-flex justify-content-between align-items-center">
+                    <span class="sidebar-section-title"><i class="bi bi-person me-1 text-success"></i>Tác giả</span>
+                    <span class="sidebar-count-pill" id="discover-author-count">0</span>
                 </div>
-                <!-- Ô lọc nhanh tác giả -->
-                <input type="text" id="filter-author-input" class="sidebar-filter-input" placeholder="Tìm trong tác giả..." autocomplete="off">
-                <!-- Danh sách tác giả từ thư viện -->
-                <div class="sidebar-list" id="sidebar-authors-list">
+                <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 8px;">
+                    💡 Nhấp 1: <span class="text-primary fw-bold">Chọn</span> | Nhấp 2: <span class="text-danger fw-bold">Loại trừ</span> | Nhấp 3: Bỏ
+                </div>
+                <input type="text" id="filter-author-input" class="sidebar-filter-input" placeholder="Lọc tác giả..." autocomplete="off">
+                <div class="sidebar-list" id="discover-authors-list" style="max-height: 250px;">
                     <div style="padding: 12px; text-align: center; color: var(--text-dim); font-size: 12px;">
-                        Đang tải tác giả từ thư viện...
+                        Đang tải tác giả...
                     </div>
                 </div>
             </div>
-
-            <!-- NÚT XÓA TẤT CẢ BỘ LỌC -->
-            <button type="button" class="btn btn-secondary btn-sm" onclick="clearAllFilters()" style="width: 100%; padding: 8px;">
-                Xóa tất cả bộ lọc
-            </button>
         </aside>
 
-        <!-- CỘT PHẢI: KHU VỰC HIỂN THỊ DANH SÁCH TRUYỆN -->
+        <!-- CỘT PHẢI: LƯỚI TRUYỆN ONLINE TỪ NHENTAI -->
         <section class="home-main">
-            <!-- Toolbar trên cùng: Tiêu đề + Bộ chọn Sắp xếp -->
+            <!-- THANH TOOLBAR: TIÊU ĐỀ & CHỌN SẮP XẾP -->
             <div class="discover-top-toolbar">
                 <div>
-                    <h2 class="home-main-title" id="explore-title-text" style="font-size: 19px; margin-bottom: 3px;">
-                        Khám Phá NHentai
-                    </h2>
-                    <div class="home-main-count" id="explore-subtitle-text">
-                        Đang kết nối tới NHentai...
+                    <h1 class="home-main-title" id="explore-title-text" style="font-size: 18px; margin-bottom: 2px;">
+                        <i class="bi bi-compass me-2 text-primary"></i>Khám Phá NHentai
+                    </h1>
+                    <div id="explore-subtitle-text" style="font-size: 13px; color: var(--text-dim);">
+                        Đang kết nối tới NHentai API...
                     </div>
                 </div>
 
-                <!-- Nhóm nút sắp xếp -->
+                <!-- Các nút sắp xếp (Sort) -->
                 <div class="sort-group">
-                    <span style="font-size: 12px; color: var(--text-dim); margin-right: 4px;">Sắp xếp:</span>
-                    <button type="button" class="sort-pill-btn active" data-sort="date" onclick="setSort('date')">Mới nhất</button>
-                    <button type="button" class="sort-pill-btn" data-sort="popular" onclick="setSort('popular')">Phổ biến nhất</button>
-                    <button type="button" class="sort-pill-btn" data-sort="popular-week" onclick="setSort('popular-week')">Hot tuần này</button>
-                    <button type="button" class="sort-pill-btn" data-sort="popular-today" onclick="setSort('popular-today')">Hot hôm nay</button>
+                    <button type="button" class="sort-pill-btn active" data-sort="date" onclick="setSort('date')">
+                        <i class="bi bi-clock me-1"></i>Mới nhất
+                    </button>
+                    <button type="button" class="sort-pill-btn" data-sort="popular" onclick="setSort('popular')">
+                        <i class="bi bi-fire me-1"></i>Phổ biến nhất
+                    </button>
+                    <button type="button" class="sort-pill-btn" data-sort="popular-week" onclick="setSort('popular-week')">
+                        <i class="bi bi-calendar-week me-1"></i>Tuần này
+                    </button>
+                    <button type="button" class="sort-pill-btn" data-sort="popular-today" onclick="setSort('popular-today')">
+                        <i class="bi bi-sun me-1"></i>Hôm nay
+                    </button>
                 </div>
             </div>
 
-            <!-- Hàng hiển thị các bộ lọc đang kích hoạt -->
-            <div class="active-filter-chips-row" id="active-filters-bar" style="display: none;"></div>
+            <!-- Thông báo quy tắc lưu truyện: Khám phá chỉ lưu Favorites -->
+            <div class="alert alert-info py-2 px-3 d-flex align-items-center gap-2 mb-3" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.4); color: #c7d2fe; font-size: 12.5px;">
+                <i class="bi bi-info-circle-fill text-primary fs-6 flex-shrink-0"></i>
+                <div>
+                    <strong>Quy tắc lưu trữ:</strong> Khi khám phá online, bạn có thể nhấn nút <b class="text-danger">❤️ Yêu thích</b> để lưu vào <b>NHentai Favorites</b>. Để phân loại truyện vào các <b>Thư mục riêng (Spotify)</b> trên máy, hãy mở mục <b>NHentai Favorites</b> trong <a href="index.html?tab=favorites" class="text-light text-decoration-underline fw-bold">Thư viện</a>!
+                </div>
+            </div>
 
-            <!-- Lưới hiển thị các thẻ truyện -->
-            <div class="comic-grid" id="explore-comic-grid">
+            <!-- CHIPS HIỂN THỊ CÁC BỘ LỌC ĐANG CHỌN -->
+            <div id="active-filters-chips-bar" class="active-filter-chips-row" style="display: none;"></div>
+
+            <!-- LƯỚI THẺ TRUYỆN ONLINE -->
+            <div id="explore-comic-grid" class="comic-grid">
                 <div style="grid-column: 1 / -1; text-align: center; padding: 100px 0; color: var(--text-dim);">
-                    Đang tải dữ liệu từ NHentai...
+                    <div class="spinner-border text-primary mb-2" role="status"></div>
+                    <div>Đang kết nối và tải danh sách từ NHentai...</div>
                 </div>
             </div>
 
-            <!-- Thanh phân trang bên dưới -->
+            <!-- THANH PHÂN TRANG DƯỚI (BOTTOM PAGINATION) -->
             <div class="pagination-container" id="bottom-pagination" style="display: none;">
-                <button type="button" class="btn btn-secondary" id="btn-bot-prev" onclick="goToPrevPage()">Trang trước</button>
-                <span class="page-info-badge" id="bot-page-badge">Trang 1 / 1</span>
-                <button type="button" class="btn btn-secondary" id="btn-bot-next" onclick="goToNextPage()">Trang sau</button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-bot-prev" onclick="goToPrevPage()">
+                    <i class="bi bi-chevron-left me-1"></i>Trang trước
+                </button>
+                <span class="page-info-badge" id="bot-page-badge">Trang 1</span>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-bot-next" onclick="goToNextPage()">
+                    Trang sau<i class="bi bi-chevron-right ms-1"></i>
+                </button>
 
                 <div style="display: flex; align-items: center; gap: 6px; margin-left: 12px;">
                     <span style="font-size: 13px; color: var(--text-dim);">Đến trang:</span>
-                    <input type="number" id="jump-page-input" min="1" style="width: 70px; padding: 6px 8px; border-radius: 6px; background: rgba(6,10,24,0.5); border: 1.5px solid rgba(255, 255, 255, 0.35); color: #fff; text-align: center;" onkeydown="if(event.key==='Enter') jumpToPage();">
+                    <input type="number" id="jump-page-input" class="header-search-input" min="1" style="width: 70px; text-align: center; padding: 5px;" onkeydown="if(event.key==='Enter') jumpToPage();">
                     <button type="button" class="btn btn-secondary btn-sm" onclick="jumpToPage()">Đi</button>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- Nạp thư viện dùng chung -->
-    <script src="app.js?v=3.2"></script>
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js?v=3.5"></script>
     <script>
-        // Trạng thái bộ lọc
-        let selectedLanguage = '';          // '' (Tất cả), 'english', 'japanese'
-        let genreStates = {};               // { [genreName]: 'include' | 'exclude' }
-        let authorStates = {};              // { [authorName]: 'include' | 'exclude' }
-        let keywordQuery = '';              // Từ khóa tự do nhập từ ô tìm kiếm
-
+        // ==================== TRẠNG THÁI KHÁM PHÁ ONLINE ====================
         let currentPage = 1;
         let totalPages = 1;
         let currentSort = 'date';
+        let selectedLanguage = '';
+        let keywordQuery = '';
 
-        // Dữ liệu danh sách lấy từ thư viện cá nhân
+        // Trạng thái 3 nấc: {} -> 'include' -> 'exclude' -> xóa khỏi object
+        let genreStates = {};
+        let authorStates = {};
+
         let libraryGenres = [];
         let libraryAuthors = [];
 
-        // Đọc URL query parameters khi khởi động
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('page')) currentPage = parseInt(urlParams.get('page'), 10) || 1;
-        if (urlParams.get('sort')) currentSort = urlParams.get('sort');
-        if (urlParams.get('lang')) selectedLanguage = urlParams.get('lang');
-
-        // Khôi phục thể loại từ URL
-        if (urlParams.get('genre')) {
-            urlParams.get('genre').split(',').map(s => s.trim()).filter(Boolean).forEach(g => {
-                genreStates[g] = 'include';
-            });
-        }
-        if (urlParams.get('exc_genre')) {
-            urlParams.get('exc_genre').split(',').map(s => s.trim()).filter(Boolean).forEach(g => {
-                genreStates[g] = 'exclude';
-            });
-        }
-
-        // Khôi phục tác giả từ URL
-        if (urlParams.get('author')) {
-            urlParams.get('author').split(',').map(s => s.trim()).filter(Boolean).forEach(a => {
-                authorStates[a] = 'include';
-            });
-        }
-        if (urlParams.get('exc_author')) {
-            urlParams.get('exc_author').split(',').map(s => s.trim()).filter(Boolean).forEach(a => {
-                authorStates[a] = 'exclude';
-            });
-        }
-
-        if (urlParams.get('q')) keywordQuery = urlParams.get('q');
+        // Cache trạng thái Favorites của các truyện đang hiển thị
+        let favoritesMap = {};
 
         const searchInput = document.getElementById('nhentaiSearchInput');
-        if (searchInput && keywordQuery) searchInput.value = keywordQuery;
 
-        // ==================== 1. TẢI DỮ LIỆU TỪ THƯ VIỆN CÁ NHÂN ====================
+        // ==================== 1. TẢI DỮ LIỆU SIDEBAR (TỪ THƯ VIỆN ĐỂ GỢI Ý) ====================
         async function loadSidebarLibraryData() {
             try {
-                const [genresData, authorsData] = await Promise.all([
-                    api.getGenres(),
-                    api.getAuthors()
-                ]);
+                const filters = await api.getDiscoverFilters();
+                libraryGenres = filters.genres || [];
+                libraryAuthors = filters.authors || [];
 
-                libraryGenres = genresData || [];
-                libraryAuthors = authorsData || [];
+                document.getElementById('discover-genre-count').textContent = libraryGenres.length;
+                document.getElementById('discover-author-count').textContent = libraryAuthors.length;
 
                 renderSidebarGenres();
                 renderSidebarAuthors();
-            } catch (err) {
-                console.error('Không thể tải dữ liệu sidebar thư viện:', err);
-                document.getElementById('sidebar-genres-list').innerHTML = `
-                    <div style="padding: 10px; font-size: 12px; color: var(--text-dim); text-align: center;">Chưa có thể loại trong thư viện</div>
-                `;
-                document.getElementById('sidebar-authors-list').innerHTML = `
-                    <div style="padding: 10px; font-size: 12px; color: var(--text-dim); text-align: center;">Chưa có tác giả trong thư viện</div>
-                `;
+            } catch (e) {
+                console.error("Lỗi tải bộ lọc từ thư viện:", e);
+                document.getElementById('discover-genres-list').innerHTML = `<div style="padding: 10px; color: var(--danger); font-size: 12px;">Lỗi tải thể loại</div>`;
+                document.getElementById('discover-authors-list').innerHTML = `<div style="padding: 10px; color: var(--danger); font-size: 12px;">Lỗi tải tác giả</div>`;
             }
         }
 
         function renderSidebarGenres(filterText = '') {
-            const listEl = document.getElementById('sidebar-genres-list');
+            const listEl = document.getElementById('discover-genres-list');
             const term = filterText.trim().toLowerCase();
             const filtered = libraryGenres.filter(g => (g.name || '').toLowerCase().includes(term));
 
@@ -496,7 +481,7 @@
         }
 
         function renderSidebarAuthors(filterText = '') {
-            const listEl = document.getElementById('sidebar-authors-list');
+            const listEl = document.getElementById('discover-authors-list');
             const term = filterText.trim().toLowerCase();
             const filtered = libraryAuthors.filter(a => (a.name || '').toLowerCase().includes(term));
 
@@ -529,7 +514,7 @@
             }).join('');
         }
 
-        // ==================== 2. CHUYỂN ĐỔI TRẠNG THÁI 3 NẤC (CHỌN -> LOẠI TRỪ -> BỎ CHỌN) ====================
+        // ==================== 2. CHUYỂN ĐỔI TRẠNG THÁI 3 NẤC ====================
         function cycleGenre(genreName) {
             const nameKey = Object.keys(genreStates).find(k => k.toLowerCase() === genreName.toLowerCase()) || genreName;
             const current = genreStates[nameKey];
@@ -629,12 +614,10 @@
         function buildNhentaiQuery() {
             const parts = [];
 
-            // 1. Ngôn ngữ
             if (selectedLanguage) {
                 parts.push(`language:${selectedLanguage}`);
             }
 
-            // 2. Thể loại (Bao gồm & Loại trừ)
             for (const [name, state] of Object.entries(genreStates)) {
                 if (state === 'include') {
                     parts.push(`tag:"${name.toLowerCase()}"`);
@@ -643,7 +626,6 @@
                 }
             }
 
-            // 3. Tác giả (Bao gồm & Loại trừ)
             for (const [name, state] of Object.entries(authorStates)) {
                 if (state === 'include') {
                     parts.push(`artist:"${name.toLowerCase()}"`);
@@ -652,23 +634,21 @@
                 }
             }
 
-            // 4. Từ khóa tự do
-            if (keywordQuery.trim()) {
-                parts.push(keywordQuery.trim());
+            if (keywordQuery) {
+                parts.push(keywordQuery);
             }
 
             return parts.join(' ').trim();
         }
 
         function updateActiveFilterChips() {
-            const bar = document.getElementById('active-filters-bar');
+            const bar = document.getElementById('active-filters-chips-bar');
             const chips = [];
 
             if (selectedLanguage) {
-                const langLabels = { 'english': 'English', 'japanese': 'Japanese' };
                 chips.push(`
                     <span class="filter-tag-badge lang-badge">
-                        Ngôn ngữ: ${langLabels[selectedLanguage] || selectedLanguage}
+                        Ngôn ngữ: ${selectedLanguage === 'english' ? 'English' : 'Japanese'}
                         <button type="button" class="btn-badge-remove" onclick="selectLanguage('')">&times;</button>
                     </span>
                 `);
@@ -678,8 +658,8 @@
                 const isInc = state === 'include';
                 chips.push(`
                     <span class="filter-tag-badge ${isInc ? '' : 'exclude-badge'}">
-                        ${isInc ? 'Thể loại:' : 'Loại trừ TL:'} ${name}
-                        <button type="button" class="btn-badge-remove" onclick="removeGenre('${name}')">&times;</button>
+                        ${isInc ? 'Tag' : 'Không có tag'}: ${name}
+                        <button type="button" class="btn-badge-remove" onclick="removeGenre('${name.replace(/'/g, "\\'")}')">&times;</button>
                     </span>
                 `);
             }
@@ -688,13 +668,13 @@
                 const isInc = state === 'include';
                 chips.push(`
                     <span class="filter-tag-badge ${isInc ? 'author-badge' : 'exclude-badge'}">
-                        ${isInc ? 'Tác giả:' : 'Loại trừ TG:'} ${name}
-                        <button type="button" class="btn-badge-remove" onclick="removeAuthor('${name}')">&times;</button>
+                        ${isInc ? 'Tác giả' : 'Không có tác giả'}: ${name}
+                        <button type="button" class="btn-badge-remove" onclick="removeAuthor('${name.replace(/'/g, "\\'")}')">&times;</button>
                     </span>
                 `);
             }
 
-            if (keywordQuery.trim()) {
+            if (keywordQuery) {
                 chips.push(`
                     <span class="filter-tag-badge">
                         Từ khóa: "${keywordQuery.trim()}"
@@ -757,7 +737,8 @@
 
             grid.innerHTML = `
                 <div style="grid-column: 1 / -1; text-align: center; padding: 100px 0; color: var(--text-dim);">
-                    Đang kết nối và tải danh sách từ NHentai...
+                    <div class="spinner-border text-primary mb-2" role="status"></div>
+                    <div>Đang kết nối và tải danh sách từ NHentai...</div>
                 </div>
             `;
 
@@ -796,6 +777,7 @@
                 if (items.length === 0) {
                     grid.innerHTML = `
                         <div style="grid-column: 1 / -1; text-align: center; padding: 100px 0; color: var(--text-muted);">
+                            <i class="bi bi-search fs-1 text-secondary d-block mb-3"></i>
                             Không tìm thấy bộ truyện nào phù hợp với các tiêu chí lọc trên!
                         </div>
                     `;
@@ -805,12 +787,12 @@
 
                 grid.innerHTML = items.map(item => {
                     const titleSafe = (item.title || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    const isSaved = item.is_already_added;
                     const coverSrc = item.cover_url.startsWith('http') ? item.cover_url : `${API_BASE}${item.cover_url}`;
+                    const isFav = favoritesMap[item.id] || false;
 
-                    const saveBtnHtml = isSaved
-                        ? `<button type="button" class="btn-online-action btn-online-saved" disabled>Đã lưu</button>`
-                        : `<button type="button" class="btn-online-action btn-online-save" id="btn-save-${item.id}" onclick="saveToLibrary(${item.id})">Lưu vào máy</button>`;
+                    const favIcon = isFav ? 'bi-heart-fill' : 'bi-heart';
+                    const favText = isFav ? 'Đã thích' : 'Yêu thích';
+                    const favClass = isFav ? 'btn-online-fav active' : 'btn-online-fav';
 
                     return `
                         <div class="comic-card" style="cursor: default;">
@@ -824,8 +806,10 @@
                                 <div class="card-author" style="font-size: 12px; color: var(--text-dim);">NHentai ID: #${item.id}</div>
                             </div>
                             <div class="online-card-actions">
-                                <a href="reader.html?gallery_id=${item.id}" class="btn-online-action btn-online-read">Đọc ngay</a>
-                                ${saveBtnHtml}
+                                <a href="reader.html?gallery_id=${item.id}" class="btn-online-action btn-online-read"><i class="bi bi-eye"></i> Đọc ngay</a>
+                                <button type="button" class="btn-online-action ${favClass}" id="btn-fav-${item.id}" onclick="toggleNhentaiFavorite(${item.id})">
+                                    <i class="bi ${favIcon}"></i> <span id="fav-text-${item.id}">${favText}</span>
+                                </button>
                             </div>
                         </div>
                     `;
@@ -836,11 +820,45 @@
             } catch (err) {
                 grid.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 80px 0; color: var(--danger);">
+                        <i class="bi bi-exclamation-triangle fs-1 d-block mb-2"></i>
                         Lỗi kết nối tới NHentai: ${err.message}.<br><br>
                         <button type="button" class="btn btn-secondary btn-sm" onclick="loadOnlineComics()">Thử lại</button>
                     </div>
                 `;
                 botPag.style.display = 'none';
+            }
+        }
+
+        // ==================== 5. FAVORITES TOGGLE (NHENTAI CLOUD) ====================
+        async function toggleNhentaiFavorite(galleryId) {
+            const btn = document.getElementById(`btn-fav-${galleryId}`);
+            const textSpan = document.getElementById(`fav-text-${galleryId}`);
+            const isCurrentlyFav = favoritesMap[galleryId] || false;
+
+            if (btn) btn.disabled = true;
+
+            try {
+                if (isCurrentlyFav) {
+                    await api.removeFavorite(galleryId);
+                    favoritesMap[galleryId] = false;
+                    showToast(`Đã bỏ yêu thích #${galleryId} khỏi NHentai!`, 'info');
+                    if (btn) {
+                        btn.className = 'btn-online-action btn-online-fav';
+                        btn.innerHTML = `<i class="bi bi-heart"></i> <span id="fav-text-${galleryId}">Yêu thích</span>`;
+                    }
+                } else {
+                    await api.addFavorite(galleryId);
+                    favoritesMap[galleryId] = true;
+                    showToast(`Đã thêm #${galleryId} vào NHentai Favorites! Vào Thư viện > Favorites để lưu vào thư mục riêng.`, 'success');
+                    if (btn) {
+                        btn.className = 'btn-online-action btn-online-fav active';
+                        btn.innerHTML = `<i class="bi bi-heart-fill"></i> <span id="fav-text-${galleryId}">Đã thích</span>`;
+                    }
+                }
+            } catch (err) {
+                showToast(err.message || 'Lỗi khi cập nhật Favorites (Yêu cầu API Key trong .env)!', 'error');
+            } finally {
+                if (btn) btn.disabled = false;
             }
         }
 
@@ -889,32 +907,6 @@
             loadOnlineComics();
         }
 
-        async function saveToLibrary(galleryId) {
-            const btn = document.getElementById(`btn-save-${galleryId}`);
-            if (btn) {
-                btn.disabled = true;
-                btn.textContent = 'Đang lưu...';
-            }
-
-            try {
-                showToast(`Đang tải ảnh bìa và thêm #${galleryId} vào thư viện...`, 'info');
-                const newComic = await api.addComicById(galleryId);
-                showToast(`Đã thêm thành công: "${newComic.title}" vào thư viện!`, 'success');
-                if (btn) {
-                    btn.className = 'btn-online-action btn-online-saved';
-                    btn.textContent = 'Đã lưu';
-                    btn.disabled = true;
-                }
-                loadSidebarLibraryData();
-            } catch (err) {
-                showToast(err.message || 'Lỗi khi lưu truyện vào máy!', 'error');
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Lưu vào máy';
-                }
-            }
-        }
-
         // Tìm kiếm nhanh trong danh sách sidebar
         document.getElementById('filter-genre-input').addEventListener('input', (e) => {
             renderSidebarGenres(e.target.value);
@@ -924,7 +916,7 @@
             renderSidebarAuthors(e.target.value);
         });
 
-        // Khởi động trang: Tải sidebar thư viện và truyện online
+        // Khởi động trang
         updateLangUI();
         document.querySelectorAll('.sort-pill-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.sort === currentSort);
