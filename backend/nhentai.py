@@ -1,9 +1,21 @@
 """
-- Lấy dữ liệu từ nhentai: id, media_id, title_pretty, tags, num_pages, pages
+- get_gallery_by_id(gallery_id): Lấy dữ liệu json của 1 bộ từ nhentai
+- extract_gallery_data(data): Extract dữ liệu thành: 
+	- id: id truyện
+	- media_id: thư mục chứa ảnh
+	- title_pretty: tên truyện
+	- cover_url: đường dẫn ảnh bìa
+	- language: ngôn ngữ
+	- category: loại truyện
+	- artists: tác giả
+	- genres: thể loại
+	- tag_list: danh sách tags của nhentai
+	- num_pages: số lượng trang
+	- page_exts: đuôi của tên ảnh
+	- page_list: danh sách link ảnh
 """
 
 import requests
-# from urllib.parse import urlparse
 
 NHENTAI_SERVER = "https://nhentai.net"
 IMAGE_SERVER = "https://i3.nhentai.net"
@@ -76,7 +88,6 @@ def extract_gallery_data(data):
 		elif tag_type == "tag":
 			genres.append(tag_name)
 
-
 	# 5. Lấy số trang
 	num_pages = int(data.get("num_pages"))
 
@@ -107,7 +118,6 @@ def extract_gallery_data(data):
 		"page_exts": page_exts,
 		"pages": page_list
 	}
-
 
 def fetch_comic_from_nhentai(gallery_id):
 	raw_data = get_gallery_by_id(gallery_id)

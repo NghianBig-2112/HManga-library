@@ -35,15 +35,15 @@ from nhentai import fetch_comic_from_nhentai
 
 EXT_MAP = {"j": "jpg", "p": "png", "w": "webp", "g": "gif"}
 
-def build_page_url(media_id: str, page_num: int, page_exts: str = "") -> str:
+def build_page_url(media_id, page_num, page_exts):
     """Sinh link ảnh chính xác theo đuôi từng trang từ chuỗi page_exts."""
     ext = "jpg"
     if page_exts and 1 <= page_num <= len(page_exts):
         ext = EXT_MAP.get(page_exts[page_num - 1], "jpg")
     return f"https://i3.nhentai.net/galleries/{media_id}/{page_num}.{ext}"
 
-# ================ COMIC ===========================
-def add_comic_by_gallery_id(gallery_id, folder_id: int = 1):
+
+def add_comic_by_gallery_id(gallery_id, folder_id = 1):
     """
     Thêm một bộ truyện mới vào thư viện bằng Gallery ID của NHentai.
     Quy trình:
@@ -59,7 +59,7 @@ def add_comic_by_gallery_id(gallery_id, folder_id: int = 1):
     media_id = comic_data["media_id"]
     title = comic_data["title"]
     artists = comic_data["artists"]
-    artist_str = ", ".join(artists) if artists else "Unknown"  # Chuyển ['o.ri'] -> 'o.ri'
+    artist_str = ", ".join(artists) if artists else "Unknown"
     cover_url = comic_data["cover_url"]
     language = comic_data["language"]
     category = comic_data["category"]
@@ -152,9 +152,8 @@ def add_comic_by_gallery_id(gallery_id, folder_id: int = 1):
         "num_pages": num_pages
     }
 
-# ==================== CÁC HÀM ĐỌC DỮ LIỆU (READ) ====================
 # ==================== CÁC HÀM ĐỌC & KIỂM TRA DỮ LIỆU (READ) ====================
-def get_all_comics(folder_id: int = None, artist_id: int = None, page: int = 1, limit: int = 12) -> dict:
+def get_all_comics(folder_id = None, artist_id = None, page = 1, limit = 12):
     """
     Lấy danh sách truyện có phân trang (mặc định 12 bộ truyện mới nhất mỗi trang).
     Hỗ trợ lọc theo Thư mục (folder_id) và Tác giả (artist_id).
@@ -228,7 +227,7 @@ def get_all_comics(folder_id: int = None, artist_id: int = None, page: int = 1, 
             }
 
 
-def check_comic_before_add(gallery_id: int) -> dict:
+def check_comic_before_add(gallery_id):
     """
     Kiểm tra truyện khi người dùng bấm nút 'Tìm' ở Trang chủ:
     1. Tìm trong Supabase theo ID trước. Nếu có -> trả về bộ truyện đó.
@@ -312,7 +311,7 @@ def check_comic_before_add(gallery_id: int) -> dict:
                 "nhentai_data": nhentai_data
             }
 
-def get_comic_detail(comic_id: int):
+def get_comic_detail(comic_id):
     """
     Lấy thông tin chi tiết của 1 bộ truyện:
     - Thông tin truyện (tiêu đề, ảnh bìa, ngôn ngữ, thể loại chính...)
@@ -413,7 +412,7 @@ def get_chapter_pages(chapter_id):
 
 # ==================== CÁC HÀM XỬ LÝ CHAPTER & XÓA ====================
 
-def split_comic_into_chapters(comic_id: int, chapters_data: list[dict]) -> list:
+def split_comic_into_chapters(comic_id, chapters_data):
     """
     Chia chapter theo đúng cấu hình thủ công mà người dùng nhập vào.
     chapters_data là danh sách do người dùng gửi lên, ví dụ:
@@ -495,7 +494,7 @@ def split_comic_into_chapters(comic_id: int, chapters_data: list[dict]) -> list:
     return created_chapters
 
 
-def add_chapter_from_gallery_id(comic_id: int, gallery_id: int, chapter_number: float = None, title: str = None) -> dict:
+def add_chapter_from_gallery_id(comic_id, gallery_id, chapter_number = None, title = None):
     """
     Thêm một chapter mới vào bộ truyện có sẵn từ một Gallery ID NHentai khác.
     Phục vụ cho các bộ truyện nhiều phần (Part 1, Part 2...).
@@ -539,7 +538,7 @@ def add_chapter_from_gallery_id(comic_id: int, gallery_id: int, chapter_number: 
     return created_chapter
 
 
-def delete_comic(comic_id: int) -> bool:
+def delete_comic(comic_id):
     """
     Xóa 1 bộ truyện khỏi thư viện.
     Nhờ 'ON DELETE CASCADE', toàn bộ chapters và liên kết tags sẽ tự động bị xóa theo.
@@ -553,13 +552,13 @@ def delete_comic(comic_id: int) -> bool:
         print(f"[INFO] Da xoa bo truyen ID: {comic_id}")
     return deleted
 
-def get_all_folders() -> list:
+def get_all_folders():
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("SELECT * FROM folders ORDER BY id ASC;")
             return cur.fetchall()
 
-def create_folder(name: str, description: str = "") -> dict:
+def create_folder(name, description = ""):
     """
     Tạo một thư mục mới để phân loại truyện.
     Nếu tên thư mục đã tồn tại thì cập nhật lại phần mô tả (description).
@@ -581,7 +580,54 @@ def create_folder(name: str, description: str = "") -> dict:
     print(f"[INFO] Da tao thu muc: '{new_folder['name']}' (ID: {new_folder['id']})")
     return new_folder
 
-def update_comic_folder(comic_id: int, folder_id: int) -> dict:
+def rename_folder(folder_id: int, new_name: str, description: str = "") -> dict:
+    """
+    Đổi tên một thư mục (không cho phép đổi tên thư mục Mặc định ID = 1).
+    """
+    if folder_id == 1:
+        raise ValueError("Không thể đổi tên thư mục 'Mặc định'!")
+    if not new_name or not new_name.strip():
+        raise ValueError("Tên thư mục mới không được để trống!")
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE folders
+                SET name = %s, description = %s
+                WHERE id = %s
+                RETURNING id, name, description;
+            """, (new_name.strip(), description.strip(), folder_id))
+            updated = cur.fetchone()
+            if not updated:
+                raise ValueError(f"Thư mục ID {folder_id} không tồn tại!")
+
+    print(f"[INFO] Da doi ten thu muc ID {folder_id} thanh: '{updated['name']}'")
+    return updated
+
+
+def delete_folder(folder_id: int) -> bool:
+    """
+    Xóa một thư mục (không cho phép xóa thư mục Mặc định ID = 1).
+    Các truyện trong thư mục bị xóa sẽ tự động chuyển về thư mục Mặc định (ID = 1).
+    """
+    if folder_id == 1:
+        raise ValueError("Không thể xóa thư mục 'Mặc định'!")
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            # Chuyển các bộ truyện trong thư mục này về thư mục Mặc định (id = 1)
+            cur.execute("UPDATE comics SET folder_id = 1 WHERE folder_id = %s;", (folder_id,))
+
+            # Xóa thư mục
+            cur.execute("DELETE FROM folders WHERE id = %s;", (folder_id,))
+            deleted = cur.rowcount > 0
+            if not deleted:
+                raise ValueError(f"Thư mục ID {folder_id} không tồn tại!")
+
+    print(f"[INFO] Da xoa thu muc ID: {folder_id}")
+    return True
+
+def update_comic_folder(comic_id, folder_id):
     """
     Chuyển một bộ truyện sang thư mục khác.
     """
@@ -607,7 +653,7 @@ def update_comic_folder(comic_id: int, folder_id: int) -> dict:
             updated["folder_name"] = folder["name"]
             return updated
 
-def get_all_authors() -> list:
+def get_all_authors():
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("""

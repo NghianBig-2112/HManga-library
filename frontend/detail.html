@@ -43,7 +43,7 @@
         max-width: 960px; 
         margin: 30px auto; 
         padding: 25px; 
-        background-color: rgba(255, 255, 255, 0.93); 
+        background-color: rgba(255, 255, 255, 0.55); 
         border-radius: 8px; 
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     ">
@@ -225,6 +225,11 @@
             ? ""
             : "http://127.0.0.1:8000";
 
+        const savedBg = localStorage.getItem("hmanga_bg");
+        if (savedBg) {
+            document.body.style.backgroundImage = `url("${API_BASE}/backgrounds/${encodeURIComponent(savedBg)}")`;
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const comicId = urlParams.get("id");
 
@@ -366,15 +371,10 @@
                 if (chapters.length === 0) {
                     chaptersList.innerHTML = `<p style="color: #555; margin: 0;">Chưa có chapter nào.</p>`;
                 } else {
-                    chaptersList.innerHTML = chapters.map((ch, idx) => {
-                        const isFirst = idx === 0;
-                        const bg = isFirst ? "#0d6efd" : "#fff";
-                        const color = isFirst ? "white" : "#2c3e50";
-                        const border = isFirst ? "#0d6efd" : "#ced4da";
-                        const weight = isFirst ? "font-weight: bold;" : "";
+                    chaptersList.innerHTML = chapters.map(ch => {
                         const chNum = Number(ch.chapter_number);
                         return `
-                            <a href="reader.html?comic_id=${comic.id}&chapter_id=${ch.id}" style="padding: 9px 14px; background: ${bg}; color: ${color}; border: 1px solid ${border}; text-decoration: none; border-radius: 4px; font-size: 14px; ${weight}">
+                            <a href="reader.html?comic_id=${comic.id}&chapter_id=${ch.id}" style="padding: 9px 14px; background: #fff; color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
                                 Chapter ${chNum}: ${ch.title || ""} (Trang ${ch.start_page} - ${ch.end_page})
                             </a>
                         `;

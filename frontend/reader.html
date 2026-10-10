@@ -15,6 +15,11 @@
             min-height: 100vh;
             font-family: Arial, sans-serif;
             background-color: #111;
+            background-image: url('assets/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             overflow-x: hidden;
         }
 
@@ -150,6 +155,11 @@
             ? ""
             : "http://127.0.0.1:8000";
 
+        const savedBg = localStorage.getItem("hmanga_bg");
+        if (savedBg) {
+            document.body.style.backgroundImage = `url("${API_BASE}/backgrounds/${encodeURIComponent(savedBg)}")`;
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const comicId = urlParams.get("comic_id");
         let currentChapterId = urlParams.get("chapter_id");
@@ -228,33 +238,34 @@
                 ).join("");
 
                 // Nếu người dùng bấm vào 1 trang cụ thể từ trang Chi tiết -> nhảy tới trang đó
-                if (startAtPageNumber && startAtPageNumber > 1) {
-                    const targetIdx = pages.findIndex(p => p.page_number === startAtPageNumber);
-                    if (targetIdx >= 0) {
-                        currentSlideIndex = targetIdx;
-                        currentPageIndexEl.textContent = currentSlideIndex + 1;
-                        isLockingInitialVerticalScroll = true;
+                const targetIdx = startAtPageNumber
+                    ? pages.findIndex(p => p.page_number === startAtPageNumber)
+                    : 0;
 
-                        const targetImg = verticalContainer.children[targetIdx];
-                        if (targetImg) {
-                            // Giữ đúng vị trí trang mục tiêu ngay cả khi các trang phía trên đang tải dần về
-                            Array.from(verticalContainer.children).slice(0, targetIdx + 1).forEach(img => {
-                                img.addEventListener("load", () => {
-                                    if (isLockingInitialVerticalScroll && modeVertical.checked) {
-                                        targetImg.scrollIntoView({ block: "start" });
-                                    }
-                                });
+                if (targetIdx > 0) {
+                    currentSlideIndex = targetIdx;
+                    currentPageIndexEl.textContent = currentSlideIndex + 1;
+                    isLockingInitialVerticalScroll = true;
+
+                    const targetImg = verticalContainer.children[targetIdx];
+                    if (targetImg) {
+                        // Giữ đúng vị trí trang mục tiêu ngay cả khi các trang phía trên đang tải dần về
+                        Array.from(verticalContainer.children).slice(0, targetIdx + 1).forEach(img => {
+                            img.addEventListener("load", () => {
+                                if (isLockingInitialVerticalScroll && modeVertical.checked) {
+                                    targetImg.scrollIntoView({ block: "start" });
+                                }
                             });
-                        }
-
-                        requestAnimationFrame(() => {
-                            if (modeHorizontal.checked) {
-                                scrollToHorizontalSlide(targetIdx, false);
-                            } else if (targetImg) {
-                                targetImg.scrollIntoView({ block: "start" });
-                            }
                         });
                     }
+
+                    requestAnimationFrame(() => {
+                        if (modeHorizontal.checked) {
+                            scrollToHorizontalSlide(targetIdx, false);
+                        } else if (targetImg) {
+                            targetImg.scrollIntoView({ block: "start" });
+                        }
+                    });
                 } else {
                     isLockingInitialVerticalScroll = false;
                     window.scrollTo(0, 0);

@@ -206,6 +206,26 @@ def add_folder(data: FolderCreateRequest):
 def get_folders():
     return services.get_all_folders()
 
+@app.put("/api/folders/{folder_id}", summary="Đổi tên thư mục")
+def update_folder(folder_id: int, data: FolderCreateRequest):
+    try:
+        return services.rename_folder(
+            folder_id=folder_id,
+            new_name=data.name,
+            description=data.description or ""
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.delete("/api/folders/{folder_id}", summary="Xóa thư mục")
+def remove_folder(folder_id: int):
+    try:
+        services.delete_folder(folder_id=folder_id)
+        return {"status": "success", "message": f"Đã xóa thư mục ID {folder_id}"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.get("/api/authors", summary="Lấy danh sách tác giả")
 def get_authors():
     return services.get_all_authors()
@@ -238,9 +258,37 @@ def restore_library():
         raise HTTPException(status_code=400, detail=str(e))
 
 
-# ==================== MOUNT FRONTEND (NẾU CÓ) ====================
+# ==================== HÌNH NỀN & MOUNT FRONTEND ====================
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = ROOT_DIR / "frontend"
+
+# Điền đường dẫn thư mục chứa ảnh nền của bạn vào đây (có chữ r ở trước dấu ngoặc kép):
+CUSTOM_BG_DIR = Path(r"D:\Anime\Twitter")
+
+# Nếu thư mục trên tồn tại thì lấy ảnh ở đó, nếu không thì tự động lùi về frontend/assets
+BACKGROUND_DIR = CUSTOM_BG_DIR if CUSTOM_BG_DIR.exists() else (FRONTEND_DIR / "assets")
+
+
+@app.get("/api/backgrounds", summary="Lấy danh sách các file ảnh nền")
+def get_backgrounds():
+    """Tự động quét tất cả file ảnh trong thư mục BACKGROUND_DIR."""
+    if not BACKGROUND_DIR.exists():
+        return []
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+    files = [
+        f.name for f in BACKGROUND_DIR.iterdir()
+        if f.is_file() and f.suffix.lower() in valid_exts and f.name.lower() != "rem.jpg"
+    ]
+    files.sort()
+    return files
+
+
+# 1. Mount thư mục ảnh nền vào đường dẫn /backgrounds (Đặt TRƯỚC khi mount "/")
+if BACKGROUND_DIR.exists():
+    app.mount("/backgrounds", StaticFiles(directory=str(BACKGROUND_DIR)), name="backgrounds")
+
+# 2. Mount giao diện Frontend vào "/"
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

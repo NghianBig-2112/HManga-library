@@ -27,9 +27,16 @@
     ">
 
         <!-- TIÊU ĐỀ TRANG CHỦ -->
-        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
             <img src="assets/rem.jpg" alt="Logo HManga" style="width: 65px; height: 65px; object-fit: cover; border-radius: 50%; border: 2px solid #2c3e50;">
             <h1 style="margin: 0; color: #2c3e50;">Thư Viện HManga</h1>
+
+            <div style="margin-left: auto; display: flex; align-items: center; gap: 6px;">
+                <label for="bgSelect" style="font-weight: bold; font-size: 13px; color: #2c3e50;">Hình nền:</label>
+                <select id="bgSelect" style="padding: 6px 10px; font-size: 13px; border-radius: 4px; border: 1px solid #ccc; max-width: 210px; cursor: pointer;">
+                    <option value="background.jpg">background.jpg</option>
+                </select>
+            </div>
         </div>
 
         <hr style="margin: 15px 0;">
@@ -46,10 +53,7 @@
                         Tìm
                     </button>
 
-                    <select id="addFolderSelect" style="padding: 8px; font-size: 14px;">
-                        <option value="1">Mặc định</option>
-                        <option value="2">Yêu thích</option>
-                    </select>
+                    <select id="addFolderSelect" style="padding: 8px; font-size: 14px;"></select>
 
                     <button type="button" id="btnAddComic" style="padding: 8px 14px; font-size: 14px; cursor: pointer; background: #0d6efd; color: white; font-weight: bold; border: none; border-radius: 4px;">
                         Thêm vào thư viện
@@ -62,13 +66,22 @@
                 </div>
             </div>
 
-            <!-- Box 2: Tạo thư mục mới -->
-            <div style="flex: 1; min-width: 220px; background: #f8f9fa; padding: 15px; border: 1px solid #dee2e6; border-radius: 6px;">
-                <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; color: #2c3e50;">Tạo thư mục mới</h3>
-                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                    <input type="text" id="newFolderName" placeholder="Nhập tên thư mục..." style="padding: 8px; font-size: 14px; flex: 1; min-width: 110px;">
+            <!-- Box 2: Quản lý thư mục (Tạo / Sửa tên / Xóa) -->
+            <div style="flex: 1; min-width: 240px; background: #f8f9fa; padding: 15px; border: 1px solid #dee2e6; border-radius: 6px;">
+                <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; color: #2c3e50;">Quản lý thư mục</h3>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;">
+                    <input type="text" id="newFolderName" placeholder="Nhập tên thư mục mới..." style="padding: 8px; font-size: 14px; flex: 1; min-width: 110px;">
                     <button type="button" id="btnCreateFolder" style="padding: 8px 14px; font-size: 14px; cursor: pointer; background: #198754; color: white; font-weight: bold; border: none; border-radius: 4px;">
                         Tạo
+                    </button>
+                </div>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+                    <select id="manageFolderSelect" style="padding: 7px; font-size: 13px; flex: 1; min-width: 100px;"></select>
+                    <button type="button" id="btnRenameFolder" style="padding: 7px 10px; font-size: 13px; cursor: pointer; background: #ffc107; color: #212529; font-weight: bold; border: none; border-radius: 4px;">
+                        Sửa tên
+                    </button>
+                    <button type="button" id="btnDeleteFolder" style="padding: 7px 10px; font-size: 13px; cursor: pointer; background: #dc3545; color: white; font-weight: bold; border: none; border-radius: 4px;">
+                        Xóa
                     </button>
                 </div>
             </div>
@@ -121,7 +134,8 @@
                         <a href="detail.html" style="text-decoration: none; color: inherit;">Family Play</a>
                     </h4>
                     <div style="font-size: 12px; color: #555; margin-bottom: 8px;">
-                        <div><strong>ID:</strong> 14414 | <strong>Số trang:</strong> 236</div>
+                        <div><strong>ID:</strong> 14414 </div>
+                        <div><strong>Số trang:</strong> 236</div>
                         <div><strong>Tác giả:</strong> <span style="color: #d63384; font-weight: bold;">o.ri</span></div>
                         <div><strong>Ngôn ngữ:</strong> english | <strong>Thư mục:</strong> Mặc định</div>
                     </div>
@@ -197,6 +211,9 @@
 
         const newFolderName = document.getElementById("newFolderName");
         const btnCreateFolder = document.getElementById("btnCreateFolder");
+        const manageFolderSelect = document.getElementById("manageFolderSelect");
+        const btnRenameFolder = document.getElementById("btnRenameFolder");
+        const btnDeleteFolder = document.getElementById("btnDeleteFolder");
 
         const filterFolder = document.getElementById("filterFolder");
         const filterAuthor = document.getElementById("filterAuthor");
@@ -225,15 +242,23 @@
                 if (!resp.ok) return;
                 const folders = await resp.json();
 
-                addFolderSelect.innerHTML = folders.map(f =>
+                const folderOptionsHTML = folders.map(f =>
                     `<option value="${f.id}">${f.name}</option>`
                 ).join("");
 
+                addFolderSelect.innerHTML = folderOptionsHTML;
+
+                const currentManageVal = manageFolderSelect.value;
+                manageFolderSelect.innerHTML = folderOptionsHTML;
+                if (currentManageVal) manageFolderSelect.value = currentManageVal;
+                if (manageFolderSelect.selectedIndex === -1 && folders.length > 0) {
+                    manageFolderSelect.selectedIndex = 0;
+                }
+
                 const currentFilterVal = filterFolder.value;
-                filterFolder.innerHTML = `<option value="">Tất cả thư mục</option>` + folders.map(f =>
-                    `<option value="${f.id}">${f.name}</option>`
-                ).join("");
+                filterFolder.innerHTML = `<option value="">Tất cả thư mục</option>` + folderOptionsHTML;
                 filterFolder.value = currentFilterVal;
+                if (filterFolder.selectedIndex === -1) filterFolder.value = "";
             } catch (err) {
                 console.error("Lỗi tải thư mục:", err);
             }
@@ -251,6 +276,7 @@
                     `<option value="${a.id}">${a.name}</option>`
                 ).join("");
                 filterAuthor.value = currentAuthorVal;
+                if (filterAuthor.selectedIndex === -1) filterAuthor.value = "";
             } catch (err) {
                 console.error("Lỗi tải tác giả:", err);
             }
@@ -267,20 +293,22 @@
                 <div style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fff; display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
                         <a href="detail.html?id=${comic.id}" style="text-decoration: none;">
-                            <img src="${getProxyImageUrl(comic.cover_url)}" alt="${comic.title}" style="width: 100%; height: 230px; object-fit: cover; border-radius: 4px; display: block;" loading="lazy">
+                            <img src="${getProxyImageUrl(comic.cover_url)}" alt="${comic.title}" style="width: 100%; height: auto; border-radius: 4px; display: block;" loading="lazy">
                         </a>
                         <h4 style="margin: 8px 0 4px 0; font-size: 15px; color: #2c3e50;">
                             <a href="detail.html?id=${comic.id}" style="text-decoration: none; color: inherit;">${comic.title}</a>
                         </h4>
                         <div style="font-size: 12px; color: #555; margin-bottom: 8px;">
-                            <div><strong>ID:</strong> ${comic.id} | <strong>Số trang:</strong> ${comic.num_pages}</div>
+                            <div><strong>ID:</strong> ${comic.id} </div>
+                            <div><strong>Số trang:</strong> ${comic.num_pages}</div>
                             <div><strong>Tác giả:</strong> <span style="color: #d63384; font-weight: bold;">${comic.author || "Unknown"}</span></div>
-                            <div><strong>Ngôn ngữ:</strong> ${comic.language || "Unknown"} | <strong>Thư mục:</strong> ${comic.folder_name || "Mặc định"}</div>
+                            <div><strong>Ngôn ngữ:</strong> ${comic.language || "Unknown"} </div>
+                            <div><strong>Thư mục:</strong> ${comic.folder_name || "Mặc định"}</div>
                         </div>
                     </div>
                     <div style="display: flex; gap: 6px; margin-top: 6px;">
                         <a href="detail.html?id=${comic.id}" style="flex: 1; padding: 6px; font-size: 12px; text-align: center; text-decoration: none; background: #0d6efd; color: white; font-weight: bold; border-radius: 4px;">
-                            Chi tiết
+                            Đọc truyện
                         </a>
                         <button type="button" onclick="handleDeleteComic(${comic.id})" style="padding: 6px 10px; font-size: 12px; cursor: pointer; background: #dc3545; color: white; font-weight: bold; border: none; border-radius: 4px;">
                             Xóa
@@ -438,6 +466,75 @@
             }
         });
 
+        // 7b. Xử lý sửa tên thư mục
+        btnRenameFolder.addEventListener("click", async () => {
+            const folderId = parseInt(manageFolderSelect.value, 10);
+            if (!folderId) return;
+            if (folderId === 1) {
+                alert("Không thể đổi tên thư mục 'Mặc định'!");
+                return;
+            }
+
+            const currentName = manageFolderSelect.options[manageFolderSelect.selectedIndex]?.textContent || "";
+            const newName = prompt("Nhập tên mới cho thư mục:", currentName);
+            if (newName === null) return;
+            if (!newName.trim()) {
+                alert("Tên thư mục không được để trống!");
+                return;
+            }
+
+            btnRenameFolder.disabled = true;
+            try {
+                const resp = await fetch(`${API_BASE}/api/folders/${folderId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name: newName.trim(), description: "" })
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.detail || "Không thể đổi tên thư mục!");
+
+                await loadFolders();
+                await loadComics(currentPage);
+                alert(`Đã đổi tên thư mục thành "${data.name}"!`);
+            } catch (err) {
+                alert(`Lỗi: ${err.message}`);
+            } finally {
+                btnRenameFolder.disabled = false;
+            }
+        });
+
+        // 7c. Xử lý xóa thư mục
+        btnDeleteFolder.addEventListener("click", async () => {
+            const folderId = parseInt(manageFolderSelect.value, 10);
+            if (!folderId) return;
+            if (folderId === 1) {
+                alert("Không thể xóa thư mục 'Mặc định'!");
+                return;
+            }
+
+            const currentName = manageFolderSelect.options[manageFolderSelect.selectedIndex]?.textContent || "";
+            if (!confirm(`Bạn có chắc muốn xóa thư mục "${currentName}"?\n(Các bộ truyện trong thư mục này sẽ được chuyển về thư mục "Mặc định")`)) {
+                return;
+            }
+
+            btnDeleteFolder.disabled = true;
+            try {
+                const resp = await fetch(`${API_BASE}/api/folders/${folderId}`, {
+                    method: "DELETE"
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.detail || "Không thể xóa thư mục!");
+
+                await loadFolders();
+                await loadComics(currentPage);
+                alert(`Đã xóa thư mục "${currentName}" thành công!`);
+            } catch (err) {
+                alert(`Lỗi: ${err.message}`);
+            } finally {
+                btnDeleteFolder.disabled = false;
+            }
+        });
+
         // 8. Xử lý xóa truyện
         window.handleDeleteComic = async function(comicId) {
             if (!confirm(`Bạn có chắc chắn muốn xóa truyện ID ${comicId} khỏi thư viện?`)) {
@@ -468,6 +565,7 @@
             searchCheckStatus.style.color = "#555";
             searchCheckStatus.style.borderColor = "#ccc";
             searchCheckStatus.innerHTML = `<em>Nhập ID truyện và bấm <strong>"Tìm"</strong> để kiểm tra xem truyện đã có trong thư viện chưa trước khi thêm.</em>`;
+            loadBackgrounds();
             loadComics(1);
         });
 
@@ -531,9 +629,47 @@
             }
         });
 
+        // 11. Tải danh sách hình nền và đổi hình nền
+        const bgSelect = document.getElementById("bgSelect");
+        const savedBg = localStorage.getItem("hmanga_bg");
+        if (savedBg) {
+            document.body.style.backgroundImage = `url("${API_BASE}/backgrounds/${encodeURIComponent(savedBg)}")`;
+        }
+
+        async function loadBackgrounds() {
+            try {
+                const resp = await fetch(`${API_BASE}/api/backgrounds`);
+                if (!resp.ok) return;
+                const files = await resp.json();
+                if (!Array.isArray(files) || files.length === 0) return;
+
+                bgSelect.innerHTML = files.map(name =>
+                    `<option value="${name}">${name}</option>`
+                ).join("");
+
+                const currentBg = localStorage.getItem("hmanga_bg");
+                if (currentBg && files.includes(currentBg)) {
+                    bgSelect.value = currentBg;
+                } else {
+                    bgSelect.value = files[0];
+                    localStorage.setItem("hmanga_bg", files[0]);
+                }
+                document.body.style.backgroundImage = `url("${API_BASE}/backgrounds/${encodeURIComponent(bgSelect.value)}")`;
+            } catch (err) {
+                console.error("Lỗi tải danh sách hình nền:", err);
+            }
+        }
+
+        bgSelect.addEventListener("change", () => {
+            const chosen = bgSelect.value;
+            if (!chosen) return;
+            localStorage.setItem("hmanga_bg", chosen);
+            document.body.style.backgroundImage = `url("${API_BASE}/backgrounds/${encodeURIComponent(chosen)}")`;
+        });
+
         // Khởi chạy khi mở Trang chủ
         window.addEventListener("DOMContentLoaded", async () => {
-            await Promise.all([loadFolders(), loadAuthors()]);
+            await Promise.all([loadFolders(), loadAuthors(), loadBackgrounds()]);
             await loadComics(1);
         });
     </script>
