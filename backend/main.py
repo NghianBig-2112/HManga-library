@@ -15,6 +15,7 @@ from pydantic import BaseModel
 
 from database import init_db
 import services
+import backup
 from nhentai import fetch_comic_from_nhentai
 
 # 1. Khởi tạo ứng dụng FastAPI
@@ -62,6 +63,9 @@ class ChapterAddRequest(BaseModel):
 class FolderCreateRequest(BaseModel):
     name: str
     description: Optional[str] = ""
+
+class ComicFolderUpdateRequest(BaseModel):
+    folder_id: int
 
 # ==================== COMICS ROUTES ====================
 @app.get("/api/comics", summary="Lấy danh sách truyện ở Trang chủ (12 bộ / trang)")
@@ -113,6 +117,14 @@ def delete_comic(comic_id: int):
         raise HTTPException(status_code=404, detail="Bộ truyện không tồn tại để xóa!")
     return {"status": "success", "message": f"Đã xóa thành công truyện ID {comic_id}"}
 
+@app.put("/api/comics/{comic_id}/folder", summary="Đổi thư mục của 1 bộ truyện")
+def change_comic_folder(comic_id: int, data: ComicFolderUpdateRequest):
+    """Cập nhật thư mục (folder_id) cho bộ truyện."""
+    try:
+        updated = services.update_comic_folder(comic_id=comic_id, folder_id=data.folder_id)
+        return {"status": "success", "comic": updated}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 # ==================== CHAPTERS ROUTES ====================
 
@@ -206,6 +218,25 @@ def get_nhentai_gallery(gallery_id: int):
         return data
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+# ==================== BACKUP & RESTORE ROUTES ====================
+
+@app.post("/api/backup", summary="Sao lưu toàn bộ dữ liệu từ Supabase ra file backup.json")
+def backup_library():
+    try:
+        filepath = backup.save_backup_file()
+        return {"status": "success", "filepath": filepath}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/api/restore", summary="Khôi phục toàn bộ dữ liệu từ file backup.json lên Supabase")
+def restore_library():
+    try:
+        return backup.restore_backup_from_file()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 
 # ==================== MOUNT FRONTEND (NẾU CÓ) ====================
 

@@ -164,8 +164,6 @@ def get_all_comics(folder_id: int = None, artist_id: int = None, page: int = 1, 
     if limit < 1:
         limit = 12
 
-    offset = (page - 1) * limit
-
     with get_connection() as conn:
         with conn.cursor() as cur:
             base_from = """
@@ -195,6 +193,11 @@ def get_all_comics(folder_id: int = None, artist_id: int = None, page: int = 1, 
             cur.execute(count_query, params)
             total_comics = cur.fetchone()["total"]
             total_pages = math.ceil(total_comics / limit) if total_comics > 0 else 1
+
+            # Tự động lùi về trang cuối cùng nếu trang hiện tại vừa bị xóa hết truyện
+            if page > total_pages:
+                page = total_pages
+            offset = (page - 1) * limit
 
             # 2. Lấy đúng 12 bộ truyện mới nhất của trang hiện tại
             data_query = f"""
@@ -454,7 +457,7 @@ def split_comic_into_chapters(comic_id: int, chapters_data: list[dict]) -> list:
                     raise ValueError(f"Chapter '{title}': trang bắt đầu ({start_p}) không được lớn hơn trang kết thúc ({end_p})!")
 
             # 3. Xóa các chapter cũ của truyện này để áp dụng danh sách mới
-            cur.execute("DELETE FROM chapters WHERE comic_id = %s;", (comic_id,))
+            cur.execute("DELETE FROM chapters WHERE comic_id = %s AND media_id = %s;", (comic_id, str(media_id)))
 
             # 4. Lưu từng chapter do người dùng tự đặt vào CSDL
             created_chapters = []
@@ -473,6 +476,20 @@ def split_comic_into_chapters(comic_id: int, chapters_data: list[dict]) -> list:
                     page_exts
                 ))
                 created_chapters.append(cur.fetchone())
+
+            # 5. Đẩy số thứ tự của các chapter từ ID khác (nếu có) nối tiếp ngay sau các chapter vừa chia
+            cur.execute("""
+                SELECT id FROM chapters
+                WHERE comic_id = %s AND media_id != %s
+                ORDER BY chapter_number ASC, id ASC;
+            """, (comic_id, str(media_id)))
+            external_chapters = cur.fetchall()
+            next_num = len(created_chapters) + 1
+            for ext_ch in external_chapters:
+                cur.execute("""
+                    UPDATE chapters SET chapter_number = %s WHERE id = %s;
+                """, (next_num, ext_ch["id"]))
+                next_num += 1
 
     print(f"[INFO] Da chia thu cong truyen {comic_id} thanh {len(created_chapters)} chapters theo y nguoi dung.")
     return created_chapters
@@ -564,10 +581,41 @@ def create_folder(name: str, description: str = "") -> dict:
     print(f"[INFO] Da tao thu muc: '{new_folder['name']}' (ID: {new_folder['id']})")
     return new_folder
 
+def update_comic_folder(comic_id: int, folder_id: int) -> dict:
+    """
+    Chuyển một bộ truyện sang thư mục khác.
+    """
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            # Kiểm tra thư mục đích có tồn tại không
+            cur.execute("SELECT id, name FROM folders WHERE id = %s;", (folder_id,))
+            folder = cur.fetchone()
+            if not folder:
+                raise ValueError(f"Thư mục ID {folder_id} không tồn tại!")
+
+            # Cập nhật folder_id cho bộ truyện
+            cur.execute("""
+                UPDATE comics
+                SET folder_id = %s
+                WHERE id = %s
+                RETURNING id, title, folder_id;
+            """, (folder_id, comic_id))
+            updated = cur.fetchone()
+            if not updated:
+                raise ValueError(f"Không tìm thấy truyện ID {comic_id}!")
+
+            updated["folder_name"] = folder["name"]
+            return updated
+
 def get_all_authors() -> list:
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT id, name, slug FROM artists ORDER BY name ASC;")
+            cur.execute("""
+                SELECT DISTINCT a.id, a.name, a.slug
+                FROM artists a
+                JOIN comic_artists ca ON a.id = ca.artist_id
+                ORDER BY a.name ASC;
+            """)
             return cur.fetchall()
 
 

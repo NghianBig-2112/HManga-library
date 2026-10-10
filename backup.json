@@ -1,0 +1,122 @@
+{
+  "folders": [
+    {
+      "id": 1,
+      "name": "Mặc định",
+      "description": "Thư mục truyện mặc định"
+    }
+  ],
+  "artists": [
+    {
+      "id": 2439,
+      "name": "o.ri",
+      "slug": "o-ri"
+    }
+  ],
+  "genres": [
+    {
+      "id": 6343,
+      "name": "pregnant",
+      "slug": "pregnant"
+    },
+    {
+      "id": 8010,
+      "name": "group",
+      "slug": "group"
+    },
+    {
+      "id": 8378,
+      "name": "glasses",
+      "slug": "glasses"
+    },
+    {
+      "id": 13720,
+      "name": "nakadashi",
+      "slug": "nakadashi"
+    },
+    {
+      "id": 14283,
+      "name": "anal",
+      "slug": "anal"
+    },
+    {
+      "id": 15785,
+      "name": "harem",
+      "slug": "harem"
+    },
+    {
+      "id": 20525,
+      "name": "defloration",
+      "slug": "defloration"
+    },
+    {
+      "id": 22942,
+      "name": "incest",
+      "slug": "incest"
+    },
+    {
+      "id": 23237,
+      "name": "tankoubon",
+      "slug": "tankoubon"
+    },
+    {
+      "id": 28031,
+      "name": "sister",
+      "slug": "sister"
+    },
+    {
+      "id": 29224,
+      "name": "impregnation",
+      "slug": "impregnation"
+    }
+  ],
+  "comics": [
+    {
+      "id": 14414,
+      "folder_id": 1,
+      "media_id": "48410",
+      "title": "Family Play",
+      "artist": "o.ri",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/48410/cover.jpg",
+      "num_pages": 236,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-10T11:03:52.693171+00:00",
+      "artist_ids": [
+        2439
+      ],
+      "genre_ids": [
+        8010,
+        13720,
+        14283,
+        8378,
+        22942,
+        23237,
+        20525,
+        29224,
+        28031,
+        6343,
+        15785
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Chapter 1:",
+          "media_id": "48410",
+          "start_page": 1,
+          "end_page": 28,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 2.0,
+          "title": "Chapter 2",
+          "media_id": "48410",
+          "start_page": 28,
+          "end_page": 57,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        }
+      ]
+    }
+  ]
+}

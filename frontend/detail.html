@@ -70,7 +70,13 @@
                     <h2 id="comicTitle" style="color: #2c3e50; margin-top: 0; margin-bottom: 12px;">Family Play</h2>
                     <p style="margin: 6px 0;"><strong>ID:</strong> <span id="comicId">14414</span></p>
                     <p style="margin: 6px 0;"><strong>Tác giả:</strong> <span id="comicArtist" style="color: #d63384; font-weight: bold;">o.ri</span></p>
-                    <p style="margin: 6px 0;"><strong>Thư mục:</strong> <span id="comicFolder">Mặc định</span></p>
+                    <p style="margin: 6px 0; display: flex; align-items: center; gap: 8px;">
+                        <strong>Thư mục:</strong>
+                        <select id="comicFolderSelect" style="padding: 4px 8px; font-size: 14px; border-radius: 4px; border: 1px solid #ccc; cursor: pointer;">
+                            <option value="1">Mặc định</option>
+                            <option value="2">Yêu thích</option>
+                        </select>
+                    </p>
                     <p style="margin: 6px 0;"><strong>Ngôn ngữ:</strong> <span id="comicLanguage" style="color: #0d6efd; font-weight: bold;">english</span></p>
                     <p style="margin: 6px 0;"><strong>Thể loại chính:</strong> <span id="comicCategory" style="color: #198754; font-weight: bold;">manga</span></p>
                     <p style="margin: 6px 0;"><strong>Thể loại chi tiết:</strong> <span id="comicGenres">big breasts, sister, mother, incest, nakadashi, sole male</span></p>
@@ -226,7 +232,7 @@
         const comicTitle = document.getElementById("comicTitle");
         const comicIdEl = document.getElementById("comicId");
         const comicArtist = document.getElementById("comicArtist");
-        const comicFolder = document.getElementById("comicFolder");
+        const comicFolderSelect = document.getElementById("comicFolderSelect");
         const comicLanguage = document.getElementById("comicLanguage");
         const comicCategory = document.getElementById("comicCategory");
         const comicGenres = document.getElementById("comicGenres");
@@ -319,9 +325,14 @@
             if (!comicId) return;
 
             try {
-                const resp = await fetch(`${API_BASE}/api/comics/${comicId}`);
+                const [resp, foldersResp] = await Promise.all([
+                    fetch(`${API_BASE}/api/comics/${comicId}`),
+                    fetch(`${API_BASE}/api/folders`)
+                ]);
                 const comic = await resp.json();
                 if (!resp.ok) throw new Error(comic.detail || "Không tìm thấy truyện!");
+
+                const folders = foldersResp.ok ? await foldersResp.json() : [];
 
                 currentComic = comic;
                 document.title = `Thư Viện HManga — ${comic.title}`;
@@ -331,7 +342,17 @@
                 comicTitle.textContent = comic.title;
                 comicIdEl.textContent = comic.id;
                 comicArtist.textContent = comic.author || "Unknown";
-                comicFolder.textContent = comic.folder_name || "Mặc định";
+
+                // Đổ danh sách thư mục vào ô chọn và chọn sẵn thư mục hiện tại của truyện
+                if (folders.length > 0) {
+                    comicFolderSelect.innerHTML = folders
+                        .map(f => `<option value="${f.id}">${f.name}</option>`)
+                        .join("");
+                    comicFolderSelect.value = String(comic.folder_id || 1);
+                } else {
+                    comicFolderSelect.innerHTML = `<option value="${comic.folder_id || 1}">${comic.folder_name || "Mặc định"}</option>`;
+                }
+
                 comicLanguage.textContent = comic.language || "Unknown";
                 comicCategory.textContent = comic.category || "Unknown";
                 comicGenres.textContent = (comic.genres && comic.genres.length > 0)
@@ -360,10 +381,11 @@
                     }).join("");
                 }
 
-                // 3. Khởi tạo các dòng chia Chapter trong Công cụ 2
+                // 3. Khởi tạo các dòng chia Chapter trong Công cụ 2 (chỉ lấy các chapter thuộc bộ truyện gốc)
                 splitRowsContainer.innerHTML = "";
-                if (chapters.length > 0) {
-                    chapters.forEach(ch => {
+                const mainChapters = chapters.filter(ch => String(ch.media_id) === String(comic.media_id));
+                if (mainChapters.length > 0) {
+                    mainChapters.forEach(ch => {
                         splitRowsContainer.appendChild(
                             createSplitRowHTML(ch.title || `Chapter ${Number(ch.chapter_number)}`, ch.start_page, ch.end_page)
                         );
@@ -382,6 +404,33 @@
                 alert(`Lỗi: ${err.message}`);
             }
         }
+
+        // Đổi thư mục của bộ truyện ngay khi chọn thư mục mới trong dropdown
+        comicFolderSelect.addEventListener("change", async () => {
+            if (!comicId) return;
+            const newFolderId = parseInt(comicFolderSelect.value, 10);
+            comicFolderSelect.disabled = true;
+            try {
+                const resp = await fetch(`${API_BASE}/api/comics/${comicId}/folder`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ folder_id: newFolderId })
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.detail || "Không thể đổi thư mục!");
+
+                if (currentComic) {
+                    currentComic.folder_id = newFolderId;
+                }
+            } catch (err) {
+                alert(`Lỗi khi đổi thư mục: ${err.message}`);
+                if (currentComic) {
+                    comicFolderSelect.value = String(currentComic.folder_id || 1);
+                }
+            } finally {
+                comicFolderSelect.disabled = false;
+            }
+        });
 
         // Xử lý Công cụ 1: Thêm Chapter mới từ ID khác
         btnAddChapter.addEventListener("click", async () => {

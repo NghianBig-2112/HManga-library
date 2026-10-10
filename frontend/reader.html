@@ -171,6 +171,7 @@
 
         let currentSlideIndex = 0;
         let totalSlides = 0;
+        let isLockingInitialVerticalScroll = false;
 
         function getProxyImageUrl(url) {
             if (!url) return "assets/rem.jpg";
@@ -194,6 +195,14 @@
             });
         }
 
+        // Tắt khóa cuộn trang ban đầu khi người dùng chủ động lăn chuột / vuốt cảm ứng / bấm phím
+        function unlockInitialVerticalScroll() {
+            isLockingInitialVerticalScroll = false;
+        }
+        window.addEventListener("wheel", unlockInitialVerticalScroll, { passive: true });
+        window.addEventListener("touchmove", unlockInitialVerticalScroll, { passive: true });
+        window.addEventListener("keydown", unlockInitialVerticalScroll);
+
         // Tải danh sách ảnh của 1 Chapter và đổ vào 2 chế độ đọc
         async function loadChapterPages(chapterId, startAtPageNumber = null) {
             if (!chapterId) return;
@@ -208,9 +217,9 @@
                 currentSlideIndex = 0;
                 currentPageIndexEl.textContent = totalSlides > 0 ? 1 : 0;
 
-                // 1. Đổ ảnh vào Chế độ 1: Cuộn dọc (trực tiếp thẻ <img> full màn hình)
+                // 1. Đổ ảnh vào Chế độ 1: Cuộn dọc (đặt min-height tạm thời trước khi ảnh tải xong để không bị nhảy trang)
                 verticalContainer.innerHTML = pages.map(p =>
-                    `<img src="${getProxyImageUrl(p.url)}" alt="Trang ${p.page_number}" data-page="${p.page_number}" style="width: 100vw; height: auto; display: block;" loading="lazy">`
+                    `<img src="${getProxyImageUrl(p.url)}" alt="Trang ${p.page_number}" data-page="${p.page_number}" onload="this.style.minHeight='0'" style="width: 100vw; min-height: 100vh; height: auto; display: block;" loading="lazy">`
                 ).join("");
 
                 // 2. Đổ ảnh vào Chế độ 2: Cuộn ngang (trực tiếp thẻ <img> full màn hình 100vw x 100vh)
@@ -222,16 +231,32 @@
                 if (startAtPageNumber && startAtPageNumber > 1) {
                     const targetIdx = pages.findIndex(p => p.page_number === startAtPageNumber);
                     if (targetIdx >= 0) {
-                        setTimeout(() => {
+                        currentSlideIndex = targetIdx;
+                        currentPageIndexEl.textContent = currentSlideIndex + 1;
+                        isLockingInitialVerticalScroll = true;
+
+                        const targetImg = verticalContainer.children[targetIdx];
+                        if (targetImg) {
+                            // Giữ đúng vị trí trang mục tiêu ngay cả khi các trang phía trên đang tải dần về
+                            Array.from(verticalContainer.children).slice(0, targetIdx + 1).forEach(img => {
+                                img.addEventListener("load", () => {
+                                    if (isLockingInitialVerticalScroll && modeVertical.checked) {
+                                        targetImg.scrollIntoView({ block: "start" });
+                                    }
+                                });
+                            });
+                        }
+
+                        requestAnimationFrame(() => {
                             if (modeHorizontal.checked) {
                                 scrollToHorizontalSlide(targetIdx, false);
-                            } else {
-                                const imgEl = verticalContainer.children[targetIdx];
-                                if (imgEl) imgEl.scrollIntoView();
+                            } else if (targetImg) {
+                                targetImg.scrollIntoView({ block: "start" });
                             }
-                        }, 100);
+                        });
                     }
                 } else {
+                    isLockingInitialVerticalScroll = false;
                     window.scrollTo(0, 0);
                     horizontalContainer.scrollTo(0, 0);
                 }
@@ -284,12 +309,50 @@
             loadChapterPages(currentChapterId, null);
         });
 
+        // Khi bấm chuyển sang chế độ Cuộn ngang -> đợi khung ngang hiện ra rồi nhảy đúng tới trang đang đọc
+        modeHorizontal.addEventListener("change", () => {
+            if (modeHorizontal.checked) {
+                isLockingInitialVerticalScroll = false;
+                requestAnimationFrame(() => {
+                    scrollToHorizontalSlide(currentSlideIndex, false);
+                });
+            }
+        });
+
+        // Khi bấm chuyển ngược từ Cuộn ngang về Cuộn dọc -> nhảy đúng tới trang đang đọc
+        modeVertical.addEventListener("change", () => {
+            if (modeVertical.checked) {
+                requestAnimationFrame(() => {
+                    const imgEl = verticalContainer.children[currentSlideIndex];
+                    if (imgEl) imgEl.scrollIntoView({ block: "start" });
+                });
+            }
+        });
+
         // Nút Trang trước / Trang sau ở chế độ Cuộn ngang
         btnPrevPage.addEventListener("click", () => scrollToHorizontalSlide(currentSlideIndex - 1));
         btnNextPage.addEventListener("click", () => scrollToHorizontalSlide(currentSlideIndex + 1));
 
+        // Cập nhật trang hiện tại khi người dùng cuộn dọc
+        window.addEventListener("scroll", () => {
+            if (!modeVertical.checked || isLockingInitialVerticalScroll || totalSlides === 0) return;
+            const viewportCenter = window.innerHeight / 2;
+            const imgs = verticalContainer.children;
+            for (let i = 0; i < imgs.length; i++) {
+                const rect = imgs[i].getBoundingClientRect();
+                if (rect.top <= viewportCenter && rect.bottom >= viewportCenter) {
+                    if (currentSlideIndex !== i) {
+                        currentSlideIndex = i;
+                        currentPageIndexEl.textContent = currentSlideIndex + 1;
+                    }
+                    break;
+                }
+            }
+        }, { passive: true });
+
         // Cập nhật số trang hiện tại khi người dùng lướt ngang bằng chuột / cảm ứng
         horizontalContainer.addEventListener("scroll", () => {
+            if (!modeHorizontal.checked) return;
             if (window.innerWidth > 0) {
                 const idx = Math.round(horizontalContainer.scrollLeft / window.innerWidth);
                 if (idx >= 0 && idx < totalSlides && idx !== currentSlideIndex) {

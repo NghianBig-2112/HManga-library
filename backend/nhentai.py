@@ -5,7 +5,7 @@
 import requests
 # from urllib.parse import urlparse
 
-NHENTAI_SERVER = "https://nhentai.net/"
+NHENTAI_SERVER = "https://nhentai.net"
 IMAGE_SERVER = "https://i3.nhentai.net"
 THUMB_SERVER = "https://t3.nhentai.net"
 
@@ -38,7 +38,8 @@ def extract_gallery_data(data):
 	media_id = int(data.get("media_id"))
 
 	# 2. Lấy tên truyện
-	title_pretty = str(data.get("title").get("pretty"))
+	title_obj = data.get("title") or {}
+	title_pretty = str(title_obj.get("pretty") or title_obj.get("english") or title_obj.get("japanese") or f"Comic {id}")
 
 	# 3. Lấy đường dẫn ảnh bìa
 	cover_path = data.get("cover").get("path")
