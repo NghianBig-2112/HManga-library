@@ -1,201 +1,128 @@
 # 📚 HManga-library
 
-Website đọc và quản lý truyện tranh cá nhân — đồng bộ đám mây với **Supabase (PostgreSQL)**, tích hợp trực tiếp **NHentai API v2**, cơ chế đọc truyện **Zero-Storage** (không tốn dung lượng ổ đĩa) và khả năng khôi phục dữ liệu tự động.
+Ứng dụng web quản lý và đọc truyện tranh cá nhân — đồng bộ cơ sở dữ liệu đám mây với **Supabase (PostgreSQL)**, tích hợp trực tiếp **NHentai API v2**, đọc truyện trực tuyến **Zero-Storage** qua **In-Memory Image Proxy** (vượt chặn nhà mạng, không tốn dung lượng ổ cứng) và hỗ trợ sao lưu / khôi phục dữ liệu chỉ với 1 cú nhấp chuột.
 
 ---
 
-## 🏗️ Kiến trúc dự án: Clean Layered Architecture (v4.0)
+## 🏗️ Cấu trúc dự án
 
-Hệ thống được thiết kế theo kiến trúc phân tầng tinh gọn, loại bỏ các thành phần cồng kềnh, tối ưu hóa 100% cho **Supabase Cloud Database**:
-
-```
+```text
 HManga-library/
-├── backend/                       ← FastAPI (Python) — Clean Layered
-│   ├── data/                      ← Thư mục lưu bản sao lưu dự phòng
-│   │   └── backup.json            ← Snapshot dữ liệu tối giản (Disaster Recovery)
-│   ├── database.py                ← Kết nối Supabase (Client Singleton)
-│   ├── models.py                  ← Pydantic schemas cho request validation & Chapter
-│   ├── services.py                ← Toàn bộ Business Logic, Supabase queries & Chapter
-│   ├── nhentai.py                 ← Trích xuất thông tin, CDN & In-Memory Image Proxy
-│   ├── backup.py                  ← Logic kết xuất & Tự động phục hồi lên Supabase
-│   ├── main.py                    ← Khởi tạo app FastAPI, static files & routes API
-│   ├── requirements.txt           ← Dependencies (fastapi, uvicorn, supabase, requests...)
-│   ├── .env                       ← File cấu hình biến môi trường (URL, Key)
-│   └── .env.example               ← File mẫu cấu hình biến môi trường
+├── backend/                       ← Backend (FastAPI + PostgreSQL/psycopg2)
+│   ├── database.py                ← Kết nối Supabase (DATABASE_URL) & tự động khởi tạo 7 bảng CSDL
+│   ├── nhentai.py                 ← Gọi NHentai API v2, bóc tách dữ liệu & mã hóa đuôi ảnh từng trang (page_exts)
+│   ├── services.py                ← Toàn bộ nghiệp vụ CRUD: Truyện, Chapter, Thư mục, Tác giả, Thể loại
+│   ├── backup.py                  ← Sao lưu (Export) & Khôi phục (Restore) toàn bộ CSDL qua file backup.json
+│   └── main.py                    ← FastAPI Server, REST API, Image Proxy (/api/image-proxy) & Mount Frontend
 │
-├── frontend/                      ← HTML5 + Modern Dark CSS + Vanilla JS
-│   ├── assets/                    ← Icon, logo và ảnh dự phòng
-│   ├── index.html                 ← Thư viện cá nhân: Quản lý Thư mục & Tác giả
-│   ├── detail.html                ← Chi tiết truyện & Quản lý Chapter (Gộp bộ / Chia trang)
-│   ├── reader.html                ← Trình đọc truyện (Webtoon cuộn dọc / Manga từng trang)
-│   ├── style.css                  ← Toàn bộ stylesheet giao diện Dark Theme hiện đại
-│   └── app.js                     ← API Client, Toast, Confirm modal dùng chung
+├── frontend/                      ← Frontend (HTML5 + CSS + Vanilla JS thuần, gọn nhẹ)
+│   ├── assets/                    ← Ảnh nền (background.jpg) và ảnh đại diện mặc định (rem.jpg)
+│   ├── index.html                 ← Trang chủ: Tìm kiểm tra & thêm truyện, tạo thư mục, lọc, sao lưu/khôi phục, phân trang
+│   ├── detail.html                ← Chi tiết truyện: Đổi thư mục, gộp phần mới từ ID khác, chia nhỏ chapter, xem trước trang
+│   └── reader.html                ← Trình đọc toàn màn hình: Cuộn dọc & Cuộn ngang, thanh điều khiển ẩn ở mép trên
 │
-├── DATABASE_REDESIGN.md           ← Bản thiết kế kiến trúc cơ sở dữ liệu chi tiết
-└── README.md                      ← Hướng dẫn sử dụng & tài liệu dự án
+├── .env                           ← Cấu hình kết nối DATABASE_URL tới Supabase PostgreSQL
+├── backup.json                    ← Bản sao lưu toàn bộ thư viện (dùng để lưu trữ trên GitHub & khôi phục nhanh)
+├── requirements.txt               ← Danh sách thư viện Python cần thiết
+└── README.md                      ← Tài liệu hướng dẫn sử dụng dự án
 ```
 
 | Thành phần | Công nghệ | Chi tiết |
 |---|---|---|
-| **Frontend** | HTML5 + CSS3 + Vanilla JS (Dark theme) | Tương tác mượt mà, không cần Node.js hay build tool |
-| **Backend** | FastAPI + Uvicorn (Clean Layered) | Port `8000` (serve cả REST API và giao diện web tĩnh) |
-| **Database** | **Supabase (PostgreSQL Cloud)** | 5 bảng cốt lõi + Chapters, dữ liệu nằm vĩnh viễn trên Cloud |
-| **Storage Engine** | **Zero-Storage (In-Memory Streaming)** | Đọc truyện trực tiếp qua proxy RAM, 0 byte ổ cứng |
+| **Frontend** | HTML5 + CSS + Vanilla JS | Tối giản, phản hồi nhanh, gói gọn trong 3 trang (`index.html`, `detail.html`, `reader.html`) |
+| **Backend** | FastAPI + Uvicorn | Cổng `8000` — phục vụ đồng thời cả REST API lẫn giao diện tĩnh Frontend |
+| **Database** | **Supabase (PostgreSQL)** | Kết nối trực tiếp qua `psycopg2`, tự động khởi tạo 7 bảng chuẩn hóa khi chạy server |
+| **Image Proxy** | **In-Memory Streaming (`requests`)** | Tải ảnh từ CDN về RAM rồi trả thẳng cho trình duyệt, vượt tường lửa ISP và không lưu rác ổ cứng |
 
 ---
 
-## ⚡ Cài đặt & Khởi chạy (Siêu đơn giản)
+## ⚡ Cài đặt & Khởi chạy
 
-### Bước 1: Clone repository
+### Bước 1: Clone dự án
 ```powershell
-git clone https://github.com/Dekisugi-2112/HManga-library.git
+git clone https://github.com/NghianBig-2112/HManga-library.git
 cd HManga-library
 ```
 
-### Bước 2: Cài đặt Python dependencies
+### Bước 2: Cài đặt thư viện Python
 ```powershell
-cd backend
 pip install -r requirements.txt
 ```
 
-### Bước 3: Cấu hình biến môi trường
-Tạo file `backend/.env` (hoặc sao chép từ `.env.example`):
+### Bước 3: Cấu hình biến môi trường (`.env`)
+Tạo file `.env` tại thư mục gốc của dự án (hoặc trong `backend/.env`) với chuỗi kết nối PostgreSQL từ **Supabase Dashboard** (*Project Settings $\rightarrow$ Database $\rightarrow$ Connection string $\rightarrow$ URI*):
 ```env
-# Supabase Configuration (Bắt buộc)
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your-supabase-key
+DATABASE_URL=postgresql://postgres.[YOUR-PROJECT-REF]:[YOUR-PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres
 ```
 
-### Bước 4: Tạo bảng trên Supabase (Chỉ cần chạy 1 lần khi tạo project mới)
-Vào mục **SQL Editor** trên [Supabase Dashboard](https://supabase.com/dashboard) và chạy script:
-```sql
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
-
-CREATE TABLE IF NOT EXISTS folders (
-    id BIGSERIAL PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL,
-    description TEXT DEFAULT '',
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS comics (
-    id BIGINT PRIMARY KEY,
-    media_id TEXT NOT NULL,
-    title_pretty TEXT NOT NULL,
-    cover_path TEXT NOT NULL,
-    num_pages INT NOT NULL DEFAULT 1,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS tags (
-    id BIGINT PRIMARY KEY,
-    type TEXT NOT NULL,
-    name TEXT NOT NULL,
-    slug TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS folder_comics (
-    folder_id BIGINT REFERENCES folders(id) ON DELETE CASCADE,
-    comic_id BIGINT REFERENCES comics(id) ON DELETE CASCADE,
-    added_at TIMESTAMPTZ DEFAULT NOW(),
-    PRIMARY KEY (folder_id, comic_id)
-);
-
-CREATE TABLE IF NOT EXISTS comic_tags (
-    comic_id BIGINT REFERENCES comics(id) ON DELETE CASCADE,
-    tag_id BIGINT REFERENCES tags(id) ON DELETE CASCADE,
-    PRIMARY KEY (comic_id, tag_id)
-);
-
-CREATE TABLE IF NOT EXISTS chapters (
-    id BIGSERIAL PRIMARY KEY,
-    comic_id BIGINT REFERENCES comics(id) ON DELETE CASCADE,
-    chapter_number NUMERIC NOT NULL,
-    title TEXT,
-    media_id TEXT NOT NULL,
-    start_page INT NOT NULL DEFAULT 1,
-    end_page INT NOT NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_comics_title ON comics USING gin (title_pretty gin_trgm_ops);
-CREATE INDEX IF NOT EXISTS idx_tags_type ON tags(type);
-CREATE INDEX IF NOT EXISTS idx_comic_tags_tag ON comic_tags(tag_id);
-CREATE INDEX IF NOT EXISTS idx_folder_comics_folder ON folder_comics(folder_id);
-CREATE INDEX IF NOT EXISTS idx_chapters_comic_id ON chapters(comic_id);
-
--- Cấp toàn quyền truy cập cho backend (service_role, anon, authenticated)
-GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
-GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated, service_role;
-GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
-GRANT ALL ON ALL ROUTINES IN SCHEMA public TO anon, authenticated, service_role;
-
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated, service_role;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO anon, authenticated, service_role;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON ROUTINES TO anon, authenticated, service_role;
-
--- Tắt RLS để backend thao tác trực tiếp không bị chặn
-ALTER TABLE folders DISABLE ROW LEVEL SECURITY;
-ALTER TABLE comics DISABLE ROW LEVEL SECURITY;
-ALTER TABLE tags DISABLE ROW LEVEL SECURITY;
-ALTER TABLE folder_comics DISABLE ROW LEVEL SECURITY;
-ALTER TABLE comic_tags DISABLE ROW LEVEL SECURITY;
-ALTER TABLE chapters DISABLE ROW LEVEL SECURITY;
-```
-
-### Bước 5: Khởi chạy Server
+### Bước 4: Khởi chạy Server
+Không cần tạo bảng thủ công trên Supabase — ngay khi khởi động, `main.py` sẽ tự động gọi `init_db(reset=False)` để tạo đầy đủ các bảng và thư mục **Mặc định** nếu chưa có:
 ```powershell
+cd backend
 uvicorn main:app --reload
 ```
 
-Khi thấy thông báo sau là hệ thống đã sẵn sàng:
-```
-[INFO] Kết nối Supabase thành công và sẵn sàng phục vụ.
-INFO:     Uvicorn running on http://127.0.0.1:8000
-```
+Mở trình duyệt truy cập: **http://127.0.0.1:8000**
 
-Mở trình duyệt truy cập: **http://localhost:8000**
-
----
-
-## 📖 Tính năng nổi bật
-
-### 1. Thư viện cá nhân thông minh (`/index.html`)
-- **Quản lý Thư mục kiểu Spotify (Playlists)**: Tạo, đổi tên, xóa thư mục và phân loại truyện theo sở thích.
-- **Quản lý Tác giả (Authors)**: Tự động trích xuất tác giả từ các bộ truyện đã lưu; nhấp vào tác giả để xem nhanh toàn bộ tác phẩm của họ trong thư viện.
-- **Tìm kiếm nhanh**: Lọc truyện theo tên, thư mục hoặc tác giả tức thì.
-- **Thêm truyện 1-Click**: Nhập ID truyện (VD: `686045`) $\rightarrow$ Xem trước $\rightarrow$ Lưu vào thư viện.
-
-### 2. Mô hình Chapter thống nhất (`/detail.html`)
-Xử lý linh hoạt cả 2 trường hợp quản lý truyện:
-- **Trường hợp 1 (Gộp nhiều bộ thành 1 truyện)**: Gộp các volume/tập truyện riêng biệt trên NHentai thành 1 bộ nhiều chapter (mỗi chapter lưu `media_id` riêng của gallery đó).
-- **Trường hợp 2 (Chia 1 bộ dài thành nhiều chapter)**: Tự động chia 1 bộ truyện 200 trang thành nhiều chương nhỏ theo dải trang (1-30, 31-60...) giúp theo dõi tiến độ dễ dàng.
-
-### 3. Trình đọc truyện mượt mà (`/reader.html`)
-- **📜 Webtoon**: Cuộn dọc liên tục, tự động căn chỉnh tỷ lệ khung hình không giật layout.
-- **📄 Manga**: Lật từng trang, hỗ trợ phím mũi tên ← / → và lăn chuột.
-- **Smart Fallback**: Tự động chuyển đổi định dạng ảnh linh hoạt (`.webp` $\rightarrow$ `.jpg` $\rightarrow$ `.png` $\rightarrow$ `.jpeg`) đảm bảo không bị lỗi ảnh 404.
+> **Lưu ý:** Nếu muốn xóa sạch toàn bộ bảng cũ trên Supabase để làm mới lại từ đầu, bạn có thể chạy:
+> ```powershell
+> cd backend
+> python database.py
+> ```
 
 ---
 
-## 🔄 Cơ chế Sao lưu & Phục hồi thảm họa (Disaster Recovery)
+## 📖 Tính năng chi tiết
 
-- **Dữ liệu chính**: Nằm 24/7 trên **Supabase Cloud**, không bị mất khi xóa project trên máy tính hay chuyển máy mới.
-- **Snapshot dự phòng (`backup.json`)**: Mỗi khi bạn thêm/xóa truyện hoặc đổi chapter, hệ thống tự động xuất bản ghi tối giản vào file `backend/data/backup.json`.
-- **Tự động phục hồi khi Supabase bị xóa (sau 1-2 tháng)**:
-  1. Tạo project Supabase mới.
-  2. Dán mã SQL tạo bảng.
-  3. Cập nhật `SUPABASE_URL` và `SUPABASE_KEY` mới vào file `.env`.
-  4. Chạy server: Hệ thống tự động nhận diện database trống (`COUNT == 0`) và bơm lại 100% truyện, thư mục và chapter trong **đúng 1 giây**!
+### 1. Trang chủ (`/index.html`)
+- **Kiểm tra truyện thông minh trước khi thêm (Nút `Tìm`):**
+  1. Kiểm tra xem **ID truyện** đã tồn tại trong Supabase chưa.
+  2. Nếu chưa có ID, hệ thống lấy thông tin từ NHentai và đối chiếu **tên truyện chuẩn (`title_pretty`)** với các bộ đã có trong thư viện.
+  3. Nếu trùng ID hoặc trùng tên, hệ thống lọc và hiển thị ngay bộ truyện đã có lên lưới để bạn bấm vào **Chi tiết** và gộp làm Chapter mới. Nếu hoàn toàn mới, hệ thống báo hợp lệ kèm tên tác giả và tổng số trang.
+- **Thêm truyện & Quản lý Thư mục:** Chọn thư mục muốn lưu và bấm **Thêm vào thư viện**, hoặc tạo nhanh thư mục phân loại mới.
+- **Bộ lọc & Phân trang:**
+  - Lọc danh sách truyện theo **Thư mục** và **Tác giả** (chỉ hiển thị những tác giả đang có truyện trong thư viện).
+  - Hiển thị **12 bộ truyện mới nhất mỗi trang** kèm thanh chuyển trang (*Trang trước / Trang sau*).
+- **Sao lưu & Khôi phục 1-Click:** Hai nút **Sao lưu** và **Khôi phục** nằm ngay cạnh nút **Làm mới** giúp xuất/nhập toàn bộ dữ liệu qua file `backup.json` mà không cần mở Terminal.
+
+### 2. Trang Chi tiết truyện (`/detail.html`)
+- **Thông tin đầy đủ:** Ảnh bìa, Tên truyện, ID, Tác giả, Ngôn ngữ, Thể loại chính (`category`), Thể loại chi tiết (`genres`) và Tổng số trang.
+- **Đổi thư mục trực tiếp:** Ô chọn **Thư mục** cho phép chuyển bộ truyện sang thư mục khác ngay lập tức.
+- **Công cụ 1 — Thêm Chapter mới từ ID khác (Truyện nhiều phần):**
+  - Dùng cho các series có nhiều phần (Part 1, Part 2, Ngoại truyện...) nằm ở các Gallery ID khác nhau trên NHentai. Mỗi chapter lưu `media_id` và `page_exts` riêng của phần đó.
+- **Công cụ 2 — Chia nhỏ truyện dài thành nhiều Chapter theo số trang:**
+  - Cho phép chia một bộ truyện dài thành nhiều hồi/chương với khoảng trang tùy chỉnh (`Từ trang` $\rightarrow$ `Đến trang`).
+  - Tự động tách biệt với các phần ngoại truyện thêm từ Công cụ 1 và tự động đánh lại số thứ tự các phần tiếp theo.
+- **Danh sách Chapter & Trang ảnh xem trước:**
+  - Danh sách Chapter tự động xếp 1 cột dọc (khi có 1–2 chapter) hoặc chia thành 2 cột dọc cân đối (khi có từ 3 chapter trở lên).
+  - Lưới xem trước trang ảnh hiển thị chuẩn xác định dạng ảnh của từng trang (`.jpg`, `.png`, `.webp`, `.gif`), tải theo từng đợt 12 trang. Bấm vào bất kỳ trang nào sẽ mở trình đọc tại đúng trang đó.
+
+### 3. Trình đọc truyện toàn màn hình (`/reader.html`)
+- **Thanh điều khiển ẩn thông minh:** Tự động ẩn hoàn toàn để không che khuất tranh; chỉ trượt xuống khi di chuột lên mép trên cùng của màn hình.
+- **2 chế độ đọc đồng bộ vị trí trang:**
+  - **Cuộn dọc (Webtoon):** Ảnh rộng toàn màn hình (`100vw`), cuộn dọc liên tục.
+  - **Cuộn ngang (Manga):** Khung nhìn vừa khít màn hình (`100vw × 100vh`, `object-fit: contain`), chuyển trang bằng nút bấm, lướt ngang hoặc phím mũi tên `←` / `→`.
+  - Khi chuyển qua lại giữa **Cuộn dọc** $\leftrightarrow$ **Cuộn ngang**, trình đọc tự động giữ nguyên đúng trang bạn đang xem.
 
 ---
 
-## 🗄️ Database Schema Summary
+## 🔄 Sao lưu & Khôi phục dữ liệu (`backup.json`)
+
+Khi bạn muốn đẩy code lên GitHub và xóa project trên máy (hoặc khi project Supabase bị tạm dừng/xóa sau thời gian dài không dùng):
+1. **Sao lưu:** Bấm nút **Sao lưu** ở Trang chủ (hoặc chạy `python backup.py` $\rightarrow$ chọn `1`). Toàn bộ 7 bảng dữ liệu sẽ được xuất ra file `backup.json` ở thư mục gốc của project.
+2. **Đẩy lên GitHub:** Commit kèm file `backup.json` lên GitHub.
+3. **Khôi phục lại bất cứ lúc nào:** Khi mở lại project hoặc gắn `DATABASE_URL` của một project Supabase mới, chỉ cần bấm nút **Khôi phục** ở Trang chủ (hoặc chạy `python backup.py` $\rightarrow$ chọn `2`). Hệ thống sẽ nạp lại 100% thư mục, tác giả, thể loại, truyện và các mốc chia chapter từ `backup.json` mà không cần phải cào lại từng bộ từ NHentai.
+
+---
+
+## 🗄️ Kiến trúc Cơ sở dữ liệu (7 Bảng PostgreSQL)
 
 | Bảng | Khóa chính (PK) | Mô tả |
 |---|---|---|
-| `comics` | `id` (ID gốc NHentai) | Lưu 5 trường cốt lõi: `id`, `media_id`, `title_pretty`, `cover_path`, `num_pages` |
-| `tags` | `id` (ID tag NHentai) | Lưu Tác giả (`type = 'artist'`) và Thể loại (`type = 'tag'`) |
-| `comic_tags` | `(comic_id, tag_id)` | Bảng liên kết nhiều-nhiều giữa truyện và tags (`ON DELETE CASCADE`) |
-| `folders` | `id BIGSERIAL` | Danh sách thư mục (Spotify-Style Playlists) |
-| `folder_comics`| `(folder_id, comic_id)` | Bảng liên kết nhiều-nhiều giữa thư mục và truyện (`ON DELETE CASCADE`) |
-| `chapters` | `id BIGSERIAL` | Danh sách chương truyện (`comic_id`, `chapter_number`, `title`, `media_id`, `start_page`, `end_page`) |
+| `folders` | `id BIGSERIAL` | Danh sách thư mục phân loại truyện (`name UNIQUE`, `description`) |
+| `comics` | `id BIGINT` | Lưu thông tin truyện: `id`, `folder_id`, `media_id`, `title`, `artist`, `language`, `category`, `cover_url`, `num_pages`, `page_exts`, `created_at` |
+| `chapters` | `id BIGSERIAL` | Danh sách chương truyện: `comic_id`, `chapter_number`, `title`, `media_id`, `start_page`, `end_page`, `page_exts` |
+| `artists` | `id BIGINT` | Danh sách tác giả (`id`, `name`, `slug`) |
+| `comic_artists` | `(comic_id, artist_id)` | Bảng nối nhiều-nhiều giữa Truyện và Tác giả (`ON DELETE CASCADE`) |
+| `genres` | `id BIGINT` | Danh sách thể loại chi tiết (`id`, `name`, `slug`) |
+| `comic_genres` | `(comic_id, genre_id)` | Bảng nối nhiều-nhiều giữa Truyện và Thể loại (`ON DELETE CASCADE`) |
