@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thư Viện HManga — Đọc Truyện</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            overflow-x: hidden;
+        }
+
+        /* Vùng cảm biến chuột ở mép trên màn hình */
+        .top-hover-zone {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 35px;
+            z-index: 1000;
+        }
+
+        /* Thanh điều khiển ẩn mặc định, chỉ hiện khi di chuột lên mép trên */
+        .control-bar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 20px;
+            border-bottom: 1px solid #dee2e6;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(-100%);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            pointer-events: none;
+        }
+
+        .top-hover-zone:hover .control-bar {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Chuyển đổi 2 chế độ đọc thuần CSS */
+        #modeVertical:checked ~ #verticalContainer {
+            display: flex !important;
+        }
+        #modeVertical:checked ~ #horizontalContainer {
+            display: none !important;
+        }
+        #modeVertical:checked ~ .top-hover-zone .horizontal-page-nav {
+            display: none !important;
+        }
+
+        #modeHorizontal:checked ~ #verticalContainer {
+            display: none !important;
+        }
+        #modeHorizontal:checked ~ #horizontalContainer {
+            display: flex !important;
+        }
+        #modeHorizontal:checked ~ .top-hover-zone .horizontal-page-nav {
+            display: flex !important;
+        }
+
+        /* Đổi màu nút chế độ đang được chọn */
+        #modeVertical:checked ~ .top-hover-zone label[for="modeVertical"],
+        #modeHorizontal:checked ~ .top-hover-zone label[for="modeHorizontal"] {
+            background-color: #0d6efd !important;
+            color: white !important;
+            border-color: #0d6efd !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 2 Radio ẩn dùng để chuyển chế độ đọc thuần HTML/CSS -->
+    <input type="radio" name="readerMode" id="modeVertical" checked style="display: none;">
+    <input type="radio" name="readerMode" id="modeHorizontal" style="display: none;">
+
+    <!-- VÙNG ĐIỀU KHIỂN ẨN (CHỈ HIỆN KHI DI CHUỘT LÊN PHÍA TRÊN MÀN HÌNH) -->
+    <div class="top-hover-zone">
+        <div class="control-bar">
+            <!-- Nút quay lại Chi tiết -->
+            <a href="detail.html" style="padding: 7px 14px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold;">
+                Quay lại Chi tiết
+            </a>
+
+            <!-- Thông tin tên truyện & Chọn Chapter -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <strong id="readerComicTitle" style="font-size: 14px; color: #2c3e50;">Family Play:</strong>
+                <select id="chapterSelect" style="padding: 6px 10px; font-size: 14px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option value="1">Chapter 1: Mở đầu (Trang 1 - 60)</option>
+                    <option value="2">Chapter 2: Diễn biến (Trang 61 - 120)</option>
+                    <option value="3">Chapter 3: Cao trào (Trang 121 - 180)</option>
+                    <option value="4">Chapter 4: Kết thúc (Trang 181 - 236)</option>
+                </select>
+            </div>
+
+            <!-- Điều hướng trang cho chế độ Cuộn ngang -->
+            <div class="horizontal-page-nav" style="display: none; align-items: center; gap: 10px;">
+                <button type="button" id="btnPrevPage" style="padding: 6px 12px; font-size: 13px; cursor: pointer; background: #0d6efd; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                    Trang trước
+                </button>
+                <span style="font-size: 14px; font-weight: bold; color: #2c3e50;">
+                    Trang <span id="currentPageIndex">1</span> / <span id="totalPagesHorizontal">60</span>
+                </span>
+                <button type="button" id="btnNextPage" style="padding: 6px 12px; font-size: 13px; cursor: pointer; background: #0d6efd; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                    Trang sau
+                </button>
+            </div>
+
+            <!-- Bộ nút chuyển đổi 2 chế độ đọc: Cuộn dọc & Cuộn ngang -->
+            <div style="display: flex; gap: 6px;">
+                <label for="modeVertical" style="padding: 7px 14px; font-size: 14px; cursor: pointer; border: 1px solid #0d6efd; border-radius: 4px; background: #fff; color: #0d6efd; font-weight: bold; user-select: none;">
+                    Cuộn dọc
+                </label>
+                <label for="modeHorizontal" style="padding: 7px 14px; font-size: 14px; cursor: pointer; border: 1px solid #0d6efd; border-radius: 4px; background: #fff; color: #0d6efd; font-weight: bold; user-select: none;">
+                    Cuộn ngang
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CHẾ ĐỘ 1: CUỘN DỌC (FULL MÀN HÌNH, KHÔNG BAO BỌC) ==================== -->
+    <div id="verticalContainer" style="display: flex; flex-direction: column; width: 100vw; margin: 0; padding: 0;">
+        <img src="assets/rem.jpg" alt="Trang 1" style="width: 100vw; height: auto; display: block;">
+        <img src="assets/rem.jpg" alt="Trang 2" style="width: 100vw; height: auto; display: block;">
+        <img src="assets/rem.jpg" alt="Trang 3" style="width: 100vw; height: auto; display: block;">
+    </div>
+
+    <!-- ==================== CHẾ ĐỘ 2: CUỘN NGANG (FULL MÀN HÌNH 100VW x 100VH, KHÔNG CUỘN DỌC) ==================== -->
+    <div id="horizontalContainer" style="display: none; width: 100vw; height: 100vh; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; margin: 0; padding: 0;">
+        <img src="assets/rem.jpg" alt="Trang 1" style="flex: 0 0 100vw; width: 100vw; height: 100vh; object-fit: contain; scroll-snap-align: center; display: block;">
+        <img src="assets/rem.jpg" alt="Trang 2" style="flex: 0 0 100vw; width: 100vw; height: 100vh; object-fit: contain; scroll-snap-align: center; display: block;">
+        <img src="assets/rem.jpg" alt="Trang 3" style="flex: 0 0 100vw; width: 100vw; height: 100vh; object-fit: contain; scroll-snap-align: center; display: block;">
+    </div>
+
+    <script>
+        const API_BASE = (window.location.protocol.startsWith("http") && window.location.port === "8000")
+            ? ""
+            : "http://127.0.0.1:8000";
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const comicId = urlParams.get("comic_id");
+        let currentChapterId = urlParams.get("chapter_id");
+        const initialPage = parseInt(urlParams.get("page") || "1", 10);
+
+        const backToDetailLink = document.querySelector('.control-bar a[href="detail.html"]');
+        const readerComicTitle = document.getElementById("readerComicTitle");
+        const chapterSelect = document.getElementById("chapterSelect");
+
+        const btnPrevPage = document.getElementById("btnPrevPage");
+        const currentPageIndexEl = document.getElementById("currentPageIndex");
+        const totalPagesHorizontalEl = document.getElementById("totalPagesHorizontal");
+        const btnNextPage = document.getElementById("btnNextPage");
+
+        const modeVertical = document.getElementById("modeVertical");
+        const modeHorizontal = document.getElementById("modeHorizontal");
+        const verticalContainer = document.getElementById("verticalContainer");
+        const horizontalContainer = document.getElementById("horizontalContainer");
+
+        let currentSlideIndex = 0;
+        let totalSlides = 0;
+
+        function getProxyImageUrl(url) {
+            if (!url) return "assets/rem.jpg";
+            if (url.includes("nhentai.net")) {
+                return `${API_BASE}/api/image-proxy?url=${encodeURIComponent(url)}`;
+            }
+            return url;
+        }
+
+        // Chuyển đến trang chỉ định trong chế độ Cuộn ngang
+        function scrollToHorizontalSlide(index, smooth = true) {
+            if (totalSlides === 0) return;
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+
+            currentSlideIndex = index;
+            currentPageIndexEl.textContent = currentSlideIndex + 1;
+            horizontalContainer.scrollTo({
+                left: currentSlideIndex * window.innerWidth,
+                behavior: smooth ? "smooth" : "auto"
+            });
+        }
+
+        // Tải danh sách ảnh của 1 Chapter và đổ vào 2 chế độ đọc
+        async function loadChapterPages(chapterId, startAtPageNumber = null) {
+            if (!chapterId) return;
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/chapters/${chapterId}/pages`);
+                const pages = await resp.json();
+                if (!resp.ok) throw new Error(pages.detail || "Không thể tải danh sách trang ảnh!");
+
+                totalSlides = pages.length;
+                totalPagesHorizontalEl.textContent = totalSlides;
+                currentSlideIndex = 0;
+                currentPageIndexEl.textContent = totalSlides > 0 ? 1 : 0;
+
+                // 1. Đổ ảnh vào Chế độ 1: Cuộn dọc (trực tiếp thẻ <img> full màn hình)
+                verticalContainer.innerHTML = pages.map(p =>
+                    `<img src="${getProxyImageUrl(p.url)}" alt="Trang ${p.page_number}" data-page="${p.page_number}" style="width: 100vw; height: auto; display: block;" loading="lazy">`
+                ).join("");
+
+                // 2. Đổ ảnh vào Chế độ 2: Cuộn ngang (trực tiếp thẻ <img> full màn hình 100vw x 100vh)
+                horizontalContainer.innerHTML = pages.map(p =>
+                    `<img src="${getProxyImageUrl(p.url)}" alt="Trang ${p.page_number}" data-page="${p.page_number}" style="flex: 0 0 100vw; width: 100vw; height: 100vh; object-fit: contain; scroll-snap-align: center; display: block;" loading="lazy">`
+                ).join("");
+
+                // Nếu người dùng bấm vào 1 trang cụ thể từ trang Chi tiết -> nhảy tới trang đó
+                if (startAtPageNumber && startAtPageNumber > 1) {
+                    const targetIdx = pages.findIndex(p => p.page_number === startAtPageNumber);
+                    if (targetIdx >= 0) {
+                        setTimeout(() => {
+                            if (modeHorizontal.checked) {
+                                scrollToHorizontalSlide(targetIdx, false);
+                            } else {
+                                const imgEl = verticalContainer.children[targetIdx];
+                                if (imgEl) imgEl.scrollIntoView();
+                            }
+                        }, 100);
+                    }
+                } else {
+                    window.scrollTo(0, 0);
+                    horizontalContainer.scrollTo(0, 0);
+                }
+            } catch (err) {
+                alert(`Lỗi: ${err.message}`);
+            }
+        }
+
+        // Khởi tạo thông tin truyện và danh sách Chapter
+        async function initReader() {
+            if (comicId && backToDetailLink) {
+                backToDetailLink.href = `detail.html?id=${comicId}`;
+            }
+
+            if (!comicId) return;
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/comics/${comicId}`);
+                const comic = await resp.json();
+                if (!resp.ok) throw new Error(comic.detail || "Không tìm thấy truyện!");
+
+                document.title = `Thư Viện HManga — ${comic.title}`;
+                readerComicTitle.textContent = `${comic.title}:`;
+
+                const chapters = comic.chapters || [];
+                if (chapters.length > 0) {
+                    // Nếu URL chưa truyền chapter_id hoặc bấm từ trang ảnh xem trước -> chọn chapter chứa trang đó
+                    if (!currentChapterId) {
+                        const matchedCh = chapters.find(ch => initialPage >= ch.start_page && initialPage <= ch.end_page);
+                        currentChapterId = matchedCh ? String(matchedCh.id) : String(chapters[0].id);
+                    }
+
+                    chapterSelect.innerHTML = chapters.map(ch =>
+                        `<option value="${ch.id}">Chapter ${Number(ch.chapter_number)}: ${ch.title || ""} (Trang ${ch.start_page} - ${ch.end_page})</option>`
+                    ).join("");
+                    chapterSelect.value = String(currentChapterId);
+
+                    await loadChapterPages(currentChapterId, initialPage);
+                }
+            } catch (err) {
+                alert(`Lỗi: ${err.message}`);
+            }
+        }
+
+        // Khi đổi Chapter trên thanh chọn
+        chapterSelect.addEventListener("change", () => {
+            currentChapterId = chapterSelect.value;
+            const newUrl = `${window.location.pathname}?comic_id=${comicId}&chapter_id=${currentChapterId}`;
+            window.history.replaceState({}, "", newUrl);
+            loadChapterPages(currentChapterId, null);
+        });
+
+        // Nút Trang trước / Trang sau ở chế độ Cuộn ngang
+        btnPrevPage.addEventListener("click", () => scrollToHorizontalSlide(currentSlideIndex - 1));
+        btnNextPage.addEventListener("click", () => scrollToHorizontalSlide(currentSlideIndex + 1));
+
+        // Cập nhật số trang hiện tại khi người dùng lướt ngang bằng chuột / cảm ứng
+        horizontalContainer.addEventListener("scroll", () => {
+            if (window.innerWidth > 0) {
+                const idx = Math.round(horizontalContainer.scrollLeft / window.innerWidth);
+                if (idx >= 0 && idx < totalSlides && idx !== currentSlideIndex) {
+                    currentSlideIndex = idx;
+                    currentPageIndexEl.textContent = currentSlideIndex + 1;
+                }
+            }
+        });
+
+        // Hỗ trợ phím mũi tên Trái / Phải khi ở chế độ Cuộn ngang
+        window.addEventListener("keydown", (e) => {
+            if (modeHorizontal.checked) {
+                if (e.key === "ArrowLeft") {
+                    e.preventDefault();
+                    scrollToHorizontalSlide(currentSlideIndex - 1);
+                } else if (e.key === "ArrowRight") {
+                    e.preventDefault();
+                    scrollToHorizontalSlide(currentSlideIndex + 1);
+                }
+            }
+        });
+
+        window.addEventListener("DOMContentLoaded", initReader);
+    </script>
+</body>
+</html>

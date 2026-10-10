@@ -26,7 +26,6 @@ HManga-library/
 ├── frontend/                      ← HTML5 + Modern Dark CSS + Vanilla JS
 │   ├── assets/                    ← Icon, logo và ảnh dự phòng
 │   ├── index.html                 ← Thư viện cá nhân: Quản lý Thư mục & Tác giả
-│   ├── discover.html              ← Khám phá NHentai: Bộ lọc gợi ý từ chính thư viện
 │   ├── detail.html                ← Chi tiết truyện & Quản lý Chapter (Gộp bộ / Chia trang)
 │   ├── reader.html                ← Trình đọc truyện (Webtoon cuộn dọc / Manga từng trang)
 │   ├── style.css                  ← Toàn bộ stylesheet giao diện Dark Theme hiện đại
@@ -62,9 +61,6 @@ pip install -r requirements.txt
 ### Bước 3: Cấu hình biến môi trường
 Tạo file `backend/.env` (hoặc sao chép từ `.env.example`):
 ```env
-# NHentai API Configuration (Tùy chọn)
-NHENTAI_API_KEY=
-
 # Supabase Configuration (Bắt buộc)
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_KEY=your-supabase-key
@@ -126,6 +122,24 @@ CREATE INDEX IF NOT EXISTS idx_tags_type ON tags(type);
 CREATE INDEX IF NOT EXISTS idx_comic_tags_tag ON comic_tags(tag_id);
 CREATE INDEX IF NOT EXISTS idx_folder_comics_folder ON folder_comics(folder_id);
 CREATE INDEX IF NOT EXISTS idx_chapters_comic_id ON chapters(comic_id);
+
+-- Cấp toàn quyền truy cập cho backend (service_role, anon, authenticated)
+GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL ROUTINES IN SCHEMA public TO anon, authenticated, service_role;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON ROUTINES TO anon, authenticated, service_role;
+
+-- Tắt RLS để backend thao tác trực tiếp không bị chặn
+ALTER TABLE folders DISABLE ROW LEVEL SECURITY;
+ALTER TABLE comics DISABLE ROW LEVEL SECURITY;
+ALTER TABLE tags DISABLE ROW LEVEL SECURITY;
+ALTER TABLE folder_comics DISABLE ROW LEVEL SECURITY;
+ALTER TABLE comic_tags DISABLE ROW LEVEL SECURITY;
+ALTER TABLE chapters DISABLE ROW LEVEL SECURITY;
 ```
 
 ### Bước 5: Khởi chạy Server
@@ -151,17 +165,12 @@ Mở trình duyệt truy cập: **http://localhost:8000**
 - **Tìm kiếm nhanh**: Lọc truyện theo tên, thư mục hoặc tác giả tức thì.
 - **Thêm truyện 1-Click**: Nhập ID truyện (VD: `686045`) $\rightarrow$ Xem trước $\rightarrow$ Lưu vào thư viện.
 
-### 2. Khám phá NHentai cá nhân hóa (`/discover.html`)
-- **Bộ lọc gợi ý theo gu**: Thanh bên trái tự động hiển thị danh sách **Tác giả** và **Thể loại** từ *các truyện bạn đang lưu trong thư viện*.
-- **Tìm kiếm toàn cục**: Bấm vào bất kỳ tác giả/thể loại nào để tìm toàn bộ tác phẩm trên kho NHentai (`artist:"..."`, `tag:"..."`).
-- **Bộ lọc 3 nấc tiện lợi**: Nhấp 1: *Chọn* $\rightarrow$ Nhấp 2: *Loại trừ* $\rightarrow$ Nhấp 3: *Bỏ chọn*.
-
-### 3. Mô hình Chapter thống nhất (`/detail.html`)
+### 2. Mô hình Chapter thống nhất (`/detail.html`)
 Xử lý linh hoạt cả 2 trường hợp quản lý truyện:
 - **Trường hợp 1 (Gộp nhiều bộ thành 1 truyện)**: Gộp các volume/tập truyện riêng biệt trên NHentai thành 1 bộ nhiều chapter (mỗi chapter lưu `media_id` riêng của gallery đó).
 - **Trường hợp 2 (Chia 1 bộ dài thành nhiều chapter)**: Tự động chia 1 bộ truyện 200 trang thành nhiều chương nhỏ theo dải trang (1-30, 31-60...) giúp theo dõi tiến độ dễ dàng.
 
-### 4. Trình đọc truyện mượt mà (`/reader.html`)
+### 3. Trình đọc truyện mượt mà (`/reader.html`)
 - **📜 Webtoon**: Cuộn dọc liên tục, tự động căn chỉnh tỷ lệ khung hình không giật layout.
 - **📄 Manga**: Lật từng trang, hỗ trợ phím mũi tên ← / → và lăn chuột.
 - **Smart Fallback**: Tự động chuyển đổi định dạng ảnh linh hoạt (`.webp` $\rightarrow$ `.jpg` $\rightarrow$ `.png` $\rightarrow$ `.jpeg`) đảm bảo không bị lỗi ảnh 404.

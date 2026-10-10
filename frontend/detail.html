@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thư Viện HManga — Chi Tiết Truyện</title>
+    <style>
+        /* Mặc định ít chapter (1 - 2 chapter): xếp thành 1 cột dọc */
+        #chaptersList {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        /* Khi có nhiều chapter (từ 3 chapter trở lên): tự động chia thành 2 cột dọc (thứ tự từ trên xuống dưới ở cột 1 rồi sang cột 2) */
+        #chaptersList:has(> :nth-child(3)) {
+            display: block;
+            column-count: 2;
+            column-gap: 12px;
+        }
+        #chaptersList a {
+            display: block;
+            box-sizing: border-box;
+            break-inside: avoid;
+        }
+        #chaptersList:has(> :nth-child(3)) a {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body style="
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-image: url('assets/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+">
+    <!-- Khung chứa nội dung nổi trên nền ảnh -->
+    <div style="
+        max-width: 960px; 
+        margin: 30px auto; 
+        padding: 25px; 
+        background-color: rgba(255, 255, 255, 0.93); 
+        border-radius: 8px; 
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    ">
+
+        <!-- THANH ĐIỀU HƯỚNG QUAY VỀ TRANG CHỦ -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <a href="index.html" style="padding: 8px 14px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold;">
+                Quay lại Trang chủ
+            </a>
+        </div>
+
+        <hr style="margin: 15px 0;">
+
+        <!-- KHU VỰC 1: THÔNG TIN BỘ TRUYỆN -->
+        <div id="resultContainer">
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+                <!-- Ảnh bìa -->
+                <div>
+                    <img id="comicCover" src="assets/rem.jpg" alt="Ảnh bìa" style="max-width: 250px; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                </div>
+
+                <!-- Chi tiết cơ bản -->
+                <div style="flex: 1; min-width: 260px;">
+                    <h2 id="comicTitle" style="color: #2c3e50; margin-top: 0; margin-bottom: 12px;">Family Play</h2>
+                    <p style="margin: 6px 0;"><strong>ID:</strong> <span id="comicId">14414</span></p>
+                    <p style="margin: 6px 0;"><strong>Tác giả:</strong> <span id="comicArtist" style="color: #d63384; font-weight: bold;">o.ri</span></p>
+                    <p style="margin: 6px 0;"><strong>Thư mục:</strong> <span id="comicFolder">Mặc định</span></p>
+                    <p style="margin: 6px 0;"><strong>Ngôn ngữ:</strong> <span id="comicLanguage" style="color: #0d6efd; font-weight: bold;">english</span></p>
+                    <p style="margin: 6px 0;"><strong>Thể loại chính:</strong> <span id="comicCategory" style="color: #198754; font-weight: bold;">manga</span></p>
+                    <p style="margin: 6px 0;"><strong>Thể loại chi tiết:</strong> <span id="comicGenres">big breasts, sister, mother, incest, nakadashi, sole male</span></p>
+                    <p style="margin: 6px 0 15px 0;"><strong>Số trang:</strong> <span id="comicNumPages">236</span></p>
+
+                    <!-- CÔNG CỤ 1: THÊM CHAPTER MỚI TỪ ID KHÁC (TRUYỆN NHIỀU PHẦN) -->
+                    <details style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 10px 14px; margin-bottom: 10px;">
+                        <summary style="cursor: pointer; font-weight: bold; color: #0d6efd; font-size: 14px;">
+                            Thêm Chapter mới từ ID khác (Truyện nhiều phần)
+                        </summary>
+                        <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                            <input type="number" id="addChapterGalleryId" placeholder="Nhập ID truyện (vd: 686201)" style="padding: 7px 10px; font-size: 14px; width: 195px;" min="1">
+                            <input type="number" id="addChapterNumber" placeholder="Số chapter (vd: 2)" step="0.1" style="padding: 7px 10px; font-size: 14px; width: 130px;" min="1">
+                            <input type="text" id="addChapterTitle" placeholder="Tên chapter (vd: Ngoại truyện)..." style="padding: 7px 10px; font-size: 14px; flex: 1; min-width: 170px;">
+                            <button type="button" id="btnAddChapter" style="padding: 7px 14px; font-size: 14px; cursor: pointer; background: #198754; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                                Thêm Chapter
+                            </button>
+                        </div>
+                    </details>
+
+                    <!-- CÔNG CỤ 2: CHIA NHỎ TRUYỆN DÀI THÀNH NHIỀU CHAPTER THEO SỐ TRANG -->
+                    <details style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 10px 14px;">
+                        <summary style="cursor: pointer; font-weight: bold; color: #d63384; font-size: 14px;">
+                            Chia nhỏ truyện thành nhiều Chapter theo số trang
+                        </summary>
+                        <div style="margin-top: 12px;">
+                            <p style="margin-top: 0; margin-bottom: 10px; font-size: 13px; color: #555;">
+                                Nhập tên chapter và khoảng trang (từ trang đầu đến trang cuối của mỗi chapter):
+                            </p>
+
+                            <!-- Danh sách các dòng nhập mốc trang -->
+                            <div id="splitRowsContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+                                <!-- Dòng mẫu 1 -->
+                                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                                    <input type="text" placeholder="Tên chapter (vd: Chapter 1)" value="Chapter 1: Mở đầu" style="padding: 6px 10px; font-size: 13px; flex: 1; min-width: 150px;">
+                                    <label style="font-size: 13px;">Từ trang:</label>
+                                    <input type="number" value="1" min="1" style="padding: 6px; font-size: 13px; width: 60px;">
+                                    <label style="font-size: 13px;">Đến trang:</label>
+                                    <input type="number" value="60" min="1" style="padding: 6px; font-size: 13px; width: 60px;">
+                                    <button type="button" style="padding: 6px 10px; font-size: 13px; cursor: pointer; background: #dc3545; color: white; font-weight: bold; border: none; border-radius: 4px;">Xóa</button>
+                                </div>
+
+                                <!-- Dòng mẫu 2 -->
+                                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                                    <input type="text" placeholder="Tên chapter (vd: Chapter 2)" value="Chapter 2: Diễn biến" style="padding: 6px 10px; font-size: 13px; flex: 1; min-width: 150px;">
+                                    <label style="font-size: 13px;">Từ trang:</label>
+                                    <input type="number" value="61" min="1" style="padding: 6px; font-size: 13px; width: 60px;">
+                                    <label style="font-size: 13px;">Đến trang:</label>
+                                    <input type="number" value="150" min="1" style="padding: 6px; font-size: 13px; width: 60px;">
+                                    <button type="button" style="padding: 6px 10px; font-size: 13px; cursor: pointer; background: #dc3545; color: white; font-weight: bold; border: none; border-radius: 4px;">Xóa</button>
+                                </div>
+                            </div>
+
+                            <!-- Nút Thêm dòng & Lưu chia chapter -->
+                            <div style="display: flex; gap: 10px;">
+                                <button type="button" id="btnAddSplitRow" style="padding: 7px 14px; font-size: 13px; cursor: pointer; background: #6c757d; color: white; font-weight: bold; border: none; border-radius: 4px;">
+                                    Thêm dòng
+                                </button>
+                                <button type="button" id="btnSaveSplit" style="padding: 7px 16px; font-size: 13px; cursor: pointer; background: #0d6efd; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                                    Lưu danh sách Chapter
+                                </button>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- KHU VỰC 2: DANH SÁCH CHAPTER (XẾP DỌC 1 CỘT HOẶC 2 CỘT DỌC KHI NHIỀU CHAPTER) -->
+            <div style="background: #f8f9fa; padding: 15px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 20px;">
+                <h3 style="margin-top: 0; margin-bottom: 12px; color: #2c3e50;">Danh sách Chapter</h3>
+                <div id="chaptersList">
+                    <a href="reader.html" style="padding: 9px 14px; background: #0d6efd; color: white; border: 1px solid #0d6efd; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold;">
+                        Chapter 1: Mở đầu (Trang 1 - 60)
+                    </a>
+                    <a href="reader.html" style="padding: 9px 14px; background: #fff; color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
+                        Chapter 2: Diễn biến (Trang 61 - 120)
+                    </a>
+                    <a href="reader.html" style="padding: 9px 14px; background: #fff; color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
+                        Chapter 3: Cao trào (Trang 121 - 180)
+                    </a>
+                    <a href="reader.html" style="padding: 9px 14px; background: #fff; color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
+                        Chapter 4: Kết thúc (Trang 181 - 236)
+                    </a>
+                </div>
+            </div>
+
+            <!-- KHU VỰC 3: DANH SÁCH TRANG ẢNH XEM TRƯỚC -->
+            <h3 style="color: #2c3e50; margin-bottom: 10px;">Danh sách trang ảnh (<span id="pagesCount">236</span> trang)</h3>
+            <div id="pagesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px;">
+
+                <!-- Trang mẫu 1 -->
+                <div style="border: 1px solid #ddd; padding: 6px; text-align: center; background: #fafafa; border-radius: 4px;">
+                    <div style="font-size: 12px; margin-bottom: 4px; font-weight: bold; color: #2c3e50;">Trang 1</div>
+                    <a href="reader.html">
+                        <img src="assets/rem.jpg" alt="Trang 1" style="width: 100%; height: 160px; object-fit: cover; display: block; border-radius: 2px;">
+                    </a>
+                </div>
+
+                <!-- Trang mẫu 2 -->
+                <div style="border: 1px solid #ddd; padding: 6px; text-align: center; background: #fafafa; border-radius: 4px;">
+                    <div style="font-size: 12px; margin-bottom: 4px; font-weight: bold; color: #2c3e50;">Trang 2</div>
+                    <a href="reader.html">
+                        <img src="assets/rem.jpg" alt="Trang 2" style="width: 100%; height: 160px; object-fit: cover; display: block; border-radius: 2px;">
+                    </a>
+                </div>
+
+                <!-- Trang mẫu 3 -->
+                <div style="border: 1px solid #ddd; padding: 6px; text-align: center; background: #fafafa; border-radius: 4px;">
+                    <div style="font-size: 12px; margin-bottom: 4px; font-weight: bold; color: #2c3e50;">Trang 3</div>
+                    <a href="reader.html">
+                        <img src="assets/rem.jpg" alt="Trang 3" style="width: 100%; height: 160px; object-fit: cover; display: block; border-radius: 2px;">
+                    </a>
+                </div>
+
+                <!-- Trang mẫu 4 -->
+                <div style="border: 1px solid #ddd; padding: 6px; text-align: center; background: #fafafa; border-radius: 4px;">
+                    <div style="font-size: 12px; margin-bottom: 4px; font-weight: bold; color: #2c3e50;">Trang 4</div>
+                    <a href="reader.html">
+                        <img src="assets/rem.jpg" alt="Trang 4" style="width: 100%; height: 160px; object-fit: cover; display: block; border-radius: 2px;">
+                    </a>
+                </div>
+
+                <!-- Trang mẫu 5 -->
+                <div style="border: 1px solid #ddd; padding: 6px; text-align: center; background: #fafafa; border-radius: 4px;">
+                    <div style="font-size: 12px; margin-bottom: 4px; font-weight: bold; color: #2c3e50;">Trang 5</div>
+                    <a href="reader.html">
+                        <img src="assets/rem.jpg" alt="Trang 5" style="width: 100%; height: 160px; object-fit: cover; display: block; border-radius: 2px;">
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Nút Hiện thêm trang -->
+            <div style="text-align: center; margin-top: 15px;">
+                <button type="button" id="btnLoadMore" style="padding: 8px 20px; font-size: 14px; cursor: pointer;">
+                    Hiện thêm 12 trang
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const API_BASE = (window.location.protocol.startsWith("http") && window.location.port === "8000")
+            ? ""
+            : "http://127.0.0.1:8000";
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const comicId = urlParams.get("id");
+
+        const comicCover = document.getElementById("comicCover");
+        const comicTitle = document.getElementById("comicTitle");
+        const comicIdEl = document.getElementById("comicId");
+        const comicArtist = document.getElementById("comicArtist");
+        const comicFolder = document.getElementById("comicFolder");
+        const comicLanguage = document.getElementById("comicLanguage");
+        const comicCategory = document.getElementById("comicCategory");
+        const comicGenres = document.getElementById("comicGenres");
+        const comicNumPages = document.getElementById("comicNumPages");
+
+        const addChapterGalleryId = document.getElementById("addChapterGalleryId");
+        const addChapterNumber = document.getElementById("addChapterNumber");
+        const addChapterTitle = document.getElementById("addChapterTitle");
+        const btnAddChapter = document.getElementById("btnAddChapter");
+
+        const splitRowsContainer = document.getElementById("splitRowsContainer");
+        const btnAddSplitRow = document.getElementById("btnAddSplitRow");
+        const btnSaveSplit = document.getElementById("btnSaveSplit");
+
+        const chaptersList = document.getElementById("chaptersList");
+        const pagesCount = document.getElementById("pagesCount");
+        const pagesList = document.getElementById("pagesList");
+        const btnLoadMore = document.getElementById("btnLoadMore");
+
+        let currentComic = null;
+        let previewPages = [];
+        let shownPagesCount = 0;
+        const PAGE_BATCH = 12;
+
+        function getProxyImageUrl(url) {
+            if (!url) return "assets/rem.jpg";
+            if (url.includes("nhentai.net")) {
+                return `${API_BASE}/api/image-proxy?url=${encodeURIComponent(url)}`;
+            }
+            return url;
+        }
+
+        // Tạo 1 dòng nhập mốc trang cho Công cụ 2 (giữ nguyên 100% style mẫu)
+        function createSplitRowHTML(title = "", startPage = 1, endPage = 1) {
+            const row = document.createElement("div");
+            row.style.cssText = "display: flex; gap: 6px; align-items: center; flex-wrap: wrap;";
+            row.innerHTML = `
+                <input type="text" class="split-title" placeholder="Tên chapter (vd: Chapter 1)" value="${title}" style="padding: 6px 10px; font-size: 13px; flex: 1; min-width: 150px;">
+                <label style="font-size: 13px;">Từ trang:</label>
+                <input type="number" class="split-start" value="${startPage}" min="1" style="padding: 6px; font-size: 13px; width: 60px;">
+                <label style="font-size: 13px;">Đến trang:</label>
+                <input type="number" class="split-end" value="${endPage}" min="1" style="padding: 6px; font-size: 13px; width: 60px;">
+                <button type="button" class="btn-remove-row" style="padding: 6px 10px; font-size: 13px; cursor: pointer; background: #dc3545; color: white; font-weight: bold; border: none; border-radius: 4px;">Xóa</button>
+            `;
+            row.querySelector(".btn-remove-row").addEventListener("click", () => {
+                if (splitRowsContainer.children.length > 1) {
+                    row.remove();
+                } else {
+                    alert("Phải có ít nhất 1 dòng Chapter!");
+                }
+            });
+            return row;
+        }
+
+        // Hiển thị thêm 12 trang ảnh xem trước
+        function renderMorePreviewPages() {
+            const nextBatch = previewPages.slice(shownPagesCount, shownPagesCount + PAGE_BATCH);
+            const chapters = (currentComic && currentComic.chapters) ? currentComic.chapters : [];
+
+            nextBatch.forEach(p => {
+                // Tìm chapter chứa trang này (nếu truyện đã chia nhiều chapter)
+                const matchedChapter = chapters.find(
+                    ch => String(ch.media_id) === String(currentComic.media_id) &&
+                          p.page_number >= ch.start_page &&
+                          p.page_number <= ch.end_page
+                ) || chapters[0];
+                const targetChapterId = matchedChapter ? matchedChapter.id : "";
+
+                const card = document.createElement("div");
+                card.style.cssText = "border: 1px solid #ddd; padding: 6px; text-align: center; background: #fafafa; border-radius: 4px;";
+                card.innerHTML = `
+                    <div style="font-size: 12px; margin-bottom: 4px; font-weight: bold; color: #2c3e50;">Trang ${p.page_number}</div>
+                    <a href="reader.html?comic_id=${currentComic.id}&chapter_id=${targetChapterId}&page=${p.page_number}">
+                        <img src="${getProxyImageUrl(p.url)}" alt="Trang ${p.page_number}" style="width: 100%; height: 160px; object-fit: cover; display: block; border-radius: 2px;" loading="lazy">
+                    </a>
+                `;
+                pagesList.appendChild(card);
+            });
+
+            shownPagesCount += nextBatch.length;
+            if (shownPagesCount >= previewPages.length) {
+                btnLoadMore.style.display = "none";
+            } else {
+                btnLoadMore.style.display = "inline-block";
+            }
+        }
+
+        // Tải chi tiết bộ truyện
+        async function loadComicDetail() {
+            if (!comicId) return;
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/comics/${comicId}`);
+                const comic = await resp.json();
+                if (!resp.ok) throw new Error(comic.detail || "Không tìm thấy truyện!");
+
+                currentComic = comic;
+                document.title = `Thư Viện HManga — ${comic.title}`;
+
+                // 1. Đổ thông tin cơ bản
+                comicCover.src = getProxyImageUrl(comic.cover_url);
+                comicTitle.textContent = comic.title;
+                comicIdEl.textContent = comic.id;
+                comicArtist.textContent = comic.author || "Unknown";
+                comicFolder.textContent = comic.folder_name || "Mặc định";
+                comicLanguage.textContent = comic.language || "Unknown";
+                comicCategory.textContent = comic.category || "Unknown";
+                comicGenres.textContent = (comic.genres && comic.genres.length > 0)
+                    ? comic.genres.join(", ")
+                    : "Chưa có";
+                comicNumPages.textContent = comic.num_pages;
+                pagesCount.textContent = comic.num_pages;
+
+                // 2. Đổ danh sách Chapter
+                const chapters = comic.chapters || [];
+                if (chapters.length === 0) {
+                    chaptersList.innerHTML = `<p style="color: #555; margin: 0;">Chưa có chapter nào.</p>`;
+                } else {
+                    chaptersList.innerHTML = chapters.map((ch, idx) => {
+                        const isFirst = idx === 0;
+                        const bg = isFirst ? "#0d6efd" : "#fff";
+                        const color = isFirst ? "white" : "#2c3e50";
+                        const border = isFirst ? "#0d6efd" : "#ced4da";
+                        const weight = isFirst ? "font-weight: bold;" : "";
+                        const chNum = Number(ch.chapter_number);
+                        return `
+                            <a href="reader.html?comic_id=${comic.id}&chapter_id=${ch.id}" style="padding: 9px 14px; background: ${bg}; color: ${color}; border: 1px solid ${border}; text-decoration: none; border-radius: 4px; font-size: 14px; ${weight}">
+                                Chapter ${chNum}: ${ch.title || ""} (Trang ${ch.start_page} - ${ch.end_page})
+                            </a>
+                        `;
+                    }).join("");
+                }
+
+                // 3. Khởi tạo các dòng chia Chapter trong Công cụ 2
+                splitRowsContainer.innerHTML = "";
+                if (chapters.length > 0) {
+                    chapters.forEach(ch => {
+                        splitRowsContainer.appendChild(
+                            createSplitRowHTML(ch.title || `Chapter ${Number(ch.chapter_number)}`, ch.start_page, ch.end_page)
+                        );
+                    });
+                } else {
+                    splitRowsContainer.appendChild(createSplitRowHTML("Toàn bộ", 1, comic.num_pages));
+                }
+
+                // 4. Lấy danh sách trang ảnh xem trước đã được Python tạo chuẩn đuôi ảnh
+                previewPages = comic.pages || [];
+                pagesList.innerHTML = "";
+                shownPagesCount = 0;
+                renderMorePreviewPages();
+
+            } catch (err) {
+                alert(`Lỗi: ${err.message}`);
+            }
+        }
+
+        // Xử lý Công cụ 1: Thêm Chapter mới từ ID khác
+        btnAddChapter.addEventListener("click", async () => {
+            if (!comicId) return;
+            const galleryId = parseInt(addChapterGalleryId.value.trim(), 10);
+            const chNumVal = addChapterNumber.value.trim();
+            const chTitleVal = addChapterTitle.value.trim();
+
+            if (!galleryId || galleryId < 1) {
+                alert("Vui lòng nhập ID truyện của phần mới!");
+                return;
+            }
+
+            btnAddChapter.disabled = true;
+            try {
+                const payload = {
+                    gallery_id: galleryId,
+                    chapter_number: chNumVal ? parseFloat(chNumVal) : null,
+                    title: chTitleVal || null
+                };
+
+                const resp = await fetch(`${API_BASE}/api/comics/${comicId}/chapters`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.detail || "Không thể thêm Chapter mới!");
+
+                addChapterGalleryId.value = "";
+                addChapterNumber.value = "";
+                addChapterTitle.value = "";
+                await loadComicDetail();
+                alert("Đã thêm Chapter mới thành công!");
+            } catch (err) {
+                alert(`Lỗi: ${err.message}`);
+            } finally {
+                btnAddChapter.disabled = false;
+            }
+        });
+
+        // Xử lý Công cụ 2: Thêm dòng & Lưu chia nhỏ Chapter
+        btnAddSplitRow.addEventListener("click", () => {
+            const nextIndex = splitRowsContainer.children.length + 1;
+            const maxPage = currentComic ? currentComic.num_pages : 1;
+            splitRowsContainer.appendChild(createSplitRowHTML(`Chapter ${nextIndex}`, 1, maxPage));
+        });
+
+        btnSaveSplit.addEventListener("click", async () => {
+            if (!comicId) return;
+            const rows = Array.from(splitRowsContainer.children);
+            const chaptersPayload = rows.map((row, idx) => ({
+                chapter_number: idx + 1,
+                title: row.querySelector(".split-title").value.trim(),
+                start_page: parseInt(row.querySelector(".split-start").value, 10),
+                end_page: parseInt(row.querySelector(".split-end").value, 10)
+            }));
+
+            btnSaveSplit.disabled = true;
+            try {
+                const resp = await fetch(`${API_BASE}/api/comics/${comicId}/split`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ chapters: chaptersPayload })
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.detail || "Lỗi khi chia nhỏ Chapter!");
+
+                await loadComicDetail();
+                alert("Đã lưu danh sách Chapter mới thành công!");
+            } catch (err) {
+                alert(`Lỗi: ${err.message}`);
+            } finally {
+                btnSaveSplit.disabled = false;
+            }
+        });
+
+        btnLoadMore.addEventListener("click", renderMorePreviewPages);
+
+        window.addEventListener("DOMContentLoaded", loadComicDetail);
+    </script>
+</body>
+</html>

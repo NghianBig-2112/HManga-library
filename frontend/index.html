@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thư Viện HManga — Trang Chủ</title>
+</head>
+<body style="
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-image: url('assets/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+">
+    <!-- Khung chứa nội dung nổi trên nền ảnh -->
+    <div style="
+        max-width: 960px; 
+        margin: 30px auto; 
+        padding: 25px; 
+        background-color: rgba(255, 255, 255, 0.93); 
+        border-radius: 8px; 
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    ">
+
+        <!-- TIÊU ĐỀ TRANG CHỦ -->
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+            <img src="assets/rem.jpg" alt="Logo HManga" style="width: 65px; height: 65px; object-fit: cover; border-radius: 50%; border: 2px solid #2c3e50;">
+            <h1 style="margin: 0; color: #2c3e50;">Thư Viện HManga</h1>
+        </div>
+
+        <hr style="margin: 15px 0;">
+
+        <!-- KHU VỰC 1: THÊM TRUYỆN & TẠO THƯ MỤC -->
+        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+            <!-- Box 1: Tìm kiểm tra & Thêm truyện bằng ID -->
+            <div style="flex: 2; min-width: 300px; background: #f8f9fa; padding: 15px; border: 1px solid #dee2e6; border-radius: 6px;">
+                <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; color: #2c3e50;">Tìm và thêm truyện từ NHentai</h3>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                    <input type="number" id="addGalleryIdInput" placeholder="Nhập ID truyện (vd: 14414)" style="padding: 8px; font-size: 14px; width: 185px;" min="1">
+                    
+                    <button type="button" id="btnSearchComic" style="padding: 8px 14px; font-size: 14px; cursor: pointer; background: #ffc107; color: #212529; font-weight: bold; border: none; border-radius: 4px;">
+                        Tìm
+                    </button>
+
+                    <select id="addFolderSelect" style="padding: 8px; font-size: 14px;">
+                        <option value="1">Mặc định</option>
+                        <option value="2">Yêu thích</option>
+                    </select>
+
+                    <button type="button" id="btnAddComic" style="padding: 8px 14px; font-size: 14px; cursor: pointer; background: #0d6efd; color: white; font-weight: bold; border: none; border-radius: 4px;">
+                        Thêm vào thư viện
+                    </button>
+                </div>
+
+                <!-- Dòng thông báo kết quả sau khi bấm nút "Tìm" -->
+                <div id="searchCheckStatus" style="margin-top: 10px; font-size: 13px; color: #555; background: #fff; padding: 8px 10px; border-radius: 4px; border: 1px dashed #ccc;">
+                    <em>Nhập ID truyện và bấm <strong>"Tìm"</strong> để kiểm tra xem truyện đã có trong thư viện chưa trước khi thêm.</em>
+                </div>
+            </div>
+
+            <!-- Box 2: Tạo thư mục mới -->
+            <div style="flex: 1; min-width: 220px; background: #f8f9fa; padding: 15px; border: 1px solid #dee2e6; border-radius: 6px;">
+                <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; color: #2c3e50;">Tạo thư mục mới</h3>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <input type="text" id="newFolderName" placeholder="Nhập tên thư mục..." style="padding: 8px; font-size: 14px; flex: 1; min-width: 110px;">
+                    <button type="button" id="btnCreateFolder" style="padding: 8px 14px; font-size: 14px; cursor: pointer; background: #198754; color: white; font-weight: bold; border: none; border-radius: 4px;">
+                        Tạo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KHU VỰC 2: BỘ LỌC (CHỈ LỌC THEO THƯ MỤC & TÁC GIẢ) -->
+        <div style="background: #eef2f5; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+            <div>
+                <label style="font-weight: bold; font-size: 14px; color: #2c3e50;">Thư mục:</label>
+                <select id="filterFolder" style="padding: 6px 10px; font-size: 14px; margin-left: 4px;">
+                    <option value="">Tất cả thư mục</option>
+                    <option value="1">Mặc định</option>
+                    <option value="2">Yêu thích</option>
+                </select>
+            </div>
+
+            <div>
+                <label style="font-weight: bold; font-size: 14px; color: #2c3e50;">Tác giả:</label>
+                <select id="filterAuthor" style="padding: 6px 10px; font-size: 14px; margin-left: 4px;">
+                    <option value="">Tất cả tác giả</option>
+                    <option value="2439">o.ri</option>
+                </select>
+            </div>
+
+            <button type="button" id="btnResetFilter" style="padding: 6px 14px; font-size: 13px; cursor: pointer; margin-left: auto;">
+                Làm mới
+            </button>
+        </div>
+
+        <!-- KHU VỰC 3: LƯỚI DANH SÁCH TRUYỆN TRONG THƯ VIỆN -->
+        <h3 style="margin-bottom: 12px; color: #2c3e50;">Danh sách truyện (<span id="comicsCount">2</span> bộ)</h3>
+
+        <div id="comicsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px;">
+
+            <!-- Thẻ truyện mẫu 1 -->
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fff; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <a href="detail.html" style="text-decoration: none;">
+                        <img src="assets/rem.jpg" alt="Ảnh bìa mẫu" style="width: 100%; height: 230px; object-fit: cover; border-radius: 4px; display: block;">
+                    </a>
+                    <h4 style="margin: 8px 0 4px 0; font-size: 15px; color: #2c3e50;">
+                        <a href="detail.html" style="text-decoration: none; color: inherit;">Family Play</a>
+                    </h4>
+                    <div style="font-size: 12px; color: #555; margin-bottom: 8px;">
+                        <div><strong>ID:</strong> 14414 | <strong>Số trang:</strong> 236</div>
+                        <div><strong>Tác giả:</strong> <span style="color: #d63384; font-weight: bold;">o.ri</span></div>
+                        <div><strong>Ngôn ngữ:</strong> english | <strong>Thư mục:</strong> Mặc định</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 6px; margin-top: 6px;">
+                    <a href="detail.html" style="flex: 1; padding: 6px; font-size: 12px; text-align: center; text-decoration: none; background: #0d6efd; color: white; font-weight: bold; border-radius: 4px;">
+                        Chi tiết
+                    </a>
+                    <button type="button" style="padding: 6px 10px; font-size: 12px; cursor: pointer; background: #dc3545; color: white; font-weight: bold; border: none; border-radius: 4px;">
+                        Xóa
+                    </button>
+                </div>
+            </div>
+
+            <!-- Thẻ truyện mẫu 2 -->
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fff; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <a href="detail.html" style="text-decoration: none;">
+                        <img src="assets/rem.jpg" alt="Ảnh bìa mẫu" style="width: 100%; height: 230px; object-fit: cover; border-radius: 4px; display: block;">
+                    </a>
+                    <h4 style="margin: 8px 0 4px 0; font-size: 15px; color: #2c3e50;">
+                        <a href="detail.html" style="text-decoration: none; color: inherit;">Mama no Jitsuryoku</a>
+                    </h4>
+                    <div style="font-size: 12px; color: #555; margin-bottom: 8px;">
+                        <div><strong>ID:</strong> 686045 | <strong>Số trang:</strong> 16</div>
+                        <div><strong>Tác giả:</strong> <span style="color: #d63384; font-weight: bold;">shironegi</span></div>
+                        <div><strong>Ngôn ngữ:</strong> english | <strong>Thư mục:</strong> Yêu thích</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 6px; margin-top: 6px;">
+                    <a href="detail.html" style="flex: 1; padding: 6px; font-size: 12px; text-align: center; text-decoration: none; background: #0d6efd; color: white; font-weight: bold; border-radius: 4px;">
+                        Chi tiết
+                    </a>
+                    <button type="button" style="padding: 6px 10px; font-size: 12px; cursor: pointer; background: #dc3545; color: white; font-weight: bold; border: none; border-radius: 4px;">
+                        Xóa
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- KHU VỰC 4: PHÂN TRANG (12 TRUYỆN / TRANG) -->
+        <div id="paginationBar" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 25px; padding-top: 15px; border-top: 1px solid #dee2e6;">
+            <button type="button" id="btnPrevComicPage" style="padding: 8px 16px; font-size: 14px; cursor: pointer; background: #0d6efd; color: white; font-weight: bold; border: none; border-radius: 4px;">
+                Trang trước
+            </button>
+
+            <span style="font-size: 14px; font-weight: bold; color: #2c3e50;">
+                Trang <span id="currentComicPage">1</span> / <span id="totalComicPages">1</span>
+            </span>
+
+            <button type="button" id="btnNextComicPage" style="padding: 8px 16px; font-size: 14px; cursor: pointer; background: #0d6efd; color: white; font-weight: bold; border: none; border-radius: 4px;">
+                Trang sau
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const API_BASE = (window.location.protocol.startsWith("http") && window.location.port === "8000")
+            ? ""
+            : "http://127.0.0.1:8000";
+
+        let currentPage = 1;
+        let totalPages = 1;
+        const LIMIT_PER_PAGE = 12;
+
+        const addGalleryIdInput = document.getElementById("addGalleryIdInput");
+        const btnSearchComic = document.getElementById("btnSearchComic");
+        const addFolderSelect = document.getElementById("addFolderSelect");
+        const btnAddComic = document.getElementById("btnAddComic");
+        const searchCheckStatus = document.getElementById("searchCheckStatus");
+
+        const newFolderName = document.getElementById("newFolderName");
+        const btnCreateFolder = document.getElementById("btnCreateFolder");
+
+        const filterFolder = document.getElementById("filterFolder");
+        const filterAuthor = document.getElementById("filterAuthor");
+        const btnResetFilter = document.getElementById("btnResetFilter");
+
+        const comicsCount = document.getElementById("comicsCount");
+        const comicsGrid = document.getElementById("comicsGrid");
+        const paginationBar = document.getElementById("paginationBar");
+        const btnPrevComicPage = document.getElementById("btnPrevComicPage");
+        const currentComicPage = document.getElementById("currentComicPage");
+        const totalComicPages = document.getElementById("totalComicPages");
+        const btnNextComicPage = document.getElementById("btnNextComicPage");
+
+        function getProxyImageUrl(url) {
+            if (!url) return "assets/rem.jpg";
+            if (url.includes("nhentai.net")) {
+                return `${API_BASE}/api/image-proxy?url=${encodeURIComponent(url)}`;
+            }
+            return url;
+        }
+
+        // 1. Tải danh sách Thư mục
+        async function loadFolders() {
+            try {
+                const resp = await fetch(`${API_BASE}/api/folders`);
+                if (!resp.ok) return;
+                const folders = await resp.json();
+
+                addFolderSelect.innerHTML = folders.map(f =>
+                    `<option value="${f.id}">${f.name}</option>`
+                ).join("");
+
+                const currentFilterVal = filterFolder.value;
+                filterFolder.innerHTML = `<option value="">Tất cả thư mục</option>` + folders.map(f =>
+                    `<option value="${f.id}">${f.name}</option>`
+                ).join("");
+                filterFolder.value = currentFilterVal;
+            } catch (err) {
+                console.error("Lỗi tải thư mục:", err);
+            }
+        }
+
+        // 2. Tải danh sách Tác giả
+        async function loadAuthors() {
+            try {
+                const resp = await fetch(`${API_BASE}/api/authors`);
+                if (!resp.ok) return;
+                const authors = await resp.json();
+
+                const currentAuthorVal = filterAuthor.value;
+                filterAuthor.innerHTML = `<option value="">Tất cả tác giả</option>` + authors.map(a =>
+                    `<option value="${a.id}">${a.name}</option>`
+                ).join("");
+                filterAuthor.value = currentAuthorVal;
+            } catch (err) {
+                console.error("Lỗi tải tác giả:", err);
+            }
+        }
+
+        // 3. Hiển thị danh sách thẻ truyện lên lưới (giữ nguyên 100% HTML/CSS của thẻ mẫu)
+        function renderComicsGrid(comicsList) {
+            if (!comicsList || comicsList.length === 0) {
+                comicsGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: #555; padding: 20px;">Chưa có bộ truyện nào để hiển thị.</p>`;
+                return;
+            }
+
+            comicsGrid.innerHTML = comicsList.map(comic => `
+                <div style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fff; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <a href="detail.html?id=${comic.id}" style="text-decoration: none;">
+                            <img src="${getProxyImageUrl(comic.cover_url)}" alt="${comic.title}" style="width: 100%; height: 230px; object-fit: cover; border-radius: 4px; display: block;" loading="lazy">
+                        </a>
+                        <h4 style="margin: 8px 0 4px 0; font-size: 15px; color: #2c3e50;">
+                            <a href="detail.html?id=${comic.id}" style="text-decoration: none; color: inherit;">${comic.title}</a>
+                        </h4>
+                        <div style="font-size: 12px; color: #555; margin-bottom: 8px;">
+                            <div><strong>ID:</strong> ${comic.id} | <strong>Số trang:</strong> ${comic.num_pages}</div>
+                            <div><strong>Tác giả:</strong> <span style="color: #d63384; font-weight: bold;">${comic.author || "Unknown"}</span></div>
+                            <div><strong>Ngôn ngữ:</strong> ${comic.language || "Unknown"} | <strong>Thư mục:</strong> ${comic.folder_name || "Mặc định"}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 6px; margin-top: 6px;">
+                        <a href="detail.html?id=${comic.id}" style="flex: 1; padding: 6px; font-size: 12px; text-align: center; text-decoration: none; background: #0d6efd; color: white; font-weight: bold; border-radius: 4px;">
+                            Chi tiết
+                        </a>
+                        <button type="button" onclick="handleDeleteComic(${comic.id})" style="padding: 6px 10px; font-size: 12px; cursor: pointer; background: #dc3545; color: white; font-weight: bold; border: none; border-radius: 4px;">
+                            Xóa
+                        </button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // 4. Tải danh sách truyện theo trang (12 bộ / trang)
+        async function loadComics(page = 1) {
+            try {
+                const params = new URLSearchParams({
+                    page: page,
+                    limit: LIMIT_PER_PAGE
+                });
+                if (filterFolder.value) params.append("folder_id", filterFolder.value);
+                if (filterAuthor.value) params.append("artist_id", filterAuthor.value);
+
+                const resp = await fetch(`${API_BASE}/api/comics?${params.toString()}`);
+                if (!resp.ok) throw new Error("Không thể tải danh sách truyện");
+                const data = await resp.json();
+
+                currentPage = data.page || 1;
+                totalPages = data.total_pages || 1;
+
+                comicsCount.textContent = data.total_comics ?? 0;
+                currentComicPage.textContent = currentPage;
+                totalComicPages.textContent = totalPages;
+
+                paginationBar.style.display = "flex";
+                btnPrevComicPage.disabled = currentPage <= 1;
+                btnNextComicPage.disabled = currentPage >= totalPages;
+                btnPrevComicPage.style.opacity = currentPage <= 1 ? "0.5" : "1";
+                btnNextComicPage.style.opacity = currentPage >= totalPages ? "0.5" : "1";
+
+                renderComicsGrid(data.items || []);
+            } catch (err) {
+                console.error("Lỗi tải danh sách truyện:", err);
+            }
+        }
+
+        // 5. Xử lý bấm nút "Tìm" (Gọi Python kiểm tra ID & title_pretty)
+        btnSearchComic.addEventListener("click", async () => {
+            const galleryId = parseInt(addGalleryIdInput.value.trim(), 10);
+            if (!galleryId || galleryId < 1) {
+                alert("Vui lòng nhập ID truyện hợp lệ!");
+                return;
+            }
+
+            btnSearchComic.disabled = true;
+            searchCheckStatus.style.color = "#555";
+            searchCheckStatus.style.borderColor = "#ccc";
+            searchCheckStatus.innerHTML = `<em>Đang kiểm tra ID <strong>${galleryId}</strong> trong thư viện và NHentai...</em>`;
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/comics/check/${galleryId}`);
+                const data = await resp.json();
+
+                if (!resp.ok) {
+                    throw new Error(data.detail || "Không tìm thấy truyện trên NHentai!");
+                }
+
+                if (data.status === "exists_id" || data.status === "exists_title") {
+                    // Đã có ID hoặc trùng tên trong Supabase -> Lọc hiện bộ truyện đó lên màn hình
+                    searchCheckStatus.style.color = "#856404";
+                    searchCheckStatus.style.borderColor = "#ffc107";
+                    searchCheckStatus.innerHTML = `<strong>Thông báo:</strong> ${data.message}`;
+
+                    comicsCount.textContent = 1;
+                    paginationBar.style.display = "none";
+                    renderComicsGrid([data.comic]);
+                } else if (data.status === "new") {
+                    // Hoàn toàn chưa có -> Báo hợp lệ để bấm "Thêm vào thư viện"
+                    searchCheckStatus.style.color = "#198754";
+                    searchCheckStatus.style.borderColor = "#198754";
+                    searchCheckStatus.innerHTML = `<strong>Hợp lệ:</strong> ${data.message}`;
+                }
+            } catch (err) {
+                searchCheckStatus.style.color = "#dc3545";
+                searchCheckStatus.style.borderColor = "#dc3545";
+                searchCheckStatus.innerHTML = `<strong>Lỗi:</strong> ${err.message}`;
+            } finally {
+                btnSearchComic.disabled = false;
+            }
+        });
+
+        // 6. Xử lý bấm nút "Thêm vào thư viện"
+        btnAddComic.addEventListener("click", async () => {
+            const galleryId = parseInt(addGalleryIdInput.value.trim(), 10);
+            const folderId = parseInt(addFolderSelect.value, 10) || 1;
+
+            if (!galleryId || galleryId < 1) {
+                alert("Vui lòng nhập ID truyện cần thêm!");
+                return;
+            }
+
+            btnAddComic.disabled = true;
+            searchCheckStatus.style.color = "#0d6efd";
+            searchCheckStatus.innerHTML = `<em>Đang thêm truyện ID <strong>${galleryId}</strong> vào thư viện...</em>`;
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/comics`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ gallery_id: galleryId, folder_id: folderId })
+                });
+                const data = await resp.json();
+
+                if (!resp.ok) {
+                    throw new Error(data.detail || "Lỗi khi thêm truyện vào thư viện!");
+                }
+
+                searchCheckStatus.style.color = "#198754";
+                searchCheckStatus.style.borderColor = "#198754";
+                searchCheckStatus.innerHTML = `<strong>Thành công:</strong> Đã thêm bộ truyện <strong>${data.title}</strong> (ID: ${data.id}) vào thư viện!`;
+                addGalleryIdInput.value = "";
+
+                await loadAuthors();
+                await loadComics(1);
+            } catch (err) {
+                searchCheckStatus.style.color = "#dc3545";
+                searchCheckStatus.style.borderColor = "#dc3545";
+                searchCheckStatus.innerHTML = `<strong>Lỗi:</strong> ${err.message}`;
+            } finally {
+                btnAddComic.disabled = false;
+            }
+        });
+
+        // 7. Xử lý tạo thư mục mới
+        btnCreateFolder.addEventListener("click", async () => {
+            const name = newFolderName.value.trim();
+            if (!name) {
+                alert("Vui lòng nhập tên thư mục!");
+                return;
+            }
+
+            btnCreateFolder.disabled = true;
+            try {
+                const resp = await fetch(`${API_BASE}/api/folders`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name: name, description: "" })
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.detail || "Không thể tạo thư mục!");
+
+                newFolderName.value = "";
+                await loadFolders();
+                alert(`Đã tạo thư mục "${data.name}" thành công!`);
+            } catch (err) {
+                alert(`Lỗi: ${err.message}`);
+            } finally {
+                btnCreateFolder.disabled = false;
+            }
+        });
+
+        // 8. Xử lý xóa truyện
+        window.handleDeleteComic = async function(comicId) {
+            if (!confirm(`Bạn có chắc chắn muốn xóa truyện ID ${comicId} khỏi thư viện?`)) {
+                return;
+            }
+            try {
+                const resp = await fetch(`${API_BASE}/api/comics/${comicId}`, {
+                    method: "DELETE"
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.detail || "Lỗi khi xóa truyện!");
+
+                await loadAuthors();
+                await loadComics(currentPage);
+            } catch (err) {
+                alert(`Lỗi: ${err.message}`);
+            }
+        };
+
+        // 9. Sự kiện lọc & Phân trang
+        filterFolder.addEventListener("change", () => loadComics(1));
+        filterAuthor.addEventListener("change", () => loadComics(1));
+
+        btnResetFilter.addEventListener("click", () => {
+            filterFolder.value = "";
+            filterAuthor.value = "";
+            addGalleryIdInput.value = "";
+            searchCheckStatus.style.color = "#555";
+            searchCheckStatus.style.borderColor = "#ccc";
+            searchCheckStatus.innerHTML = `<em>Nhập ID truyện và bấm <strong>"Tìm"</strong> để kiểm tra xem truyện đã có trong thư viện chưa trước khi thêm.</em>`;
+            loadComics(1);
+        });
+
+        btnPrevComicPage.addEventListener("click", () => {
+            if (currentPage > 1) loadComics(currentPage - 1);
+        });
+
+        btnNextComicPage.addEventListener("click", () => {
+            if (currentPage < totalPages) loadComics(currentPage + 1);
+        });
+
+        addGalleryIdInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                btnSearchComic.click();
+            }
+        });
+
+        newFolderName.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                btnCreateFolder.click();
+            }
+        });
+
+        // Khởi chạy khi mở Trang chủ
+        window.addEventListener("DOMContentLoaded", async () => {
+            await Promise.all([loadFolders(), loadAuthors()]);
+            await loadComics(1);
+        });
+    </script>
+</body>
+</html>

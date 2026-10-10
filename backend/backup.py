@@ -16,9 +16,20 @@ if hasattr(sys.stdout, "reconfigure"):
 
 from database import get_supabase
 
-DATA_DIR = Path(__file__).parent / "data"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-BACKUP_FILE = DATA_DIR / "backup.json"
+ROOT_DIR = Path(__file__).resolve().parent.parent
+BACKEND_DIR = Path(__file__).resolve().parent
+
+def get_backup_filepath() -> Path:
+    """Xác định đường dẫn file backup.json (ưu tiên root/backup.json, sau đó backend/data/backup.json)."""
+    root_backup = ROOT_DIR / "backup.json"
+    backend_backup = BACKEND_DIR / "data" / "backup.json"
+    if root_backup.exists():
+        return root_backup
+    if backend_backup.exists():
+        return backend_backup
+    return root_backup
+
+BACKUP_FILE = get_backup_filepath()
 
 
 def export_library_data() -> dict:
@@ -88,24 +99,26 @@ def export_library_data() -> dict:
     }
 
 
-def save_backup_file(filepath: Path = BACKUP_FILE) -> str:
+def save_backup_file(filepath: Path = None) -> str:
     """Xuất dữ liệu và lưu vào file backup.json trên đĩa."""
+    target_path = filepath or get_backup_filepath()
+    target_path.parent.mkdir(parents=True, exist_ok=True)
     data = export_library_data()
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    with open(filepath, "w", encoding="utf-8") as f:
+    with open(target_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    return str(filepath)
+    return str(target_path)
 
 
-def restore_backup_from_file(filepath: Path = BACKUP_FILE) -> dict:
+def restore_backup_from_file(filepath: Path = None) -> dict:
     """
     Nạp dữ liệu từ backup.json lên Supabase bằng Batch Upsert.
     """
-    if not filepath.exists():
+    target_path = filepath or get_backup_filepath()
+    if not target_path.exists():
         return {"success": False, "message": "Không tìm thấy file backup"}
 
     sb = get_supabase()
-    with open(filepath, "r", encoding="utf-8") as f:
+    with open(target_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     # 1. Folders
@@ -184,9 +197,10 @@ def auto_restore_if_empty() -> bool:
     try:
         sb = get_supabase()
         res = sb.table("comics").select("id", count="exact").limit(1).execute()
-        if (res.count or 0) == 0 and BACKUP_FILE.exists():
-            print("[INFO] Supabase chưa có truyện nào, phát hiện backup.json. Đang tự động khôi phục...")
-            result = restore_backup_from_file(BACKUP_FILE)
+        backup_path = get_backup_filepath()
+        if (res.count or 0) == 0 and backup_path.exists():
+            print(f"[INFO] Supabase chưa có truyện nào, phát hiện {backup_path.name}. Đang tự động khôi phục...")
+            result = restore_backup_from_file(backup_path)
             print(f"[INFO] Tự động khôi phục hoàn tất: {result.get('so_truyen_khoi_phuc', 0)} truyện.")
             return True
         return False
