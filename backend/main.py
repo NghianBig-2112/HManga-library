@@ -262,17 +262,12 @@ def restore_library():
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = ROOT_DIR / "frontend"
-
-# Điền đường dẫn thư mục chứa ảnh nền của bạn vào đây (có chữ r ở trước dấu ngoặc kép):
-CUSTOM_BG_DIR = Path(r"D:\Anime\Twitter")
-
-# Nếu thư mục trên tồn tại thì lấy ảnh ở đó, nếu không thì tự động lùi về frontend/assets
-BACKGROUND_DIR = CUSTOM_BG_DIR if CUSTOM_BG_DIR.exists() else (FRONTEND_DIR / "assets")
+BACKGROUND_DIR = FRONTEND_DIR / "assets"
 
 
 @app.get("/api/backgrounds", summary="Lấy danh sách các file ảnh nền")
 def get_backgrounds():
-    """Tự động quét tất cả file ảnh trong thư mục BACKGROUND_DIR."""
+    """Tự động quét tất cả file ảnh trong thư mục frontend/assets."""
     if not BACKGROUND_DIR.exists():
         return []
 
@@ -285,10 +280,6 @@ def get_backgrounds():
     return files
 
 
-# 1. Mount thư mục ảnh nền vào đường dẫn /backgrounds (Đặt TRƯỚC khi mount "/")
-if BACKGROUND_DIR.exists():
-    app.mount("/backgrounds", StaticFiles(directory=str(BACKGROUND_DIR)), name="backgrounds")
-
-# 2. Mount giao diện Frontend vào "/"
+# Mount giao diện Frontend vào "/"
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

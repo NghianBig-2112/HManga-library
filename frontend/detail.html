@@ -227,7 +227,7 @@
 
         const savedBg = localStorage.getItem("hmanga_bg");
         if (savedBg) {
-            document.body.style.backgroundImage = `url("${API_BASE}/backgrounds/${encodeURIComponent(savedBg)}")`;
+            document.body.style.backgroundImage = `url("assets/${encodeURIComponent(savedBg)}")`;
         }
 
         const urlParams = new URLSearchParams(window.location.search);

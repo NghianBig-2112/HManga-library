@@ -633,7 +633,7 @@
         const bgSelect = document.getElementById("bgSelect");
         const savedBg = localStorage.getItem("hmanga_bg");
         if (savedBg) {
-            document.body.style.backgroundImage = `url("${API_BASE}/backgrounds/${encodeURIComponent(savedBg)}")`;
+            document.body.style.backgroundImage = `url("assets/${encodeURIComponent(savedBg)}")`;
         }
 
         async function loadBackgrounds() {
@@ -654,7 +654,7 @@
                     bgSelect.value = files[0];
                     localStorage.setItem("hmanga_bg", files[0]);
                 }
-                document.body.style.backgroundImage = `url("${API_BASE}/backgrounds/${encodeURIComponent(bgSelect.value)}")`;
+                document.body.style.backgroundImage = `url("assets/${encodeURIComponent(bgSelect.value)}")`;
             } catch (err) {
                 console.error("Lỗi tải danh sách hình nền:", err);
             }
@@ -664,7 +664,7 @@
             const chosen = bgSelect.value;
             if (!chosen) return;
             localStorage.setItem("hmanga_bg", chosen);
-            document.body.style.backgroundImage = `url("${API_BASE}/backgrounds/${encodeURIComponent(chosen)}")`;
+            document.body.style.backgroundImage = `url("assets/${encodeURIComponent(chosen)}")`;
         });
 
         // Khởi chạy khi mở Trang chủ
