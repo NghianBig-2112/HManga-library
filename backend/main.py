@@ -325,3 +325,7 @@ def get_backgrounds():
 # Mount toàn bộ thư mục `frontend` vào đường dẫn gốc "/" (đặt ở cuối file để không che khuất các route /api/...)
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
