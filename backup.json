@@ -6,8 +6,13 @@
       "description": "Thư mục truyện mặc định"
     },
     {
+      "id": 2,
+      "name": "Family",
+      "description": ""
+    },
+    {
       "id": 3,
-      "name": "Best mother",
+      "name": "Series",
       "description": ""
     }
   ],
@@ -18,14 +23,19 @@
       "slug": "o-ri"
     },
     {
-      "id": 3978,
-      "name": "ginyou haru",
-      "slug": "ginyou-haru"
+      "id": 4366,
+      "name": "tsuyatsuya",
+      "slug": "tsuyatsuya"
     },
     {
-      "id": 5960,
-      "name": "yamamoto yoshifumi",
-      "slug": "yamamoto-yoshifumi"
+      "id": 6281,
+      "name": "gonza",
+      "slug": "gonza"
+    },
+    {
+      "id": 8929,
+      "name": "tower",
+      "slug": "tower"
     },
     {
       "id": 9075,
@@ -33,49 +43,39 @@
       "slug": "kuroki-hidehiko"
     },
     {
-      "id": 12874,
-      "name": "millefeuille",
-      "slug": "millefeuille"
+      "id": 10597,
+      "name": "izayoi no kiki",
+      "slug": "izayoi-no-kiki"
     },
     {
-      "id": 14412,
-      "name": "morris",
-      "slug": "morris"
+      "id": 10969,
+      "name": "hiryuu ran",
+      "slug": "hiryuu-ran"
     },
     {
-      "id": 16569,
-      "name": "nagare ippon",
-      "slug": "nagare-ippon"
+      "id": 14451,
+      "name": "kai hiroyuki",
+      "slug": "kai-hiroyuki"
     },
     {
-      "id": 17696,
-      "name": "zerry fujio",
-      "slug": "zerry-fujio"
+      "id": 18203,
+      "name": "chanpon miyabi",
+      "slug": "chanpon-miyabi"
     },
     {
-      "id": 18578,
-      "name": "iguchi sentarou",
-      "slug": "iguchi-sentarou"
+      "id": 24124,
+      "name": "kawara keisuke",
+      "slug": "kawara-keisuke"
     },
     {
-      "id": 19057,
-      "name": "isorashi",
-      "slug": "isorashi"
+      "id": 26425,
+      "name": "the seiji",
+      "slug": "the-seiji"
     },
     {
-      "id": 20988,
-      "name": "rocket monkey",
-      "slug": "rocket-monkey"
-    },
-    {
-      "id": 21762,
-      "name": "nitta jun",
-      "slug": "nitta-jun"
-    },
-    {
-      "id": 24962,
-      "name": "saigado",
-      "slug": "saigado"
+      "id": 27255,
+      "name": "hyji",
+      "slug": "hyji"
     },
     {
       "id": 27832,
@@ -83,9 +83,14 @@
       "slug": "nishimaki-tohru"
     },
     {
-      "id": 32383,
-      "name": "bai asuka",
-      "slug": "bai-asuka"
+      "id": 27910,
+      "name": "suehirogari",
+      "slug": "suehirogari"
+    },
+    {
+      "id": 32219,
+      "name": "juan gotoh",
+      "slug": "juan-gotoh"
     },
     {
       "id": 32387,
@@ -93,39 +98,14 @@
       "slug": "xter"
     },
     {
-      "id": 51548,
-      "name": "gesundheit",
-      "slug": "gesundheit"
+      "id": 53664,
+      "name": "ahemaru",
+      "slug": "ahemaru"
     },
     {
-      "id": 74838,
-      "name": "gotoh juan",
-      "slug": "gotoh-juan"
-    },
-    {
-      "id": 108131,
-      "name": "namaribou nayonayo",
-      "slug": "namaribou-nayonayo"
-    },
-    {
-      "id": 135416,
-      "name": "tempura dozaemon",
-      "slug": "tempura-dozaemon"
-    },
-    {
-      "id": 146850,
-      "name": "pororivista",
-      "slug": "pororivista"
-    },
-    {
-      "id": 154005,
-      "name": "hanpatsu zokusei",
-      "slug": "hanpatsu-zokusei"
-    },
-    {
-      "id": 156051,
-      "name": "pz-x",
-      "slug": "pz-x"
+      "id": 126358,
+      "name": "gin eiji",
+      "slug": "gin-eiji"
     }
   ],
   "genres": [
@@ -133,21 +113,6 @@
       "id": 190,
       "name": "maid",
       "slug": "maid"
-    },
-    {
-      "id": 370,
-      "name": "business suit",
-      "slug": "business-suit"
-    },
-    {
-      "id": 683,
-      "name": "squirting",
-      "slug": "squirting"
-    },
-    {
-      "id": 706,
-      "name": "birth",
-      "slug": "birth"
     },
     {
       "id": 1033,
@@ -185,11 +150,6 @@
       "slug": "virginity"
     },
     {
-      "id": 2633,
-      "name": "leg lock",
-      "slug": "leg-lock"
-    },
-    {
       "id": 2820,
       "name": "scat",
       "slug": "scat"
@@ -200,9 +160,9 @@
       "slug": "big-breasts"
     },
     {
-      "id": 3614,
-      "name": "triple penetration",
-      "slug": "triple-penetration"
+      "id": 3031,
+      "name": "underwater",
+      "slug": "underwater"
     },
     {
       "id": 3666,
@@ -215,39 +175,19 @@
       "slug": "swimsuit"
     },
     {
-      "id": 3947,
-      "name": "onahole",
-      "slug": "onahole"
-    },
-    {
-      "id": 5620,
-      "name": "double anal",
-      "slug": "double-anal"
-    },
-    {
-      "id": 5820,
-      "name": "piercing",
-      "slug": "piercing"
-    },
-    {
-      "id": 5936,
-      "name": "time stop",
-      "slug": "time-stop"
-    },
-    {
       "id": 6343,
       "name": "pregnant",
       "slug": "pregnant"
     },
     {
-      "id": 6817,
-      "name": "unusual pupils",
-      "slug": "unusual-pupils"
+      "id": 6525,
+      "name": "nurse",
+      "slug": "nurse"
     },
     {
-      "id": 7142,
-      "name": "bbw",
-      "slug": "bbw"
+      "id": 6900,
+      "name": "miko",
+      "slug": "miko"
     },
     {
       "id": 7155,
@@ -273,6 +213,11 @@
       "id": 8010,
       "name": "group",
       "slug": "group"
+    },
+    {
+      "id": 8119,
+      "name": "dragon",
+      "slug": "dragon"
     },
     {
       "id": 8368,
@@ -330,24 +275,14 @@
       "slug": "urination"
     },
     {
-      "id": 10685,
-      "name": "double blowjob",
-      "slug": "double-blowjob"
+      "id": 11941,
+      "name": "replaced",
+      "slug": "replaced"
     },
     {
-      "id": 10794,
-      "name": "breast feeding",
-      "slug": "breast-feeding"
-    },
-    {
-      "id": 12220,
-      "name": "butler",
-      "slug": "butler"
-    },
-    {
-      "id": 12695,
-      "name": "prostitution",
-      "slug": "prostitution"
+      "id": 12523,
+      "name": "bestiality",
+      "slug": "bestiality"
     },
     {
       "id": 12824,
@@ -358,16 +293,6 @@
       "id": 13720,
       "name": "nakadashi",
       "slug": "nakadashi"
-    },
-    {
-      "id": 13722,
-      "name": "moral degeneration",
-      "slug": "moral-degeneration"
-    },
-    {
-      "id": 13882,
-      "name": "tutor",
-      "slug": "tutor"
     },
     {
       "id": 13989,
@@ -385,34 +310,19 @@
       "slug": "anal"
     },
     {
-      "id": 14526,
-      "name": "cashier",
-      "slug": "cashier"
-    },
-    {
       "id": 14971,
       "name": "sex toys",
       "slug": "sex-toys"
     },
     {
-      "id": 15045,
-      "name": "niece",
-      "slug": "niece"
-    },
-    {
-      "id": 15242,
-      "name": "lab coat",
-      "slug": "lab-coat"
+      "id": 15225,
+      "name": "blowjob face",
+      "slug": "blowjob-face"
     },
     {
       "id": 15348,
       "name": "ffm threesome",
       "slug": "ffm-threesome"
-    },
-    {
-      "id": 15408,
-      "name": "femdom",
-      "slug": "femdom"
     },
     {
       "id": 15492,
@@ -435,29 +345,14 @@
       "slug": "mother"
     },
     {
-      "id": 16533,
-      "name": "sleeping",
-      "slug": "sleeping"
-    },
-    {
       "id": 16828,
       "name": "hairy",
       "slug": "hairy"
     },
     {
-      "id": 17801,
-      "name": "solo action",
-      "slug": "solo-action"
-    },
-    {
-      "id": 18322,
-      "name": "brother",
-      "slug": "brother"
-    },
-    {
-      "id": 19064,
-      "name": "pubic stubble",
-      "slug": "pubic-stubble"
+      "id": 17531,
+      "name": "cosplaying",
+      "slug": "cosplaying"
     },
     {
       "id": 19175,
@@ -475,9 +370,19 @@
       "slug": "exhibitionism"
     },
     {
+      "id": 19954,
+      "name": "yuri",
+      "slug": "yuri"
+    },
+    {
       "id": 20035,
       "name": "x-ray",
       "slug": "x-ray"
+    },
+    {
+      "id": 20282,
+      "name": "footjob",
+      "slug": "footjob"
     },
     {
       "id": 20525,
@@ -490,11 +395,6 @@
       "slug": "mind-control"
     },
     {
-      "id": 20789,
-      "name": "policewoman",
-      "slug": "policewoman"
-    },
-    {
       "id": 20905,
       "name": "full color",
       "slug": "full-color"
@@ -505,9 +405,24 @@
       "slug": "multi-work-series"
     },
     {
-      "id": 22079,
-      "name": "drugs",
-      "slug": "drugs"
+      "id": 21774,
+      "name": "human pet",
+      "slug": "human-pet"
+    },
+    {
+      "id": 21822,
+      "name": "low bestiality",
+      "slug": "low-bestiality"
+    },
+    {
+      "id": 22025,
+      "name": "prolapse",
+      "slug": "prolapse"
+    },
+    {
+      "id": 22221,
+      "name": "blood",
+      "slug": "blood"
     },
     {
       "id": 22942,
@@ -520,19 +435,9 @@
       "slug": "double-penetration"
     },
     {
-      "id": 22950,
-      "name": "tanlines",
-      "slug": "tanlines"
-    },
-    {
       "id": 23035,
       "name": "aunt",
       "slug": "aunt"
-    },
-    {
-      "id": 23132,
-      "name": "bunny girl",
-      "slug": "bunny-girl"
     },
     {
       "id": 23237,
@@ -545,11 +450,6 @@
       "slug": "big-areolae"
     },
     {
-      "id": 23965,
-      "name": "chloroform",
-      "slug": "chloroform"
-    },
-    {
       "id": 24102,
       "name": "lactation",
       "slug": "lactation"
@@ -560,14 +460,9 @@
       "slug": "stockings"
     },
     {
-      "id": 24380,
-      "name": "pantyhose",
-      "slug": "pantyhose"
-    },
-    {
-      "id": 24708,
-      "name": "cowgirl",
-      "slug": "cowgirl"
+      "id": 24676,
+      "name": "rimjob",
+      "slug": "rimjob"
     },
     {
       "id": 24726,
@@ -580,34 +475,14 @@
       "slug": "drunk"
     },
     {
-      "id": 24984,
-      "name": "orgasm denial",
-      "slug": "orgasm-denial"
-    },
-    {
-      "id": 25085,
-      "name": "swinging",
-      "slug": "swinging"
-    },
-    {
       "id": 25614,
       "name": "paizuri",
       "slug": "paizuri"
     },
     {
-      "id": 25663,
-      "name": "oppai loli",
-      "slug": "oppai-loli"
-    },
-    {
       "id": 25794,
       "name": "widow",
       "slug": "widow"
-    },
-    {
-      "id": 25822,
-      "name": "smell",
-      "slug": "smell"
     },
     {
       "id": 25871,
@@ -620,19 +495,9 @@
       "slug": "fingering"
     },
     {
-      "id": 26953,
-      "name": "bukkake",
-      "slug": "bukkake"
-    },
-    {
       "id": 27063,
       "name": "filming",
       "slug": "filming"
-    },
-    {
-      "id": 27384,
-      "name": "mind break",
-      "slug": "mind-break"
     },
     {
       "id": 27473,
@@ -645,34 +510,9 @@
       "slug": "rape"
     },
     {
-      "id": 27598,
-      "name": "low shotacon",
-      "slug": "low-shotacon"
-    },
-    {
-      "id": 27697,
-      "name": "leotard",
-      "slug": "leotard"
-    },
-    {
-      "id": 27720,
-      "name": "smegma",
-      "slug": "smegma"
-    },
-    {
       "id": 28031,
       "name": "sister",
       "slug": "sister"
-    },
-    {
-      "id": 28426,
-      "name": "hairy armpits",
-      "slug": "hairy-armpits"
-    },
-    {
-      "id": 28521,
-      "name": "voyeurism",
-      "slug": "voyeurism"
     },
     {
       "id": 28550,
@@ -680,14 +520,9 @@
       "slug": "teacher"
     },
     {
-      "id": 28589,
-      "name": "hotpants",
-      "slug": "hotpants"
-    },
-    {
-      "id": 29013,
-      "name": "dilf",
-      "slug": "dilf"
+      "id": 29182,
+      "name": "blackmail",
+      "slug": "blackmail"
     },
     {
       "id": 29224,
@@ -695,29 +530,14 @@
       "slug": "impregnation"
     },
     {
-      "id": 29399,
-      "name": "daughter",
-      "slug": "daughter"
-    },
-    {
-      "id": 29631,
-      "name": "inverted nipples",
-      "slug": "inverted-nipples"
-    },
-    {
       "id": 29859,
       "name": "blowjob",
       "slug": "blowjob"
     },
     {
-      "id": 30473,
-      "name": "muscle",
-      "slug": "muscle"
-    },
-    {
-      "id": 30555,
-      "name": "big penis",
-      "slug": "big-penis"
+      "id": 31012,
+      "name": "blindfold",
+      "slug": "blindfold"
     },
     {
       "id": 31044,
@@ -725,9 +545,14 @@
       "slug": "collar"
     },
     {
-      "id": 31337,
-      "name": "kunoichi",
-      "slug": "kunoichi"
+      "id": 31880,
+      "name": "bbm",
+      "slug": "bbm"
+    },
+    {
+      "id": 32224,
+      "name": "eggs",
+      "slug": "eggs"
     },
     {
       "id": 32341,
@@ -735,19 +560,9 @@
       "slug": "shotacon"
     },
     {
-      "id": 32484,
-      "name": "stomach deformation",
-      "slug": "stomach-deformation"
-    },
-    {
-      "id": 32538,
-      "name": "out of order",
-      "slug": "out-of-order"
-    },
-    {
-      "id": 32745,
-      "name": "chikan",
-      "slug": "chikan"
+      "id": 32602,
+      "name": "fisting",
+      "slug": "fisting"
     },
     {
       "id": 32752,
@@ -770,24 +585,14 @@
       "slug": "oyakodon"
     },
     {
-      "id": 75320,
-      "name": "clamp",
-      "slug": "clamp"
-    },
-    {
       "id": 81707,
       "name": "beauty mark",
       "slug": "beauty-mark"
     },
     {
-      "id": 85288,
-      "name": "ponytail",
-      "slug": "ponytail"
-    },
-    {
-      "id": 88433,
-      "name": "clothed male nude female",
-      "slug": "clothed-male-nude-female"
+      "id": 88846,
+      "name": "horns",
+      "slug": "horns"
     },
     {
       "id": 89056,
@@ -795,14 +600,14 @@
       "slug": "hidden-sex"
     },
     {
+      "id": 104262,
+      "name": "makeup",
+      "slug": "makeup"
+    },
+    {
       "id": 106119,
       "name": "no penetration",
       "slug": "no-penetration"
-    },
-    {
-      "id": 126671,
-      "name": "multimouth blowjob",
-      "slug": "multimouth-blowjob"
     },
     {
       "id": 130025,
@@ -810,14 +615,14 @@
       "slug": "anal-intercourse"
     },
     {
-      "id": 132818,
-      "name": "multiple orgasms",
-      "slug": "multiple-orgasms"
-    },
-    {
       "id": 132926,
       "name": "multipanel sequence",
       "slug": "multipanel-sequence"
+    },
+    {
+      "id": 138267,
+      "name": "rough grammar",
+      "slug": "rough-grammar"
     },
     {
       "id": 138277,
@@ -825,40 +630,25 @@
       "slug": "rough-translation"
     },
     {
-      "id": 141098,
-      "name": "nipple stimulation",
-      "slug": "nipple-stimulation"
-    },
-    {
       "id": 145155,
       "name": "painted nails",
       "slug": "painted-nails"
     },
     {
-      "id": 146696,
-      "name": "high heels",
-      "slug": "high-heels"
+      "id": 145563,
+      "name": "son",
+      "slug": "son"
     },
     {
-      "id": 158754,
-      "name": "bathing room",
-      "slug": "bathing-room"
-    },
-    {
-      "id": 163463,
-      "name": "short-haired female",
-      "slug": "short-haired-female"
-    },
-    {
-      "id": 163593,
-      "name": "jimiko",
-      "slug": "jimiko"
+      "id": 158734,
+      "name": "beach",
+      "slug": "beach"
     }
   ],
   "comics": [
     {
       "id": 14414,
-      "folder_id": 3,
+      "folder_id": 2,
       "media_id": "48410",
       "title": "Family Play",
       "artist": "o.ri",
@@ -867,7 +657,7 @@
       "cover_url": "https://t3.nhentai.net/galleries/48410/cover.jpg",
       "num_pages": 236,
       "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T13:55:23.865716+00:00",
+      "created_at": "2026-10-11T03:21:18.518385+00:00",
       "artist_ids": [
         2439
       ],
@@ -887,7 +677,7 @@
       "chapters": [
         {
           "chapter_number": 1.0,
-          "title": "Chapter 1",
+          "title": "Mother",
           "media_id": "48410",
           "start_page": 1,
           "end_page": 28,
@@ -895,7 +685,7 @@
         },
         {
           "chapter_number": 2.0,
-          "title": "Chapter 2",
+          "title": "Morning with mother",
           "media_id": "48410",
           "start_page": 29,
           "end_page": 52,
@@ -960,1084 +750,791 @@
       ]
     },
     {
-      "id": 686041,
+      "id": 400471,
       "folder_id": 1,
-      "media_id": "4225336",
-      "title": "Mama to Etchina 3ttsu no Bou",
-      "artist": "Unknown",
-      "language": "japanese",
-      "category": "doujinshi",
-      "cover_url": "https://t3.nhentai.net/galleries/4225336/cover.webp.webp",
-      "num_pages": 12,
-      "page_exts": "wwwwwwwwwwww",
-      "created_at": "2026-10-10T14:32:34.393887+00:00",
-      "artist_ids": [],
-      "genre_ids": [
-        35762,
-        22942,
-        15853
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "4225336",
-          "start_page": 1,
-          "end_page": 12,
-          "page_exts": "wwwwwwwwwwww"
-        }
-      ]
-    },
-    {
-      "id": 686045,
-      "folder_id": 3,
-      "media_id": "4225352",
-      "title": "Mama no Jitsuryoku | Mom's Skills",
-      "artist": "nitta jun",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/4225352/cover.webp.webp",
-      "num_pages": 16,
-      "page_exts": "wwwwwwwwwwwwwwww",
-      "created_at": "2026-10-10T14:33:22.470098+00:00",
-      "artist_ids": [
-        21762
-      ],
-      "genre_ids": [
-        1207,
-        138277,
-        12695,
-        2515,
-        29399
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "4225352",
-          "start_page": 1,
-          "end_page": 16,
-          "page_exts": "wwwwwwwwwwwwwwww"
-        }
-      ]
-    },
-    {
-      "id": 575342,
-      "folder_id": 1,
-      "media_id": "3371151",
-      "title": "My AR glasses can see various stats about my foster sister?!",
-      "artist": "pz-x",
+      "media_id": "2201599",
+      "title": "My Mother",
+      "artist": "xter",
       "language": "english",
       "category": "doujinshi",
-      "cover_url": "https://t3.nhentai.net/galleries/3371151/cover.webp.webp",
-      "num_pages": 166,
-      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-      "created_at": "2026-10-10T14:35:11.032940+00:00",
+      "cover_url": "https://t3.nhentai.net/galleries/2201599/cover.jpg",
+      "num_pages": 136,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T03:25:22.322741+00:00",
       "artist_ids": [
-        156051
+        32387
       ],
       "genre_ids": [
         2937,
         35762,
         35763,
-        13720,
+        14283,
         29859,
-        10314,
-        20905,
-        27473,
-        20035,
-        22942,
-        14971,
-        85288,
-        29224,
-        9162,
-        8739,
-        28031,
-        6817,
-        27063,
-        29631,
-        1067,
-        89056,
-        132818,
-        28521,
-        17801,
-        24984,
-        28589,
-        13722,
-        145155,
-        3947,
-        132926
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "3371151",
-          "start_page": 1,
-          "end_page": 166,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        }
-      ]
-    },
-    {
-      "id": 83843,
-      "folder_id": 1,
-      "media_id": "547852",
-      "title": "Jukuniku Kanin",
-      "artist": "yamamoto yoshifumi",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/547852/cover.jpg",
-      "num_pages": 171,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:35:53.580448+00:00",
-      "artist_ids": [
-        5960
-      ],
-      "genre_ids": [
-        2937,
-        24201,
-        10314,
-        32341,
         13989,
+        21572,
         20035,
         22942,
         1207,
-        8653,
-        23237,
-        29224,
+        25614,
+        3735,
+        130025,
         16828,
-        9260,
+        1643,
+        9083,
+        19175,
         8693,
-        28031,
-        6343,
+        1590,
+        24102,
+        81707,
         15853,
-        370,
-        9661,
-        2633,
+        12824,
+        25871,
         24764,
-        28426,
-        32745
+        132926,
+        145563
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "547852",
+          "media_id": "2201599",
           "start_page": 1,
-          "end_page": 171,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+          "end_page": 136,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
         }
       ]
     },
     {
-      "id": 531305,
+      "id": 3508,
       "folder_id": 1,
-      "media_id": "3064244",
-      "title": "Tadashii Seikyouiku | Proper Sex Ed",
-      "artist": "gotoh juan",
+      "media_id": "12101",
+      "title": "Shounen Teikoku - Boys' Empire",
+      "artist": "juan gotoh",
       "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/3064244/cover.jpg",
-      "num_pages": 16,
-      "page_exts": "jjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:36:43.946816+00:00",
+      "category": "doujinshi",
+      "cover_url": "https://t3.nhentai.net/galleries/12101/cover.jpg",
+      "num_pages": 26,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T03:26:17.117363+00:00",
       "artist_ids": [
-        74838
+        32219
       ],
       "genre_ids": [
-        35762,
-        35763,
-        13720,
-        20905,
+        19440,
         32341,
         22942,
-        1207,
-        85288,
-        16828,
-        9162,
-        8693,
-        1033,
-        15853,
+        28031,
         2515
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "3064244",
+          "media_id": "12101",
           "start_page": 1,
-          "end_page": 16,
-          "page_exts": "jjjjjjjjjjjjjjjj"
+          "end_page": 26,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 2.0,
+          "title": "Tập 2",
+          "media_id": "12102",
+          "start_page": 1,
+          "end_page": 26,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 3.0,
+          "title": "Tập 3",
+          "media_id": "12104",
+          "start_page": 1,
+          "end_page": 27,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 4.0,
+          "title": "Tập 4",
+          "media_id": "12105",
+          "start_page": 1,
+          "end_page": 26,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 5.0,
+          "title": "Tập 5",
+          "media_id": "12106",
+          "start_page": 1,
+          "end_page": 26,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 6.0,
+          "title": "Tập 6",
+          "media_id": "12107",
+          "start_page": 1,
+          "end_page": 26,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 7.0,
+          "title": "Tập 7",
+          "media_id": "12108",
+          "start_page": 1,
+          "end_page": 26,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 8.0,
+          "title": "Tập 8",
+          "media_id": "6511",
+          "start_page": 1,
+          "end_page": 22,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 9.0,
+          "title": "Tập 9",
+          "media_id": "24515",
+          "start_page": 1,
+          "end_page": 26,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 10.0,
+          "title": "Tập 10",
+          "media_id": "42984",
+          "start_page": 1,
+          "end_page": 75,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        },
+        {
+          "chapter_number": 11.0,
+          "title": "Tập 11",
+          "media_id": "42985",
+          "start_page": 1,
+          "end_page": 68,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
         }
       ]
     },
     {
-      "id": 404719,
-      "folder_id": 1,
-      "media_id": "2231784",
-      "title": "Namaiki na Imouto ga Ore no SeFri ni Natta Keii | How My Cheeky Little Sister and I Became Sex Friends With Benefits",
-      "artist": "Unknown",
+      "id": 671558,
+      "folder_id": 3,
+      "media_id": "4108062",
+      "title": "BLUE EYES Vol. 1",
+      "artist": "nishimaki tohru",
       "language": "english",
-      "category": "doujinshi",
-      "cover_url": "https://t3.nhentai.net/galleries/2231784/cover.jpg",
-      "num_pages": 111,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:37:06.883891+00:00",
-      "artist_ids": [],
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/4108062/cover.webp.webp",
+      "num_pages": 190,
+      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "created_at": "2026-10-11T03:32:57.630410+00:00",
+      "artist_ids": [
+        27832
+      ],
       "genre_ids": [
-        35762,
-        35763,
-        13720,
-        29859,
-        20905,
-        27473,
-        22942,
-        20525,
-        16828,
-        1643,
-        8739,
-        28031,
-        26130,
-        2515,
-        89056,
-        28589,
-        18322,
-        88433,
-        158754,
-        163463
+        2937,
+        23237,
+        8693,
+        138277
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "The Girl With Blue Eyes",
+          "media_id": "4108062",
+          "start_page": 1,
+          "end_page": 28,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        },
+        {
+          "chapter_number": 2.0,
+          "title": "Huge Breasts Vs. Really Huge Breasts",
+          "media_id": "4108062",
+          "start_page": 29,
+          "end_page": 46,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        },
+        {
+          "chapter_number": 3.0,
+          "title": "The Nurse's Office Géets Hot and Wet",
+          "media_id": "4108062",
+          "start_page": 47,
+          "end_page": 67,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        },
+        {
+          "chapter_number": 4.0,
+          "title": "Unsatisfied",
+          "media_id": "4108062",
+          "start_page": 68,
+          "end_page": 87,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        },
+        {
+          "chapter_number": 5.0,
+          "title": "A Confession of Love",
+          "media_id": "4108062",
+          "start_page": 88,
+          "end_page": 109,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        },
+        {
+          "chapter_number": 6.0,
+          "title": "Lunch Time Romance",
+          "media_id": "4108062",
+          "start_page": 110,
+          "end_page": 133,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        },
+        {
+          "chapter_number": 7.0,
+          "title": "The Ace",
+          "media_id": "4108062",
+          "start_page": 134,
+          "end_page": 153,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        },
+        {
+          "chapter_number": 8.0,
+          "title": "After School",
+          "media_id": "4108062",
+          "start_page": 154,
+          "end_page": 190,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        }
+      ]
+    },
+    {
+      "id": 671563,
+      "folder_id": 3,
+      "media_id": "4108121",
+      "title": "BLUE EYES Vol. 2",
+      "artist": "nishimaki tohru",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/4108121/cover.webp.webp",
+      "num_pages": 174,
+      "page_exts": "wwjjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwjjw",
+      "created_at": "2026-10-11T03:45:07.965514+00:00",
+      "artist_ids": [
+        27832
+      ],
+      "genre_ids": [
+        2937,
+        10314,
+        23237,
+        3735,
+        8693,
+        138277,
+        14072
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "2231784",
+          "media_id": "4108121",
           "start_page": 1,
-          "end_page": 111,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+          "end_page": 174,
+          "page_exts": "wwjjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwjjw"
         }
       ]
     },
     {
-      "id": 367359,
-      "folder_id": 1,
-      "media_id": "1970696",
-      "title": "Egg or Chicken? Chuuhen + Kouhen | Egg or Chicken? part 2+3",
-      "artist": "rocket monkey",
+      "id": 671566,
+      "folder_id": 3,
+      "media_id": "4108174",
+      "title": "BLUE EYES Vol. 3",
+      "artist": "nishimaki tohru",
       "language": "english",
       "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/1970696/cover.jpg",
-      "num_pages": 70,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjpjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjpj",
-      "created_at": "2026-10-10T14:39:05.129803+00:00",
+      "cover_url": "https://t3.nhentai.net/galleries/4108174/cover.webp.webp",
+      "num_pages": 170,
+      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "created_at": "2026-10-11T03:46:11.075928+00:00",
       "artist_ids": [
-        20988
+        27832
       ],
       "genre_ids": [
         2937,
-        35763,
-        8010,
-        13720,
-        14283,
-        29859,
-        20905,
-        8378,
-        13989,
+        23237,
+        8693,
+        138277,
+        14072
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "4108174",
+          "start_page": 1,
+          "end_page": 170,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        }
+      ]
+    },
+    {
+      "id": 671567,
+      "folder_id": 3,
+      "media_id": "4108193",
+      "title": "BLUE EYES Vol. 4",
+      "artist": "nishimaki tohru",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/4108193/cover.webp.webp",
+      "num_pages": 176,
+      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "created_at": "2026-10-11T03:46:36.835539+00:00",
+      "artist_ids": [
+        27832
+      ],
+      "genre_ids": [
+        2937,
+        23237,
+        8693,
+        138277,
+        14072,
+        12523,
+        6525,
+        21822
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "4108193",
+          "start_page": 1,
+          "end_page": 176,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        }
+      ]
+    },
+    {
+      "id": 671568,
+      "folder_id": 3,
+      "media_id": "4108202",
+      "title": "BLUE EYES Vol. 5",
+      "artist": "nishimaki tohru",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/4108202/cover.webp.webp",
+      "num_pages": 178,
+      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "created_at": "2026-10-11T03:47:11.356494+00:00",
+      "artist_ids": [
+        27832
+      ],
+      "genre_ids": [
+        2937,
+        24201,
+        23237,
+        8693,
+        138277
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "4108202",
+          "start_page": 1,
+          "end_page": 178,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        }
+      ]
+    },
+    {
+      "id": 671569,
+      "folder_id": 3,
+      "media_id": "4108207",
+      "title": "BLUE EYES Vol. 6",
+      "artist": "nishimaki tohru",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/4108207/cover.webp.webp",
+      "num_pages": 188,
+      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "created_at": "2026-10-11T03:47:31.718420+00:00",
+      "artist_ids": [
+        27832
+      ],
+      "genre_ids": [
+        2937,
+        23237,
+        138277
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "4108207",
+          "start_page": 1,
+          "end_page": 188,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        }
+      ]
+    },
+    {
+      "id": 671572,
+      "folder_id": 3,
+      "media_id": "4108231",
+      "title": "BLUE EYES Vol. 7",
+      "artist": "nishimaki tohru",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/4108231/cover.webp.webp",
+      "num_pages": 176,
+      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "created_at": "2026-10-11T03:47:44.448563+00:00",
+      "artist_ids": [
+        27832
+      ],
+      "genre_ids": [
+        2937,
+        23237,
+        138277
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "4108231",
+          "start_page": 1,
+          "end_page": 176,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        }
+      ]
+    },
+    {
+      "id": 671574,
+      "folder_id": 3,
+      "media_id": "4108244",
+      "title": "BLUE EYES Vol. 8",
+      "artist": "nishimaki tohru",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/4108244/cover.jpg.webp",
+      "num_pages": 178,
+      "page_exts": "jjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwpwwwwwwww",
+      "created_at": "2026-10-11T03:48:00.423954+00:00",
+      "artist_ids": [
+        27832
+      ],
+      "genre_ids": [
+        2937,
+        23237,
+        138277
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "4108244",
+          "start_page": 1,
+          "end_page": 178,
+          "page_exts": "jjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwpwwwwwwww"
+        }
+      ]
+    },
+    {
+      "id": 671576,
+      "folder_id": 3,
+      "media_id": "4108257",
+      "title": "BLUE EYES Vol. 9",
+      "artist": "nishimaki tohru",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/4108257/cover.jpg.webp",
+      "num_pages": 169,
+      "page_exts": "jjwpwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwpwww",
+      "created_at": "2026-10-11T03:48:16.813302+00:00",
+      "artist_ids": [
+        27832
+      ],
+      "genre_ids": [
+        2937,
+        23237,
+        138277
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "4108257",
+          "start_page": 1,
+          "end_page": 169,
+          "page_exts": "jjwpwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwpwww"
+        }
+      ]
+    },
+    {
+      "id": 672003,
+      "folder_id": 3,
+      "media_id": "4112585",
+      "title": "BLUE EYES Special Edition",
+      "artist": "nishimaki tohru",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/4112585/cover.webp.webp",
+      "num_pages": 234,
+      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "created_at": "2026-10-11T03:49:12.336294+00:00",
+      "artist_ids": [
+        27832
+      ],
+      "genre_ids": [
+        2937,
+        138277
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "4112585",
+          "start_page": 1,
+          "end_page": 234,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        }
+      ]
+    },
+    {
+      "id": 672146,
+      "folder_id": 3,
+      "media_id": "4113996",
+      "title": "BLUE EYES Special Edition 2",
+      "artist": "nishimaki tohru",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/4113996/cover.webp.webp",
+      "num_pages": 151,
+      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "created_at": "2026-10-11T03:49:29.898045+00:00",
+      "artist_ids": [
+        27832
+      ],
+      "genre_ids": [
+        2937,
         1207,
         15348,
         3735,
-        85288,
-        8368,
-        16828,
         19175,
-        1590,
-        6817,
-        7142,
-        89056,
-        50505,
-        126671,
-        25794,
-        10685
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "1970696",
-          "start_page": 1,
-          "end_page": 70,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjpjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjpj"
-        }
-      ]
-    },
-    {
-      "id": 333951,
-      "folder_id": 1,
-      "media_id": "1764021",
-      "title": "Time Stripper Reika",
-      "artist": "gesundheit",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/1764021/cover.jpg",
-      "num_pages": 48,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:39:57.350316+00:00",
-      "artist_ids": [
-        51548
-      ],
-      "genre_ids": [
-        13720,
-        20905,
-        8378,
-        27473,
-        27553,
-        13989,
-        22942,
-        29224,
-        30555,
-        1590,
-        19899,
-        12824,
-        32484,
-        706,
-        5936
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "1764021",
-          "start_page": 1,
-          "end_page": 48,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        }
-      ]
-    },
-    {
-      "id": 401565,
-      "folder_id": 1,
-      "media_id": "2209881",
-      "title": "Kimi ni Sawareru Shiawase",
-      "artist": "tempura dozaemon",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/2209881/cover.png",
-      "num_pages": 32,
-      "page_exts": "pppppppppppppppppppppppppppppppp",
-      "created_at": "2026-10-10T14:40:21.248266+00:00",
-      "artist_ids": [
-        135416
-      ],
-      "genre_ids": [
-        35762,
-        35763,
-        19440,
-        20905,
-        32341,
-        27473,
-        20525,
-        16828,
-        12824,
-        2515
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "2209881",
-          "start_page": 1,
-          "end_page": 32,
-          "page_exts": "pppppppppppppppppppppppppppppppp"
-        }
-      ]
-    },
-    {
-      "id": 673485,
-      "folder_id": 1,
-      "media_id": "4123741",
-      "title": "ENG AI Translated [Hanpatsu Zokusei] Mayu-chan EP 1 - 4",
-      "artist": "hanpatsu zokusei",
-      "language": "english",
-      "category": "doujinshi",
-      "cover_url": "https://t3.nhentai.net/galleries/4123741/cover.webp.webp",
-      "num_pages": 275,
-      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-      "created_at": "2026-10-10T14:40:59.021777+00:00",
-      "artist_ids": [
-        154005
-      ],
-      "genre_ids": [
-        2937,
-        35762,
-        35763,
-        20905,
-        8378,
-        16828,
-        9162,
-        28031,
         138277,
-        7142,
-        106119,
-        28521,
-        163593
+        145155,
+        104262,
+        158734
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "4123741",
+          "media_id": "4113996",
           "start_page": 1,
-          "end_page": 275,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+          "end_page": 151,
+          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
         }
       ]
     },
     {
-      "id": 251156,
+      "id": 3398,
       "folder_id": 1,
-      "media_id": "1306365",
-      "title": "Mikami-kun no Kinshin Jijou  | Mikami-kun’s Incestuous Situation Ch. 1-5",
-      "artist": "bai asuka",
+      "media_id": "12342",
+      "title": "HA-HA",
+      "artist": "hiryuu ran",
       "language": "english",
       "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/1306365/cover.jpg",
-      "num_pages": 100,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:41:32.785450+00:00",
+      "cover_url": "https://t3.nhentai.net/galleries/12342/cover.jpg",
+      "num_pages": 182,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T03:50:26.955955+00:00",
       "artist_ids": [
-        32383
+        10969
       ],
       "genre_ids": [
         2937,
-        35762,
-        35763,
         13720,
-        14283,
-        24201,
         29859,
+        8378,
         32341,
         27553,
-        13989,
-        15658,
-        20035,
-        22942,
-        1207,
-        14971,
-        22945,
-        85288,
-        15408,
-        30555,
-        31044,
-        16828,
-        9260,
-        24380,
-        9162,
-        8739,
-        1590,
-        24102,
-        7752,
-        19899,
-        26130,
-        15853,
-        25871,
-        23632,
-        5820,
-        683,
-        2820,
-        32752,
-        7995,
-        89056,
-        1088,
-        32745,
-        27598,
-        75320
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "1306365",
-          "start_page": 1,
-          "end_page": 100,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        }
-      ]
-    },
-    {
-      "id": 276257,
-      "folder_id": 1,
-      "media_id": "1435832",
-      "title": "37-sai Hoshigarizuma | 37-Year-Old Want Shy Wife Ch. 1-5",
-      "artist": "kuroki hidehiko",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/1435832/cover.jpg",
-      "num_pages": 89,
-      "page_exts": "jjjpjjjjjjjppjjjjjjjjjjjjjjjjjpjjjpppppjjjjjjjpjpjjjjppppjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:42:03.495162+00:00",
-      "artist_ids": [
-        9075
-      ],
-      "genre_ids": [
-        8378,
-        27473,
-        22942,
-        1207,
-        85288,
-        16828,
-        1643,
-        9260,
-        15853,
-        27697,
-        28521,
-        25085
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "1435832",
-          "start_page": 1,
-          "end_page": 89,
-          "page_exts": "jjjpjjjjjjjppjjjjjjjjjjjjjjjjjpjjjpppppjjjjjjjpjpjjjjppppjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        }
-      ]
-    },
-    {
-      "id": 76401,
-      "folder_id": 1,
-      "media_id": "496001",
-      "title": "Come Together",
-      "artist": "zerry fujio",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/496001/cover.jpg",
-      "num_pages": 197,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:42:31.291033+00:00",
-      "artist_ids": [
-        17696
-      ],
-      "genre_ids": [
-        13720,
-        19440,
-        24201,
-        8378,
-        32341,
-        22942,
-        1207,
-        23237,
-        20525,
-        20617,
-        28031,
-        22079,
-        2515,
-        1067,
-        25663,
-        27720,
-        31337
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "496001",
-          "start_page": 1,
-          "end_page": 197,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        }
-      ]
-    },
-    {
-      "id": 24046,
-      "folder_id": 1,
-      "media_id": "93210",
-      "title": "Wet Fun",
-      "artist": "saigado",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/93210/cover.jpg",
-      "num_pages": 18,
-      "page_exts": "jjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:43:44.900473+00:00",
-      "artist_ids": [
-        24962
-      ],
-      "genre_ids": [
-        22942,
-        1207,
-        15853
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "93210",
-          "start_page": 1,
-          "end_page": 18,
-          "page_exts": "jjjjjjjjjjjjjjjjjj"
-        }
-      ]
-    },
-    {
-      "id": 577688,
-      "folder_id": 1,
-      "media_id": "3389779",
-      "title": "Sourou Kokufuku Clinic | Quick-Shot Therapy Clinic",
-      "artist": "ginyou haru",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/3389779/cover.webp.webp",
-      "num_pages": 126,
-      "page_exts": "wjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:44:15.548352+00:00",
-      "artist_ids": [
-        3978
-      ],
-      "genre_ids": [
-        2937,
-        35763,
-        13720,
-        24201,
-        29859,
-        20905,
-        8378,
-        20035,
-        85288,
-        16828,
-        1643,
-        9260,
-        26130,
-        1033,
-        81707,
-        12824,
-        141098,
-        146696,
-        15242
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "3389779",
-          "start_page": 1,
-          "end_page": 126,
-          "page_exts": "wjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        }
-      ]
-    },
-    {
-      "id": 238869,
-      "folder_id": 1,
-      "media_id": "1249503",
-      "title": "Onee-chan Senyou!",
-      "artist": "isorashi",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/1249503/cover.png",
-      "num_pages": 23,
-      "page_exts": "ppppppppppppppppppppppp",
-      "created_at": "2026-10-10T14:44:43.670759+00:00",
-      "artist_ids": [
-        19057
-      ],
-      "genre_ids": [
-        35762,
-        35763,
-        20905,
-        32341,
-        22942,
-        8693,
-        28031
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "1249503",
-          "start_page": 1,
-          "end_page": 23,
-          "page_exts": "ppppppppppppppppppppppp"
-        }
-      ]
-    },
-    {
-      "id": 311915,
-      "folder_id": 1,
-      "media_id": "1628981",
-      "title": "Classmate to Ecchi Jugyou",
-      "artist": "iguchi sentarou",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/1628981/cover.jpg",
-      "num_pages": 410,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjpjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:45:01.569722+00:00",
-      "artist_ids": [
-        18578
-      ],
-      "genre_ids": [
-        2937,
-        8010,
-        13720,
-        29859,
-        20905,
-        15348,
-        8368,
-        9083,
-        8739,
-        14072,
-        7256,
-        19899,
-        28550,
-        190,
-        15853,
-        23132,
-        24708,
-        20789,
-        32538,
-        12220
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "1628981",
-          "start_page": 1,
-          "end_page": 410,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjpjjjjjjjjjjjjjjjjjjjjjjjj"
-        }
-      ]
-    },
-    {
-      "id": 15844,
-      "folder_id": 1,
-      "media_id": "52808",
-      "title": "Nikuyoku No Jusei | Impregnation of Lust",
-      "artist": "yamamoto yoshifumi",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/52808/cover.jpg",
-      "num_pages": 16,
-      "page_exts": "jjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:45:38.667033+00:00",
-      "artist_ids": [
-        5960
-      ],
-      "genre_ids": [
-        2937,
-        32341,
-        22942,
-        15853
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "52808",
-          "start_page": 1,
-          "end_page": 16,
-          "page_exts": "jjjjjjjjjjjjjjjj"
-        }
-      ]
-    },
-    {
-      "id": 85431,
-      "folder_id": 1,
-      "media_id": "556506",
-      "title": "Kokochiyoi Omosa - Bomb Bust Girls.",
-      "artist": "millefeuille",
-      "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/556506/cover.jpg",
-      "num_pages": 171,
-      "page_exts": "jjjjjjjjjjppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppj",
-      "created_at": "2026-10-10T14:46:50.319865+00:00",
-      "artist_ids": [
-        12874
-      ],
-      "genre_ids": [
-        2937,
-        8010,
-        13720,
-        14283,
-        24201,
-        29859,
-        8378,
-        32341,
         15658,
         22942,
         1207,
         25614,
         23237,
-        28031,
-        7752,
-        28550,
-        3666,
-        2515,
-        26953,
-        13882,
-        14526
+        8739,
+        8693,
+        24102,
+        15853,
+        31012,
+        17531
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "556506",
+          "media_id": "12342",
           "start_page": 1,
-          "end_page": 171,
-          "page_exts": "jjjjjjjjjjppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppj"
+          "end_page": 182,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
         }
       ]
     },
     {
-      "id": 103903,
+      "id": 418833,
       "folder_id": 1,
-      "media_id": "665436",
-      "title": "Gibo",
-      "artist": "nagare ippon",
+      "media_id": "2307091",
+      "title": "Kaa-chan wa Yopparau to... | When Mom Gets Drunk...",
+      "artist": "gin eiji",
       "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/665436/cover.jpg",
-      "num_pages": 81,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjpjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjp",
-      "created_at": "2026-10-10T14:47:55.555036+00:00",
+      "category": "doujinshi",
+      "cover_url": "https://t3.nhentai.net/galleries/2307091/cover.jpg",
+      "num_pages": 55,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T03:51:23.985200+00:00",
       "artist_ids": [
-        16569
+        126358
       ],
       "genre_ids": [
         2937,
-        8010,
-        13720,
-        14283,
-        13989,
-        15658,
-        20035,
+        35762,
+        35763,
+        20905,
+        32341,
         22942,
         1207,
-        14971,
-        8653,
-        22945,
-        9260,
-        8739,
-        27384,
-        28550,
+        8368,
+        1590,
+        81707,
         15853,
-        22079,
-        1067,
-        9661,
-        32752,
-        24726,
-        3614,
-        5620,
-        19064
+        24764
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "665436",
+          "media_id": "2307091",
           "start_page": 1,
-          "end_page": 81,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjpjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjp"
+          "end_page": 55,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
         }
       ]
     },
     {
-      "id": 512879,
+      "id": 405778,
       "folder_id": 1,
-      "media_id": "2939690",
-      "title": "Kinshin Soukansha no Nichijou | Everyday Life of Incestuous Lovers",
-      "artist": "morris",
+      "media_id": "2238993",
+      "title": "Boku Ga Okasanto Konna Koto Ni Natchau Hanashi 1 | The story of how i wound up like this with my mother 1",
+      "artist": "hyji",
       "language": "english",
-      "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/2939690/cover.jpg",
-      "num_pages": 203,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:48:31.772262+00:00",
+      "category": "doujinshi",
+      "cover_url": "https://t3.nhentai.net/galleries/2238993/cover.jpg",
+      "num_pages": 46,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T03:56:12.258482+00:00",
       "artist_ids": [
-        14412
+        27255
       ],
       "genre_ids": [
-        13720,
-        14283,
+        2937,
+        35763,
         29859,
+        27473,
         22942,
         1207,
-        23237,
-        85288,
-        30555,
-        130025,
-        29013,
-        16828,
+        25614,
+        1643,
         9260,
-        28031,
-        26130,
+        9083,
+        1033,
         15853,
-        7155,
-        16533,
-        10794,
-        1067,
-        29399,
-        24764,
-        23035,
-        15045
+        106119,
+        104262,
+        138267
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "2939690",
+          "media_id": "2238993",
           "start_page": 1,
-          "end_page": 203,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+          "end_page": 46,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
         }
       ]
     },
     {
-      "id": 9747,
-      "folder_id": 3,
-      "media_id": "27475",
-      "title": "Submissive Mother - Chapter 1-6",
+      "id": 401431,
+      "folder_id": 1,
+      "media_id": "2209279",
+      "title": "Toaru Jijou kara SEX Suru Hame ni Nari, Hontou ni Hamechatta Toaru Oyako no Ohanashi | Mother and son pushed into having sex...",
       "artist": "Unknown",
       "language": "english",
       "category": "doujinshi",
-      "cover_url": "https://t3.nhentai.net/galleries/27475/cover.jpg",
-      "num_pages": 161,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:50:23.399490+00:00",
+      "cover_url": "https://t3.nhentai.net/galleries/2209279/cover.jpg",
+      "num_pages": 41,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T03:56:39.733485+00:00",
       "artist_ids": [],
       "genre_ids": [
-        8010,
-        14283,
-        24201,
-        29859,
+        2937,
+        35762,
+        35763,
         20905,
-        8378,
-        22942,
-        1207,
-        14971,
-        8653,
-        16828,
-        9162,
-        8739,
-        15853,
-        3666,
-        26953
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Chapter 1",
-          "media_id": "27475",
-          "start_page": 1,
-          "end_page": 30,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 2.0,
-          "title": "Chapter 2",
-          "media_id": "27475",
-          "start_page": 31,
-          "end_page": 51,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 3.0,
-          "title": "Chapter 3",
-          "media_id": "27475",
-          "start_page": 52,
-          "end_page": 71,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 4.0,
-          "title": "Chapter 4",
-          "media_id": "27475",
-          "start_page": 72,
-          "end_page": 91,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 5.0,
-          "title": "Chapter 5",
-          "media_id": "27475",
-          "start_page": 92,
-          "end_page": 121,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 6.0,
-          "title": "Chapter 6",
-          "media_id": "27475",
-          "start_page": 122,
-          "end_page": 161,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        }
-      ]
-    },
-    {
-      "id": 373923,
-      "folder_id": 1,
-      "media_id": "2016308",
-      "title": "Tomodachi no Gibo to Ane ni Yuuwaku Sareru Hanashi | A Tale of the Temptation of My Friend's Stepmom and Sister",
-      "artist": "namaribou nayonayo",
-      "language": "english",
-      "category": "doujinshi",
-      "cover_url": "https://t3.nhentai.net/galleries/2016308/cover.jpg",
-      "num_pages": 45,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T14:57:34.032275+00:00",
-      "artist_ids": [
-        108131
-      ],
-      "genre_ids": [
-        13720,
-        29859,
-        20905,
-        8378,
-        13989,
+        27473,
         21572,
         22942,
         1207,
-        85288,
         16828,
-        1643,
-        9260,
-        9162,
-        8693,
-        1590,
-        19899,
-        26130,
-        81707,
-        15853,
-        7155,
-        10476,
-        683,
-        22950,
-        2515,
-        26953,
-        29631,
-        1067,
-        25822,
-        89056
+        15853
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "2016308",
+          "media_id": "2209279",
           "start_page": 1,
-          "end_page": 45,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
+          "end_page": 41,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 295089,
+      "folder_id": 1,
+      "media_id": "1541174",
+      "title": "Share 1",
+      "artist": "izayoi no kiki",
+      "language": "english",
+      "category": "doujinshi",
+      "cover_url": "https://t3.nhentai.net/galleries/1541174/cover.jpg",
+      "num_pages": 20,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T03:57:13.749340+00:00",
+      "artist_ids": [
+        10597
+      ],
+      "genre_ids": [
+        2937,
+        35763,
+        20905,
+        27473,
+        21572,
+        22942,
+        1207,
+        16828,
+        9260,
+        28031,
+        15853,
+        12824,
+        50505
+      ],
+      "chapters": [
         {
-          "chapter_number": 2.0,
-          "title": "Tập 2",
-          "media_id": "2301304",
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "1541174",
           "start_page": 1,
-          "end_page": 55,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjpjjjjjjjp"
+          "end_page": 20,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjj"
         }
       ]
     },
@@ -2052,7 +1549,7 @@
       "cover_url": "https://t3.nhentai.net/galleries/91200/cover.jpg",
       "num_pages": 222,
       "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T15:19:20.005189+00:00",
+      "created_at": "2026-10-11T03:57:28.573295+00:00",
       "artist_ids": [
         2439
       ],
@@ -2073,364 +1570,683 @@
       "chapters": [
         {
           "chapter_number": 1.0,
-          "title": "Chapter 1",
+          "title": "Toàn bộ",
           "media_id": "91200",
           "start_page": 1,
-          "end_page": 26,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 2.0,
-          "title": "Chapter 2",
-          "media_id": "91200",
-          "start_page": 27,
-          "end_page": 46,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 3.0,
-          "title": "Chapter 3",
-          "media_id": "91200",
-          "start_page": 47,
-          "end_page": 68,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 4.0,
-          "title": "Chapter 4",
-          "media_id": "91200",
-          "start_page": 69,
-          "end_page": 96,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 5.0,
-          "title": "Chapter 5",
-          "media_id": "91200",
-          "start_page": 97,
-          "end_page": 122,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 6.0,
-          "title": "Chapter 6",
-          "media_id": "91200",
-          "start_page": 123,
-          "end_page": 146,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 7.0,
-          "title": "Chapter 7",
-          "media_id": "91200",
-          "start_page": 147,
-          "end_page": 166,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 8.0,
-          "title": "Chapter 8",
-          "media_id": "91200",
-          "start_page": 167,
-          "end_page": 190,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 9.0,
-          "title": "Chapter 9",
-          "media_id": "91200",
-          "start_page": 191,
           "end_page": 222,
           "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
         }
       ]
     },
     {
-      "id": 684647,
-      "folder_id": 3,
-      "media_id": "4214775",
-      "title": "Provoking Men",
-      "artist": "pororivista",
+      "id": 58781,
+      "folder_id": 1,
+      "media_id": "344985",
+      "title": "White Angel",
+      "artist": "o.ri",
       "language": "english",
       "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/4214775/cover.webp.webp",
-      "num_pages": 256,
-      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-      "created_at": "2026-10-10T15:28:13.684362+00:00",
+      "cover_url": "https://t3.nhentai.net/galleries/344985/cover.jpg",
+      "num_pages": 196,
+      "page_exts": "jjjjjppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppjjjjppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppjjjjppppppppppppppppppppppp",
+      "created_at": "2026-10-11T03:57:42.481502+00:00",
       "artist_ids": [
-        146850
+        2439
       ],
       "genre_ids": [
-        2937,
-        35762,
-        35763,
-        13720,
-        20905,
-        27473,
-        27553,
-        22942,
-        1207,
-        85288,
-        29224,
-        30555,
-        16828,
-        9260,
-        30473,
-        138277,
-        15853,
-        16533,
-        15492,
-        23965
+        8010,
+        14283,
+        29859,
+        15658,
+        22945,
+        23237,
+        15348,
+        10476,
+        6525
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "4214775",
+          "media_id": "344985",
           "start_page": 1,
-          "end_page": 25,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        },
-        {
-          "chapter_number": 2.0,
-          "title": "Chapter 2",
-          "media_id": "4214775",
-          "start_page": 26,
-          "end_page": 50,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        },
-        {
-          "chapter_number": 3.0,
-          "title": "Chapter 3",
-          "media_id": "4214775",
-          "start_page": 51,
-          "end_page": 75,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        },
-        {
-          "chapter_number": 4.0,
-          "title": "Chapter 4",
-          "media_id": "4214775",
-          "start_page": 75,
-          "end_page": 100,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        },
-        {
-          "chapter_number": 5.0,
-          "title": "Chapter 5",
-          "media_id": "4214775",
-          "start_page": 101,
-          "end_page": 125,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        },
-        {
-          "chapter_number": 6.0,
-          "title": "Chapter 6",
-          "media_id": "4214775",
-          "start_page": 126,
-          "end_page": 150,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        },
-        {
-          "chapter_number": 7.0,
-          "title": "Chapter 7",
-          "media_id": "4214775",
-          "start_page": 151,
-          "end_page": 175,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        },
-        {
-          "chapter_number": 8.0,
-          "title": "Chapter 8",
-          "media_id": "4214775",
-          "start_page": 176,
-          "end_page": 200,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        },
-        {
-          "chapter_number": 9.0,
-          "title": "Chapter 9",
-          "media_id": "4214775",
-          "start_page": 201,
-          "end_page": 225,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        },
-        {
-          "chapter_number": 10.0,
-          "title": "Chapter 10",
-          "media_id": "4214775",
-          "start_page": 226,
-          "end_page": 256,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+          "end_page": 196,
+          "page_exts": "jjjjjppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppjjjjppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppjjjjppppppppppppppppppppppp"
         }
       ]
     },
     {
-      "id": 492882,
-      "folder_id": 3,
-      "media_id": "2806907",
-      "title": "My Mother",
-      "artist": "xter",
+      "id": 7762,
+      "folder_id": 1,
+      "media_id": "23029",
+      "title": "Haha wa Sexy Idol | My Mom, The Sexy Idol",
+      "artist": "chanpon miyabi",
       "language": "english",
-      "category": "doujinshi",
-      "cover_url": "https://t3.nhentai.net/galleries/2806907/cover.jpg",
-      "num_pages": 139,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T15:34:59.009302+00:00",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/23029/cover.jpg",
+      "num_pages": 212,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T03:58:04.037158+00:00",
       "artist_ids": [
-        32387
+        18203
       ],
       "genre_ids": [
         2937,
-        35762,
-        35763,
+        8378,
+        22942,
+        1207,
+        23237,
+        3735,
+        8368,
+        19175,
+        8739,
+        190,
+        15853,
+        1067
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "23029",
+          "start_page": 1,
+          "end_page": 212,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 51555,
+      "folder_id": 1,
+      "media_id": "285198",
+      "title": "Hisae Haitoku Nikki Kanzenban Jou",
+      "artist": "tsuyatsuya",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/285198/cover.jpg",
+      "num_pages": 206,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:01:50.854936+00:00",
+      "artist_ids": [
+        4366
+      ],
+      "genre_ids": [
+        2937,
         13720,
         14283,
         29859,
-        21572,
+        8378,
         22942,
         1207,
-        25614,
-        130025,
-        16828,
-        1643,
-        9083,
-        19175,
-        8693,
-        1590,
-        24102,
-        81707,
+        8653,
+        23237,
+        8739,
+        19899,
+        28550,
         15853,
-        12824,
-        25871,
-        7155,
-        24764
+        10476,
+        24676,
+        22221
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "2806907",
+          "media_id": "285198",
           "start_page": 1,
-          "end_page": 139,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        },
-        {
-          "chapter_number": 2.0,
-          "title": "Tập 2",
-          "media_id": "2891716",
-          "start_page": 1,
-          "end_page": 67,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+          "end_page": 206,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
         }
       ]
     },
     {
-      "id": 31358,
+      "id": 52629,
       "folder_id": 1,
-      "media_id": "134841",
-      "title": "Scarlet Desire",
-      "artist": "nishimaki tohru",
+      "media_id": "295009",
+      "title": "Family Porn",
+      "artist": "chanpon miyabi",
       "language": "english",
       "category": "manga",
-      "cover_url": "https://t3.nhentai.net/galleries/134841/cover.jpg",
-      "num_pages": 191,
-      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T15:39:30.183599+00:00",
+      "cover_url": "https://t3.nhentai.net/galleries/295009/cover.jpg",
+      "num_pages": 354,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjpjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:02:16.197508+00:00",
       "artist_ids": [
-        27832
+        18203
       ],
       "genre_ids": [
         2937,
-        35763,
-        27553,
+        8010,
+        13989,
+        22942,
+        1207,
+        25614,
+        14971,
+        15348,
+        29224,
+        8368,
+        28031,
+        6343,
+        19899,
+        15853,
+        23035
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "295009",
+          "start_page": 1,
+          "end_page": 354,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjpjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 52950,
+      "folder_id": 1,
+      "media_id": "299685",
+      "title": "Showing Some Love to Mom",
+      "artist": "kuroki hidehiko",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/299685/cover.jpg",
+      "num_pages": 17,
+      "page_exts": "jjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:02:34.389453+00:00",
+      "artist_ids": [
+        9075
+      ],
+      "genre_ids": [
+        2937,
+        22942,
+        1207,
+        15853
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "299685",
+          "start_page": 1,
+          "end_page": 17,
+          "page_exts": "jjjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 90950,
+      "folder_id": 1,
+      "media_id": "588301",
+      "title": "34 Sai Onedarizuma | 34-Year-Old Begging Wife",
+      "artist": "kuroki hidehiko",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/588301/cover.jpg",
+      "num_pages": 201,
+      "page_exts": "jjjppppppppppppppppjppppppppppppppppppjppppppppppppppppppjppppppppppppppppppjppppppppppppppppppjppppppppppppjppjppppppppppppppppppppppppppppppppppppppppjpppppppppppppppppppppjjjjpppppppppppppppppjpjjjj",
+      "created_at": "2026-10-11T04:02:51.240111+00:00",
+      "artist_ids": [
+        9075
+      ],
+      "genre_ids": [
+        2937,
+        24201,
+        22942,
+        1207,
+        23237,
+        3735,
+        1643,
+        9260,
+        19175,
+        8693,
+        15853,
+        1067,
+        6525
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "588301",
+          "start_page": 1,
+          "end_page": 201,
+          "page_exts": "jjjppppppppppppppppjppppppppppppppppppjppppppppppppppppppjppppppppppppppppppjppppppppppppppppppjppppppppppppjppjppppppppppppppppppppppppppppppppppppppppjpppppppppppppppppppppjjjjpppppppppppppppppjpjjjj"
+        }
+      ]
+    },
+    {
+      "id": 153801,
+      "folder_id": 1,
+      "media_id": "892445",
+      "title": "Tomo Haha Ch. 1-5",
+      "artist": "kai hiroyuki",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/892445/cover.png",
+      "num_pages": 100,
+      "page_exts": "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp",
+      "created_at": "2026-10-11T04:03:08.882894+00:00",
+      "artist_ids": [
+        14451
+      ],
+      "genre_ids": [
+        2937,
+        13720,
+        32341,
+        13989,
+        22942,
+        1207,
+        25614,
+        16828,
+        9260,
+        9083,
+        8739,
+        28031,
+        15853,
+        2515,
+        9661,
+        6900,
+        25794
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "892445",
+          "start_page": 1,
+          "end_page": 100,
+          "page_exts": "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+        }
+      ]
+    },
+    {
+      "id": 623311,
+      "folder_id": 1,
+      "media_id": "3737957",
+      "title": "Kotowarenai Haha - Mother who cannot refuse.",
+      "artist": "gonza",
+      "language": "english",
+      "category": "doujinshi",
+      "cover_url": "https://t3.nhentai.net/galleries/3737957/cover.webp.webp",
+      "num_pages": 215,
+      "page_exts": "wjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwjwwwwwwwwwjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwjjwwwj",
+      "created_at": "2026-10-11T04:04:31.689323+00:00",
+      "artist_ids": [
+        6281
+      ],
+      "genre_ids": [
+        2937,
+        13720,
+        24201,
+        29859,
+        13989,
+        22942,
+        1207,
+        25614,
+        14971,
+        8653,
+        23237,
+        16828,
+        9162,
+        1590,
+        138277,
+        19899,
+        26130,
+        1033,
+        15853,
+        25871,
+        10476,
+        23632,
+        27063,
+        15492,
+        15225,
+        89056,
+        24726,
+        17531
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "3737957",
+          "start_page": 1,
+          "end_page": 215,
+          "page_exts": "wjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwjwwwwwwwwwjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwjwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwjjwwwj"
+        }
+      ]
+    },
+    {
+      "id": 129636,
+      "folder_id": 1,
+      "media_id": "796701",
+      "title": "Inbo Shiiku - Slave Mother Rape",
+      "artist": "chanpon miyabi",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/796701/cover.jpg",
+      "num_pages": 187,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:04:53.334042+00:00",
+      "artist_ids": [
+        18203
+      ],
+      "genre_ids": [
+        2937,
+        8010,
+        13720,
+        14283,
+        29859,
+        8378,
+        15658,
+        22942,
+        1207,
+        22945,
+        23237,
+        31044,
+        16828,
+        9162,
+        8739,
+        8693,
+        7256,
+        19899,
+        15853,
+        32752,
+        1088,
+        21774
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "796701",
+          "start_page": 1,
+          "end_page": 187,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 62999,
+      "folder_id": 1,
+      "media_id": "382286",
+      "title": "Kumo no Michi",
+      "artist": "suehirogari",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/382286/cover.jpg",
+      "num_pages": 209,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:05:17.671845+00:00",
+      "artist_ids": [
+        27910
+      ],
+      "genre_ids": [
+        8010,
+        24201,
+        29859,
+        10314,
+        8378,
+        15658,
+        14971,
+        23237,
+        19954,
+        16828,
+        7752,
+        19899,
+        7155,
+        20282
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "382286",
+          "start_page": 1,
+          "end_page": 209,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 3732,
+      "folder_id": 1,
+      "media_id": "12846",
+      "title": "TAG",
+      "artist": "suehirogari",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/12846/cover.jpg",
+      "num_pages": 209,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:06:17.452823+00:00",
+      "artist_ids": [
+        27910
+      ],
+      "genre_ids": [
+        2937,
+        8010,
+        29859,
+        14971,
+        23237,
+        19954,
+        9260,
+        20617,
+        19899,
+        10476,
+        29182
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "12846",
+          "start_page": 1,
+          "end_page": 209,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 9570,
+      "folder_id": 1,
+      "media_id": "28009",
+      "title": "One Fine Day",
+      "artist": "tower",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/28009/cover.jpg",
+      "num_pages": 16,
+      "page_exts": "jjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:06:46.092749+00:00",
+      "artist_ids": [
+        8929
+      ],
+      "genre_ids": [
+        19899,
+        11941
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "28009",
+          "start_page": 1,
+          "end_page": 16,
+          "page_exts": "jjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 28493,
+      "folder_id": 1,
+      "media_id": "117323",
+      "title": "Boku no Aijin - My Lovers.",
+      "artist": "tsuyatsuya",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/117323/cover.jpg",
+      "num_pages": 183,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:07:09.728962+00:00",
+      "artist_ids": [
+        4366
+      ],
+      "genre_ids": [
+        2937,
+        8010,
+        14283,
+        24201,
+        32341,
         22942,
         1207,
         23237,
         9260,
-        9162,
-        14072,
+        8693,
+        19899,
+        28550,
         15853,
-        16533
+        10476,
+        3666,
+        2820
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "134841",
+          "media_id": "117323",
           "start_page": 1,
-          "end_page": 191,
-          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+          "end_page": 183,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
         }
       ]
     },
     {
-      "id": 681207,
+      "id": 27900,
       "folder_id": 1,
-      "media_id": "4182273",
-      "title": "Kirimusubi | Making Mother mine, over and over again.",
-      "artist": "Unknown",
+      "media_id": "115792",
+      "title": "Aokan Tengoku Ch. 1-2, 4, 6",
+      "artist": "tower",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/115792/cover.jpg",
+      "num_pages": 77,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:08:18.297824+00:00",
+      "artist_ids": [
+        8929
+      ],
+      "genre_ids": [
+        27553,
+        9162,
+        19899
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "115792",
+          "start_page": 1,
+          "end_page": 77,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 54689,
+      "folder_id": 1,
+      "media_id": "315477",
+      "title": "Daibouken Hitomi-chan | Hitomi's Great Adventure",
+      "artist": "kawara keisuke",
       "language": "english",
       "category": "doujinshi",
-      "cover_url": "https://t3.nhentai.net/galleries/4182273/cover.webp.webp",
-      "num_pages": 78,
-      "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-      "created_at": "2026-10-10T16:28:59.476277+00:00",
-      "artist_ids": [],
+      "cover_url": "https://t3.nhentai.net/galleries/315477/cover.jpg",
+      "num_pages": 51,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:09:33.287707+00:00",
+      "artist_ids": [
+        24124
+      ],
+      "genre_ids": [
+        19899,
+        3031
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "315477",
+          "start_page": 1,
+          "end_page": 51,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 5483,
+      "folder_id": 1,
+      "media_id": "17626",
+      "title": "Momo Muite Kuri Namete",
+      "artist": "the seiji",
+      "language": "japanese",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/17626/cover.jpg",
+      "num_pages": 200,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:44:16.551218+00:00",
+      "artist_ids": [
+        26425
+      ],
+      "genre_ids": [
+        2937,
+        10314,
+        8378,
+        22945,
+        23237,
+        20282,
+        11941
+      ],
+      "chapters": [
+        {
+          "chapter_number": 1.0,
+          "title": "Toàn bộ",
+          "media_id": "17626",
+          "start_page": 1,
+          "end_page": 200,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        }
+      ]
+    },
+    {
+      "id": 33599,
+      "folder_id": 1,
+      "media_id": "147535",
+      "title": "Aneki's Broken Hearted Trip",
+      "artist": "the seiji",
+      "language": "english",
+      "category": "manga",
+      "cover_url": "https://t3.nhentai.net/galleries/147535/cover.jpg",
+      "num_pages": 20,
+      "page_exts": "jjjjjjjjjjjjjjjjjjjj",
+      "created_at": "2026-10-11T04:46:59.504643+00:00",
+      "artist_ids": [
+        26425
+      ],
       "genre_ids": [
         2937,
         35762,
-        35763,
         22942,
-        1207,
-        25614,
-        20525,
-        85288,
-        29224,
-        16828,
-        8739,
-        15853,
-        2515
+        28031,
+        19899
       ],
       "chapters": [
         {
           "chapter_number": 1.0,
           "title": "Toàn bộ",
-          "media_id": "4182273",
+          "media_id": "147535",
           "start_page": 1,
-          "end_page": 78,
-          "page_exts": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        }
-      ]
-    },
-    {
-      "id": 620511,
-      "folder_id": 1,
-      "media_id": "3720782",
-      "title": "Majirosan no Koujitsu",
-      "artist": "Unknown",
-      "language": "japanese",
-      "category": "doujinshi",
-      "cover_url": "https://t3.nhentai.net/galleries/3720782/cover.jpg.webp",
-      "num_pages": 36,
-      "page_exts": "jjjjjjjjjjjjjwjjjjjjjjjjjjjjjjjjjjjj",
-      "created_at": "2026-10-10T16:33:20.015798+00:00",
-      "artist_ids": [],
-      "genre_ids": [
-        35762,
-        35763,
-        13720,
-        20035,
-        16828
-      ],
-      "chapters": [
-        {
-          "chapter_number": 1.0,
-          "title": "Toàn bộ",
-          "media_id": "3720782",
-          "start_page": 1,
-          "end_page": 36,
-          "page_exts": "jjjjjjjjjjjjjwjjjjjjjjjjjjjjjjjjjjjj"
+          "end_page": 20,
+          "page_exts": "jjjjjjjjjjjjjjjjjjjj"
         }
       ]
     }

@@ -44,7 +44,7 @@
         <!-- KHU VỰC 1: THÊM TRUYỆN & TẠO THƯ MỤC -->
         <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
             <!-- Box 1: Tìm kiểm tra & Thêm truyện bằng ID -->
-            <div style="flex: 2; min-width: 300px; background: #f8f9fa; padding: 15px; border: 1px solid #dee2e6; border-radius: 6px;">
+            <div style="flex: 2; min-width: 300px; background: rgba(255, 255, 255, 0.45); padding: 15px; border: 1px solid #dee2e6; border-radius: 6px;">
                 <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; color: #2c3e50;">Tìm và thêm truyện từ NHentai</h3>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                     <input type="number" id="addGalleryIdInput" placeholder="Nhập ID truyện (vd: 14414)" style="padding: 8px; font-size: 14px; width: 185px;" min="1">
@@ -61,13 +61,13 @@
                 </div>
 
                 <!-- Dòng thông báo kết quả sau khi bấm nút "Tìm" -->
-                <div id="searchCheckStatus" style="margin-top: 10px; font-size: 13px; color: #555; background: #fff; padding: 8px 10px; border-radius: 4px; border: 1px dashed #ccc;">
+                <div id="searchCheckStatus" style="margin-top: 10px; font-size: 13px; color: #555; background: rgba(255, 255, 255, 0.5); padding: 8px 10px; border-radius: 4px; border: 1px dashed #ccc;">
                     <em>Nhập ID truyện và bấm <strong>"Tìm"</strong> để kiểm tra xem truyện đã có trong thư viện chưa trước khi thêm.</em>
                 </div>
             </div>
 
             <!-- Box 2: Quản lý thư mục (Tạo / Sửa tên / Xóa) -->
-            <div style="flex: 1; min-width: 240px; background: #f8f9fa; padding: 15px; border: 1px solid #dee2e6; border-radius: 6px;">
+            <div style="flex: 1; min-width: 240px; background: rgba(255, 255, 255, 0.45); padding: 15px; border: 1px solid #dee2e6; border-radius: 6px;">
                 <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; color: #2c3e50;">Quản lý thư mục</h3>
                 <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;">
                     <input type="text" id="newFolderName" placeholder="Nhập tên thư mục mới..." style="padding: 8px; font-size: 14px; flex: 1; min-width: 110px;">
@@ -88,7 +88,7 @@
         </div>
 
         <!-- KHU VỰC 2: BỘ LỌC (CHỈ LỌC THEO THƯ MỤC & TÁC GIẢ) -->
-        <div style="background: #eef2f5; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+        <div style="background: rgba(255, 255, 255, 0.45); padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
             <div>
                 <label style="font-weight: bold; font-size: 14px; color: #2c3e50;">Thư mục:</label>
                 <select id="filterFolder" style="padding: 6px 10px; font-size: 14px; margin-left: 4px;">
@@ -125,7 +125,7 @@
         <div id="comicsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px;">
 
             <!-- Thẻ truyện mẫu 1 -->
-            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fff; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: rgba(255, 255, 255, 0.5); display: flex; flex-direction: column; justify-content: space-between;">
                 <div>
                     <a href="detail.html" style="text-decoration: none;">
                         <img src="assets/rem.jpg" alt="Ảnh bìa mẫu" style="width: 100%; height: 230px; object-fit: cover; border-radius: 4px; display: block;">
@@ -151,7 +151,7 @@
             </div>
 
             <!-- Thẻ truyện mẫu 2 -->
-            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fff; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: rgba(255, 255, 255, 0.5); display: flex; flex-direction: column; justify-content: space-between;">
                 <div>
                     <a href="detail.html" style="text-decoration: none;">
                         <img src="assets/rem.jpg" alt="Ảnh bìa mẫu" style="width: 100%; height: 230px; object-fit: cover; border-radius: 4px; display: block;">
@@ -195,6 +195,8 @@
     </div>
 
     <script>
+        // ==================== 1. CẤU HÌNH API & TRẠNG THÁI PHÂN TRANG ====================
+        // Nếu mở trực tiếp qua cổng 8000 của FastAPI thì dùng đường dẫn tương đối "", ngược lại trỏ về http://127.0.0.1:8000
         const API_BASE = (window.location.protocol.startsWith("http") && window.location.port === "8000")
             ? ""
             : "http://127.0.0.1:8000";
@@ -203,22 +205,27 @@
         let totalPages = 1;
         const LIMIT_PER_PAGE = 12;
 
+        // ==================== 2. THAM CHIẾU CÁC PHẦN TỬ DOM ====================
+        // Nhóm tìm kiếm & thêm truyện mới
         const addGalleryIdInput = document.getElementById("addGalleryIdInput");
         const btnSearchComic = document.getElementById("btnSearchComic");
         const addFolderSelect = document.getElementById("addFolderSelect");
         const btnAddComic = document.getElementById("btnAddComic");
         const searchCheckStatus = document.getElementById("searchCheckStatus");
 
+        // Nhóm quản lý thư mục (Tạo / Đổi tên / Xóa)
         const newFolderName = document.getElementById("newFolderName");
         const btnCreateFolder = document.getElementById("btnCreateFolder");
         const manageFolderSelect = document.getElementById("manageFolderSelect");
         const btnRenameFolder = document.getElementById("btnRenameFolder");
         const btnDeleteFolder = document.getElementById("btnDeleteFolder");
 
+        // Nhóm bộ lọc (Thư mục & Tác giả)
         const filterFolder = document.getElementById("filterFolder");
         const filterAuthor = document.getElementById("filterAuthor");
         const btnResetFilter = document.getElementById("btnResetFilter");
 
+        // Nhóm hiển thị danh sách truyện & thanh phân trang
         const comicsCount = document.getElementById("comicsCount");
         const comicsGrid = document.getElementById("comicsGrid");
         const paginationBar = document.getElementById("paginationBar");
@@ -227,6 +234,7 @@
         const totalComicPages = document.getElementById("totalComicPages");
         const btnNextComicPage = document.getElementById("btnNextComicPage");
 
+        // Chuyển link ảnh gốc từ nhentai.net sang đi qua Image Proxy của Backend để vượt chặn nhà mạng
         function getProxyImageUrl(url) {
             if (!url) return "assets/rem.jpg";
             if (url.includes("nhentai.net")) {
@@ -235,7 +243,9 @@
             return url;
         }
 
-        // 1. Tải danh sách Thư mục
+        // ==================== 3. CÁC HÀM TẢI DỮ LIỆU TỪ BACKEND ====================
+
+        // 3.1. Tải danh sách Thư mục và cập nhật đồng thời cho cả 3 ô chọn (Thêm truyện, Quản lý thư mục, Lọc thư mục)
         async function loadFolders() {
             try {
                 const resp = await fetch(`${API_BASE}/api/folders`);
@@ -264,7 +274,7 @@
             }
         }
 
-        // 2. Tải danh sách Tác giả
+        // 3.2. Tải danh sách Tác giả đang có truyện trong thư viện để đưa vào bộ lọc
         async function loadAuthors() {
             try {
                 const resp = await fetch(`${API_BASE}/api/authors`);
@@ -282,7 +292,7 @@
             }
         }
 
-        // 3. Hiển thị danh sách thẻ truyện lên lưới (giữ nguyên 100% HTML/CSS của thẻ mẫu)
+        // 3.3. Vẽ danh sách các thẻ truyện (Comic Cards) lên lưới giao diện
         function renderComicsGrid(comicsList) {
             if (!comicsList || comicsList.length === 0) {
                 comicsGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: #555; padding: 20px;">Chưa có bộ truyện nào để hiển thị.</p>`;
@@ -290,7 +300,7 @@
             }
 
             comicsGrid.innerHTML = comicsList.map(comic => `
-                <div style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fff; display: flex; flex-direction: column; justify-content: space-between;">
+                <div style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: rgba(255, 255, 255, 0.5); display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
                         <a href="detail.html?id=${comic.id}" style="text-decoration: none;">
                             <img src="${getProxyImageUrl(comic.cover_url)}" alt="${comic.title}" style="width: 100%; height: auto; border-radius: 4px; display: block;" loading="lazy">
@@ -318,7 +328,7 @@
             `).join("");
         }
 
-        // 4. Tải danh sách truyện theo trang (12 bộ / trang)
+        // 3.4. Tải danh sách truyện theo trang (12 bộ / trang) kèm điều kiện lọc Thư mục & Tác giả
         async function loadComics(page = 1) {
             try {
                 const params = new URLSearchParams({
@@ -351,7 +361,9 @@
             }
         }
 
-        // 5. Xử lý bấm nút "Tìm" (Gọi Python kiểm tra ID & title_pretty)
+        // ==================== 4. XỬ LÝ SỰ KIỆN TÌM, THÊM & XÓA TRUYỆN ====================
+
+        // 4.1. Nút "Tìm": Kiểm tra xem Gallery ID đã tồn tại hoặc trùng tên trong thư viện chưa
         btnSearchComic.addEventListener("click", async () => {
             const galleryId = parseInt(addGalleryIdInput.value.trim(), 10);
             if (!galleryId || galleryId < 1) {
@@ -373,7 +385,7 @@
                 }
 
                 if (data.status === "exists_id" || data.status === "exists_title") {
-                    // Đã có ID hoặc trùng tên trong Supabase -> Lọc hiện bộ truyện đó lên màn hình
+                    // Đã có ID hoặc trùng tên trong Supabase -> Lọc hiện ngay bộ truyện đó lên lưới để người dùng tiện bấm vào xem/gộp chapter
                     searchCheckStatus.style.color = "#856404";
                     searchCheckStatus.style.borderColor = "#ffc107";
                     searchCheckStatus.innerHTML = `<strong>Thông báo:</strong> ${data.message}`;
@@ -382,7 +394,7 @@
                     paginationBar.style.display = "none";
                     renderComicsGrid([data.comic]);
                 } else if (data.status === "new") {
-                    // Hoàn toàn chưa có -> Báo hợp lệ để bấm "Thêm vào thư viện"
+                    // Chưa có trong thư viện -> Hiển thị tên truyện, tác giả, số trang để sẵn sàng bấm "Thêm vào thư viện"
                     searchCheckStatus.style.color = "#198754";
                     searchCheckStatus.style.borderColor = "#198754";
                     searchCheckStatus.innerHTML = `<strong>Hợp lệ:</strong> ${data.message}`;
@@ -396,7 +408,7 @@
             }
         });
 
-        // 6. Xử lý bấm nút "Thêm vào thư viện"
+        // 4.2. Nút "Thêm vào thư viện": Cào dữ liệu từ NHentai theo Gallery ID và lưu vào thư mục đã chọn
         btnAddComic.addEventListener("click", async () => {
             const galleryId = parseInt(addGalleryIdInput.value.trim(), 10);
             const folderId = parseInt(addFolderSelect.value, 10) || 1;
@@ -438,7 +450,28 @@
             }
         });
 
-        // 7. Xử lý tạo thư mục mới
+        // 4.3. Xóa 1 bộ truyện khỏi thư viện
+        window.handleDeleteComic = async function(comicId) {
+            if (!confirm(`Bạn có chắc chắn muốn xóa truyện ID ${comicId} khỏi thư viện?`)) {
+                return;
+            }
+            try {
+                const resp = await fetch(`${API_BASE}/api/comics/${comicId}`, {
+                    method: "DELETE"
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.detail || "Lỗi khi xóa truyện!");
+
+                await loadAuthors();
+                await loadComics(currentPage);
+            } catch (err) {
+                alert(`Lỗi: ${err.message}`);
+            }
+        };
+
+        // ==================== 5. XỬ LÝ SỰ KIỆN QUẢN LÝ THƯ MỤC ====================
+
+        // 5.1. Tạo thư mục mới
         btnCreateFolder.addEventListener("click", async () => {
             const name = newFolderName.value.trim();
             if (!name) {
@@ -466,7 +499,7 @@
             }
         });
 
-        // 7b. Xử lý sửa tên thư mục
+        // 5.2. Sửa tên thư mục đang chọn (ngoại trừ thư mục Mặc định ID = 1)
         btnRenameFolder.addEventListener("click", async () => {
             const folderId = parseInt(manageFolderSelect.value, 10);
             if (!folderId) return;
@@ -503,7 +536,7 @@
             }
         });
 
-        // 7c. Xử lý xóa thư mục
+        // 5.3. Xóa thư mục đang chọn (các truyện bên trong sẽ tự động chuyển về thư mục Mặc định)
         btnDeleteFolder.addEventListener("click", async () => {
             const folderId = parseInt(manageFolderSelect.value, 10);
             if (!folderId) return;
@@ -535,29 +568,12 @@
             }
         });
 
-        // 8. Xử lý xóa truyện
-        window.handleDeleteComic = async function(comicId) {
-            if (!confirm(`Bạn có chắc chắn muốn xóa truyện ID ${comicId} khỏi thư viện?`)) {
-                return;
-            }
-            try {
-                const resp = await fetch(`${API_BASE}/api/comics/${comicId}`, {
-                    method: "DELETE"
-                });
-                const data = await resp.json();
-                if (!resp.ok) throw new Error(data.detail || "Lỗi khi xóa truyện!");
+        // ==================== 6. BỘ LỌC, PHÂN TRANG & SAO LƯU / KHÔI PHỤC ====================
 
-                await loadAuthors();
-                await loadComics(currentPage);
-            } catch (err) {
-                alert(`Lỗi: ${err.message}`);
-            }
-        };
-
-        // 9. Sự kiện lọc & Phân trang
         filterFolder.addEventListener("change", () => loadComics(1));
         filterAuthor.addEventListener("change", () => loadComics(1));
 
+        // Nút "Làm mới": Đặt lại toàn bộ bộ lọc, trạng thái tìm kiếm và tải lại danh sách truyện + hình nền
         btnResetFilter.addEventListener("click", () => {
             filterFolder.value = "";
             filterAuthor.value = "";
@@ -569,10 +585,10 @@
             loadComics(1);
         });
 
-        // 10. Sự kiện Sao lưu & Khôi phục dữ liệu (backup.json)
         const btnBackup = document.getElementById("btnBackup");
         const btnRestore = document.getElementById("btnRestore");
 
+        // Nút "Sao lưu": Xuất toàn bộ CSDL từ Supabase ra file backup.json
         btnBackup.addEventListener("click", async () => {
             btnBackup.disabled = true;
             try {
@@ -587,6 +603,7 @@
             }
         });
 
+        // Nút "Khôi phục": Đọc file backup.json và đồng bộ lại toàn bộ truyện + thư mục lên Supabase
         btnRestore.addEventListener("click", async () => {
             if (!confirm("Khôi phục toàn bộ dữ liệu từ file backup.json lên Supabase?")) {
                 return;
@@ -607,6 +624,7 @@
             }
         });
 
+        // Chuyển trang Trước / Sau
         btnPrevComicPage.addEventListener("click", () => {
             if (currentPage > 1) loadComics(currentPage - 1);
         });
@@ -615,6 +633,7 @@
             if (currentPage < totalPages) loadComics(currentPage + 1);
         });
 
+        // Hỗ trợ nhấn phím Enter trong ô nhập ID truyện và ô tạo thư mục
         addGalleryIdInput.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
                 e.preventDefault();
@@ -629,13 +648,15 @@
             }
         });
 
-        // 11. Tải danh sách hình nền và đổi hình nền
+        // ==================== 7. QUẢN LÝ HÌNH NỀN (TỪ THƯ MỤC FRONTEND/ASSETS) ====================
+
         const bgSelect = document.getElementById("bgSelect");
         const savedBg = localStorage.getItem("hmanga_bg");
         if (savedBg) {
             document.body.style.backgroundImage = `url("assets/${encodeURIComponent(savedBg)}")`;
         }
 
+        // Tải danh sách các file ảnh trong frontend/assets và lưu lựa chọn vào localStorage
         async function loadBackgrounds() {
             try {
                 const resp = await fetch(`${API_BASE}/api/backgrounds`);
@@ -667,7 +688,7 @@
             document.body.style.backgroundImage = `url("assets/${encodeURIComponent(chosen)}")`;
         });
 
-        // Khởi chạy khi mở Trang chủ
+        // ==================== 8. KHỞI CHẠY KHI MỞ TRANG CHỦ ====================
         window.addEventListener("DOMContentLoaded", async () => {
             await Promise.all([loadFolders(), loadAuthors(), loadBackgrounds()]);
             await loadComics(1);

@@ -1,58 +1,62 @@
 """
-Chuyên lo kết nối CSDL và các hàm Thêm / Đọc / Sửa / Xóa (CRUD - create, read, update, delete)
-- Tương tác với supabase để:
-	- Lấy data từ supabase: read
-	- Thêm data vào supabase: Add
-	- Sửa data trong supabase: update
-	- Xóa data trong supabase: remove
+HManga Library - Module Nghiệp Vụ & Tương Tác CSDL (Services / CRUD)
+====================================================================
+Chứa toàn bộ các hàm xử lý nghiệp vụ cốt lõi nối giữa API (main.py) và Supabase (database.py):
 
-- Get data from supabase
-	- Get 1 comic
-	- Get comics
-	- Get 1 chapter
-	- Get folder
+1. Tiện ích xử lý ảnh:
+   - build_page_url                  : Giải mã chuỗi `page_exts` để ghép đúng link ảnh từng trang (.jpg, .png, .webp, .gif).
 
-- Add data to supabase
-	- Add 1 comic
-	- Add 1 chapter
-	- Add 1 folder
+2. Nghiệp vụ Truyện (Comics):
+   - add_comic_by_gallery_id         : Cào dữ liệu từ NHentai và lưu vào các bảng comics, chapters, artists, genres.
+   - get_all_comics                  : Lấy danh sách truyện phân trang (12 bộ/trang), hỗ trợ lọc theo Thư mục & Tác giả.
+   - check_comic_before_add          : Kiểm tra trùng ID hoặc trùng tên truyện (`title_pretty`) trước khi thêm.
+   - get_comic_detail                : Lấy thông tin chi tiết 1 bộ truyện kèm danh sách tác giả, thể loại, chapters và trang xem trước.
+   - delete_comic                    : Xóa truyện khỏi thư viện (tự động dọn dẹp dữ liệu liên quan nhờ CASCADE).
+   - update_comic_folder             : Chuyển bộ truyện sang thư mục khác.
 
-- Remove data
-	- Remove 1 comic
-	- Remove 1 chapter
+3. Nghiệp vụ Chương/Tập (Chapters):
+   - get_chapter_pages               : Sinh danh sách link ảnh của 1 chapter để hiển thị trên trình đọc.
+   - split_comic_into_chapters       : Chia nhỏ bộ truyện dài thành nhiều chapter theo mốc trang tùy chọn.
+   - add_chapter_from_gallery_id     : Gộp thêm 1 phần mới (từ Gallery ID khác) làm chapter tiếp theo của bộ truyện hiện tại.
 
-- Update data
-	- Update 1 chapter
-
-
-note: sau này sẽ thêm:
-- get_all_genres()
+4. Nghiệp vụ Thư mục & Tác giả (Folders & Artists):
+   - get_all_folders, create_folder, rename_folder, delete_folder
+   - get_all_authors                 : Lấy danh sách các tác giả đang có truyện trong thư viện.
 """
 
 import math
 from database import get_connection
 from nhentai import fetch_comic_from_nhentai
 
+
+# ==================== 1. HÀM TIỆN ÍCH SINH LINK ẢNH ====================
+
+# Bảng ánh xạ ký tự đầu trong chuỗi `page_exts` sang đuôi file ảnh thực tế
 EXT_MAP = {"j": "jpg", "p": "png", "w": "webp", "g": "gif"}
 
 def build_page_url(media_id, page_num, page_exts):
-    """Sinh link ảnh chính xác theo đuôi từng trang từ chuỗi page_exts."""
+    """
+    Sinh đường dẫn ảnh trên CDN NHentai cho một trang cụ thể.
+    Dựa vào vị trí `page_num - 1` trong chuỗi `page_exts` để lấy đúng định dạng ảnh (.jpg, .png, .webp, .gif).
+    """
     ext = "jpg"
     if page_exts and 1 <= page_num <= len(page_exts):
         ext = EXT_MAP.get(page_exts[page_num - 1], "jpg")
     return f"https://i3.nhentai.net/galleries/{media_id}/{page_num}.{ext}"
 
 
+# ==================== 2. HÀM THÊM TRUYỆN MỚI VÀO THƯ VIỆN ====================
+
 def add_comic_by_gallery_id(gallery_id, folder_id = 1):
     """
     Thêm một bộ truyện mới vào thư viện bằng Gallery ID của NHentai.
-    Quy trình:
-    1. Cào dữ liệu từ NHentai.
-    2. Lưu thông tin vào bảng 'comics'.
-    3. Tự động tạo Tập 1 (toàn bộ các trang) vào bảng 'chapters'.
-    4. Lưu tags vào bảng 'tags' và liên kết trong 'comic_tags'.
+    Quy trình thực hiện trong 1 Transaction:
+    1. Gọi NHentai API lấy toàn bộ thông tin truyện.
+    2. Lưu thông tin tổng quan vào bảng `comics`.
+    3. Tạo mặc định Chapter 1 ("Toàn bộ", từ trang 1 đến trang cuối) trong bảng `chapters`.
+    4. Tách và lưu danh sách Tác giả vào `artists` / `comic_artists`, Thể loại vào `genres` / `comic_genres`.
     """
-    # Bước 1: Lấy dữ liệu truyện từ NHentai
+    # Bước 1: Thu thập và bóc tách dữ liệu từ NHentai
     comic_data = fetch_comic_from_nhentai(gallery_id)
 
     comic_id = comic_data["id"]
@@ -68,10 +72,10 @@ def add_comic_by_gallery_id(gallery_id, folder_id = 1):
     raw_tags = comic_data.get("tags", [])
     genres_list = []
 
-    # Kết nối CSDL và thực thi Transaction
+    # Mở kết nối CSDL và thực thi toàn bộ thao tác trong cùng 1 Transaction
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # Bước 2: Lưu vào bảng comics
+            # Bước 2: Lưu (hoặc cập nhật nếu đã tồn tại ID) vào bảng `comics`
             cur.execute("""
                 INSERT INTO comics (id, folder_id, media_id, title, artist, language, category, cover_url, num_pages, page_exts)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -87,8 +91,8 @@ def add_comic_by_gallery_id(gallery_id, folder_id = 1):
                     page_exts = EXCLUDED.page_exts;
             """, (comic_id, folder_id, media_id, title, artist_str, language, category, cover_url, num_pages, page_exts))
 
-            # Bước 3: Tạo Chapter 1 mặc định (gồm toàn bộ các trang từ 1 đến num_pages)
-            # Xóa chapter cũ nếu đã tồn tại để tránh trùng lặp
+            # Bước 3: Khởi tạo Chapter 1 mặc định (chứa toàn bộ trang từ 1 đến num_pages)
+            # Xóa chapter cũ của truyện này (nếu có) để tránh bị nhân đôi khi thêm lại
             cur.execute("DELETE FROM chapters WHERE comic_id = %s;", (comic_id,))
 
             cur.execute("""
@@ -96,7 +100,7 @@ def add_comic_by_gallery_id(gallery_id, folder_id = 1):
                 VALUES (%s, %s, %s, %s, %s, %s, %s);
             """, (comic_id, 1, "Toàn bộ", media_id, 1, num_pages, page_exts))
 
-            # Bước 4: Lưu tags vào bảng 'tags' và tạo liên kết trong 'comic_tags'
+            # Bước 4: Lưu thông tin Tác giả (artist) và Thể loại (tag) vào các bảng chuẩn hóa
             for tag in raw_tags:
                 t_id = tag.get("id")
                 t_type = tag.get("type")
@@ -106,7 +110,7 @@ def add_comic_by_gallery_id(gallery_id, folder_id = 1):
                 if not t_id or not t_name:
                     continue
 
-                # 1. Nếu là tác giả -> Lưu vào artists và comic_artists
+                # 4a. Nếu tag là tác giả -> Lưu vào bảng `artists` và bảng nối `comic_artists`
                 if t_type == "artist":
                     cur.execute("""
                         INSERT INTO artists (id, name, slug)
@@ -120,7 +124,7 @@ def add_comic_by_gallery_id(gallery_id, folder_id = 1):
                         ON CONFLICT (comic_id, artist_id) DO NOTHING;
                     """, (comic_id, t_id))
 
-                # 2. Nếu là thể loại -> Lưu vào genres và comic_genres
+                # 4b. Nếu tag là thể loại chi tiết -> Lưu vào bảng `genres` và bảng nối `comic_genres`
                 elif t_type == "tag":
                     cur.execute("""
                         INSERT INTO genres (id, name, slug)
@@ -152,11 +156,13 @@ def add_comic_by_gallery_id(gallery_id, folder_id = 1):
         "num_pages": num_pages
     }
 
-# ==================== CÁC HÀM ĐỌC & KIỂM TRA DỮ LIỆU (READ) ====================
+
+# ==================== 3. CÁC HÀM ĐỌC & KIỂM TRA DỮ LIỆU (READ) ====================
+
 def get_all_comics(folder_id = None, artist_id = None, page = 1, limit = 12):
     """
-    Lấy danh sách truyện có phân trang (mặc định 12 bộ truyện mới nhất mỗi trang).
-    Hỗ trợ lọc theo Thư mục (folder_id) và Tác giả (artist_id).
+    Lấy danh sách truyện ở Trang chủ có phân trang (mặc định 12 bộ mới nhất mỗi trang).
+    Hỗ trợ lọc kết hợp theo Thư mục (`folder_id`) và Tác giả (`artist_id`).
     """
     if page < 1:
         page = 1
@@ -172,12 +178,12 @@ def get_all_comics(folder_id = None, artist_id = None, page = 1, limit = 12):
             conditions = []
             params = []
 
-            # Hỗ trợ lọc theo Thư mục
+            # Điều kiện lọc 1: Lọc theo Thư mục
             if folder_id:
                 conditions.append("c.folder_id = %s")
                 params.append(folder_id)
 
-            # Hỗ trợ lọc theo Tác giả (dùng bảng nối comic_artists)
+            # Điều kiện lọc 2: Lọc theo Tác giả (JOIN qua bảng trung gian `comic_artists`)
             if artist_id:
                 base_from += " JOIN comic_artists ca ON c.id = ca.comic_id "
                 conditions.append("ca.artist_id = %s")
@@ -187,18 +193,18 @@ def get_all_comics(folder_id = None, artist_id = None, page = 1, limit = 12):
             if conditions:
                 where_clause = " WHERE " + " AND ".join(conditions)
 
-            # 1. Đếm tổng số bộ truyện thỏa điều kiện lọc
+            # Bước 1: Đếm tổng số bộ truyện thỏa điều kiện để tính tổng số trang (total_pages)
             count_query = f"SELECT COUNT(DISTINCT c.id) AS total {base_from} {where_clause};"
             cur.execute(count_query, params)
             total_comics = cur.fetchone()["total"]
             total_pages = math.ceil(total_comics / limit) if total_comics > 0 else 1
 
-            # Tự động lùi về trang cuối cùng nếu trang hiện tại vừa bị xóa hết truyện
+            # Nếu trang yêu cầu vượt quá tổng số trang (ví dụ sau khi xóa bớt truyện), tự động lùi về trang cuối
             if page > total_pages:
                 page = total_pages
             offset = (page - 1) * limit
 
-            # 2. Lấy đúng 12 bộ truyện mới nhất của trang hiện tại
+            # Bước 2: Truy vấn danh sách truyện của trang hiện tại, sắp xếp theo thời gian thêm mới nhất
             data_query = f"""
                 SELECT
                     c.id,
@@ -229,16 +235,15 @@ def get_all_comics(folder_id = None, artist_id = None, page = 1, limit = 12):
 
 def check_comic_before_add(gallery_id):
     """
-    Kiểm tra truyện khi người dùng bấm nút 'Tìm' ở Trang chủ:
-    1. Tìm trong Supabase theo ID trước. Nếu có -> trả về bộ truyện đó.
-    2. Nếu chưa có ID trong Supabase -> lấy thông tin từ NHentai, sau đó so sánh
-       title (title_pretty) xem có trùng với bộ truyện nào trong Supabase không:
-       - Nếu trùng tên -> trả về bộ truyện bị trùng tên trong Supabase.
-       - Nếu không trùng -> báo là truyện mới để người dùng bấm 'Thêm vào thư viện'.
+    Kiểm tra một Gallery ID khi người dùng bấm nút 'Tìm' ở Trang chủ:
+    - Bước 1 (`exists_id`)   : Kiểm tra xem ID này đã có trong bảng `comics` chưa.
+    - Bước 2 (`exists_title`): Nếu chưa có ID, gọi NHentai lấy `title_pretty` rồi đối chiếu xem
+                               có trùng tên với bộ truyện nào đã lưu trong thư viện không (để gợi ý gộp Chapter).
+    - Bước 3 (`new`)         : Nếu hoàn toàn chưa có, trả về thông tin xem trước để người dùng thêm mới.
     """
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # Bước 1: Kiểm tra trùng ID trong Supabase
+            # Bước 1: Kiểm tra trùng ID trực tiếp trong Supabase
             cur.execute("""
                 SELECT
                     c.id,
@@ -264,11 +269,11 @@ def check_comic_before_add(gallery_id):
                     "nhentai_data": None
                 }
 
-            # Bước 2: Chưa có ID trong Supabase -> Tìm trên NHentai
+            # Bước 2: Nếu chưa có ID trong CSDL -> Gọi NHentai API để lấy thông tin truyện
             nhentai_data = fetch_comic_from_nhentai(gallery_id)
             title_pretty = nhentai_data["title"].strip()
 
-            # Bước 3: Kiểm tra xem title_pretty có trùng với bộ truyện nào trong Supabase không
+            # Bước 3: So sánh tên truyện (không phân biệt hoa thường) với các bộ đã có trong CSDL
             cur.execute("""
                 SELECT
                     c.id,
@@ -299,7 +304,7 @@ def check_comic_before_add(gallery_id):
                     "nhentai_data": nhentai_data
                 }
 
-            # Bước 4: Hoàn toàn chưa có trong thư viện
+            # Bước 4: Truyện hoàn toàn mới và hợp lệ để thêm vào thư viện
             artists_str = ", ".join(nhentai_data.get("artists", [])) or "Unknown"
             return {
                 "status": "new",
@@ -311,17 +316,18 @@ def check_comic_before_add(gallery_id):
                 "nhentai_data": nhentai_data
             }
 
+
 def get_comic_detail(comic_id):
     """
-    Lấy thông tin chi tiết của 1 bộ truyện:
-    - Thông tin truyện (tiêu đề, ảnh bìa, ngôn ngữ, thể loại chính...)
-    - Danh sách các thể loại chi tiết (genres)
-    - Danh sách tác giả (artists)
-    - Danh sách các tập/hồi (chapters) để người dùng bấm vào đọc
+    Lấy đầy đủ thông tin chi tiết của 1 bộ truyện cho trang Chi tiết (`detail.html`):
+    - Thông tin cơ bản + Tên thư mục hiện tại
+    - Danh sách thể loại chi tiết (`genres`) và tác giả (`artists`)
+    - Danh sách các chương/tập (`chapters`)
+    - Danh sách đường dẫn toàn bộ trang ảnh (`pages`) của bộ gốc để hiển thị lưới xem trước
     """
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # 1. Lấy thông tin cơ bản của truyện kèm tên thư mục
+            # 1. Lấy thông tin cơ bản của bộ truyện kèm tên thư mục
             cur.execute("""
                 SELECT c.*, f.name AS folder_name
                 FROM comics c
@@ -330,11 +336,10 @@ def get_comic_detail(comic_id):
             """, (comic_id,))
             comic = cur.fetchone()
 
-            # Nếu không tìm thấy truyện trong CSDL
             if not comic:
                 return None
 
-            # 2. Lấy danh sách thể loại từ bảng 'genres' (qua bảng nối 'comic_genres')
+            # 2. Lấy danh sách thể loại của truyện từ bảng `genres`
             cur.execute("""
                 SELECT g.id, g.name, g.slug
                 FROM genres g
@@ -344,7 +349,7 @@ def get_comic_detail(comic_id):
             """, (comic_id,))
             genres_rows = cur.fetchall()
 
-            # 3. Lấy danh sách tác giả từ bảng 'artists' (qua bảng nối 'comic_artists')
+            # 3. Lấy danh sách tác giả của truyện từ bảng `artists`
             cur.execute("""
                 SELECT a.id, a.name, a.slug
                 FROM artists a
@@ -354,14 +359,13 @@ def get_comic_detail(comic_id):
             """, (comic_id,))
             artists_rows = cur.fetchall()
 
-            # Chuẩn hóa dữ liệu trả về cho Frontend dễ đọc
+            # Gắn thông tin thể loại và tác giả vào đối tượng kết quả
             comic["genres"] = [g["name"] for g in genres_rows]
-            comic["genres_detail"] = genres_rows  # Lưu đầy đủ id, name, slug (tiện để làm link bấm vào thể loại sau này)
+            comic["genres_detail"] = genres_rows
             comic["authors"] = [a["name"] for a in artists_rows]
-            # Ưu tiên lấy từ cột artist đã có sẵn trong bảng comics, nếu chưa có thì lấy từ danh sách tác giả
             comic["author"] = comic.get("artist") or (", ".join(comic["authors"]) if comic["authors"] else "Unknown")
 
-            # 4. Lấy danh sách chapters của truyện này
+            # 4. Lấy danh sách các tập/chương (chapters) theo thứ tự tăng dần
             cur.execute("""
                 SELECT id, chapter_number, title, media_id, start_page, end_page
                 FROM chapters
@@ -370,7 +374,7 @@ def get_comic_detail(comic_id):
             """, (comic_id,))
             comic["chapters"] = cur.fetchall()
 
-             # 5. Tạo danh sách link ảnh xem trước chính xác theo đuôi từng trang
+            # 5. Tạo danh sách link ảnh xem trước cho toàn bộ trang của bộ truyện gốc
             c_exts = comic.get("page_exts") or ""
             comic["pages"] = [
                 {
@@ -382,10 +386,11 @@ def get_comic_detail(comic_id):
 
             return comic
 
+
 def get_chapter_pages(chapter_id):
     """
-    Lấy danh sách link ảnh trực tiếp để đọc online một chapter.
-    Tự động sinh link từ start_page đến end_page với đúng đuôi ảnh từ page_exts.
+    Sinh danh sách các trang ảnh (từ `start_page` đến `end_page`) của 1 Chapter
+    để hiển thị trong Trình đọc truyện (`reader.html`).
     """
     with get_connection() as conn:
         with conn.cursor() as cur:
@@ -398,10 +403,13 @@ def get_chapter_pages(chapter_id):
             ch = cur.fetchone()
             if not ch:
                 return []
+
             media_id = ch["media_id"]
             start_p = ch["start_page"]
             end_p = ch["end_page"]
+            # Ưu tiên lấy chuỗi đuôi ảnh riêng của chapter (nếu là phần gộp từ ID khác), nếu trống thì dùng của truyện gốc
             page_exts = ch.get("page_exts") or ch.get("comic_page_exts") or ""
+
             pages = []
             for page_num in range(start_p, end_p + 1):
                 pages.append({
@@ -410,24 +418,23 @@ def get_chapter_pages(chapter_id):
                 })
             return pages
 
-# ==================== CÁC HÀM XỬ LÝ CHAPTER & XÓA ====================
+
+# ==================== 4. CÁC HÀM QUẢN LÝ CHAPTER & XÓA TRUYỆN ====================
 
 def split_comic_into_chapters(comic_id, chapters_data):
     """
-    Chia chapter theo đúng cấu hình thủ công mà người dùng nhập vào.
-    chapters_data là danh sách do người dùng gửi lên, ví dụ:
-    [
-        {"title": "Hồi 1: Khởi đầu", "start_page": 1, "end_page": 50},
-        {"title": "Hồi 2: Biến cố",  "start_page": 51, "end_page": 130},
-        {"title": "Hồi 3: Kết thúc", "start_page": 131, "end_page": 236}
-    ]
+    Chia nhỏ bộ truyện gốc thành nhiều Chapter dựa trên mốc trang (`start_page` -> `end_page`) do người dùng nhập.
+    Lưu ý:
+    - Chỉ thay thế các chapter thuộc cùng `media_id` của bộ truyện gốc.
+    - Các chapter ngoại truyện / phần tiếp theo (thêm từ Gallery ID khác) sẽ được giữ nguyên
+      và tự động đánh lại số thứ tự nối tiếp phía sau.
     """
     if not chapters_data:
         raise ValueError("Danh sách chapter không được để trống!")
 
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # 1. Lấy thông tin truyện để kiểm tra giới hạn số trang
+            # Bước 1: Kiểm tra bộ truyện có tồn tại không và lấy tổng số trang giới hạn
             cur.execute("SELECT id, media_id, num_pages, page_exts FROM comics WHERE id = %s;", (comic_id,))
 
             comic = cur.fetchone()
@@ -438,7 +445,7 @@ def split_comic_into_chapters(comic_id, chapters_data):
             num_pages = comic["num_pages"]
             page_exts = comic.get("page_exts") or ""
 
-            # 2. Kiểm tra tính hợp lệ của từng chapter người dùng nhập
+            # Bước 2: Kiểm tra tính hợp lệ của từng khoảng trang người dùng gửi lên
             for index, item in enumerate(chapters_data, start=1):
                 start_p = item.get("start_page")
                 end_p = item.get("end_page")
@@ -455,10 +462,10 @@ def split_comic_into_chapters(comic_id, chapters_data):
                 if start_p > end_p:
                     raise ValueError(f"Chapter '{title}': trang bắt đầu ({start_p}) không được lớn hơn trang kết thúc ({end_p})!")
 
-            # 3. Xóa các chapter cũ của truyện này để áp dụng danh sách mới
+            # Bước 3: Xóa các chapter cũ thuộc bộ truyện gốc (cùng media_id) trước khi lưu danh sách chia mới
             cur.execute("DELETE FROM chapters WHERE comic_id = %s AND media_id = %s;", (comic_id, str(media_id)))
 
-            # 4. Lưu từng chapter do người dùng tự đặt vào CSDL
+            # Bước 4: Thêm các chapter vừa chia vào bảng `chapters`
             created_chapters = []
             for index, item in enumerate(chapters_data, start=1):
                 cur.execute("""
@@ -476,7 +483,7 @@ def split_comic_into_chapters(comic_id, chapters_data):
                 ))
                 created_chapters.append(cur.fetchone())
 
-            # 5. Đẩy số thứ tự của các chapter từ ID khác (nếu có) nối tiếp ngay sau các chapter vừa chia
+            # Bước 5: Cập nhật lại số thứ tự (`chapter_number`) của các phần thêm từ ID khác (nếu có) nối tiếp theo sau
             cur.execute("""
                 SELECT id FROM chapters
                 WHERE comic_id = %s AND media_id != %s
@@ -496,10 +503,10 @@ def split_comic_into_chapters(comic_id, chapters_data):
 
 def add_chapter_from_gallery_id(comic_id, gallery_id, chapter_number = None, title = None):
     """
-    Thêm một chapter mới vào bộ truyện có sẵn từ một Gallery ID NHentai khác.
-    Phục vụ cho các bộ truyện nhiều phần (Part 1, Part 2...).
+    Gộp một bộ truyện từ Gallery ID NHentai khác vào làm Chapter mới của bộ truyện `comic_id` hiện tại.
+    Dùng cho các series có nhiều phần (Part 1, Part 2, Ngoại truyện...) có ID riêng trên NHentai.
     """
-    # 1. Cào dữ liệu của tập mới từ NHentai
+    # Bước 1: Cào thông tin media_id, tổng số trang và đuôi ảnh của phần mới từ NHentai
     new_gallery = fetch_comic_from_nhentai(gallery_id)
     new_media_id = str(new_gallery["media_id"])
     new_num_pages = new_gallery["num_pages"]
@@ -507,12 +514,12 @@ def add_chapter_from_gallery_id(comic_id, gallery_id, chapter_number = None, tit
 
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # 2. Kiểm tra bộ truyện cha có tồn tại không
+            # Bước 2: Kiểm tra bộ truyện gốc có tồn tại trong thư viện không
             cur.execute("SELECT id FROM comics WHERE id = %s;", (comic_id,))
             if not cur.fetchone():
                 raise ValueError(f"Bộ truyện cha ID {comic_id} không tồn tại!")
 
-            # 3. Tự động tính số thứ tự tập tiếp theo nếu không truyền vào
+            # Bước 3: Nếu người dùng không nhập số thứ tự chapter, tự động lấy (số lớn nhất hiện tại + 1)
             if chapter_number is None:
                 cur.execute("""
                     SELECT COALESCE(MAX(chapter_number), 0) + 1 AS next_num
@@ -521,11 +528,11 @@ def add_chapter_from_gallery_id(comic_id, gallery_id, chapter_number = None, tit
                 """, (comic_id,))
                 chapter_number = cur.fetchone()["next_num"]
 
-            # 4. Tên chapter mặc định nếu không truyền
+            # Bước 4: Đặt tên mặc định (vd: "Tập 2") nếu người dùng để trống tên chapter
             if not title:
                 title = f"Tập {int(chapter_number) if float(chapter_number).is_integer() else chapter_number}"
 
-            # 5. Lưu chapter mới vào CSDL
+            # Bước 5: Lưu chapter mới với `media_id` và `page_exts` riêng của phần đó
             cur.execute("""
                 INSERT INTO chapters (comic_id, chapter_number, title, media_id, start_page, end_page, page_exts)
                 VALUES (%s, %s, %s, %s, 1, %s, %s)
@@ -540,8 +547,8 @@ def add_chapter_from_gallery_id(comic_id, gallery_id, chapter_number = None, tit
 
 def delete_comic(comic_id):
     """
-    Xóa 1 bộ truyện khỏi thư viện.
-    Nhờ 'ON DELETE CASCADE', toàn bộ chapters và liên kết tags sẽ tự động bị xóa theo.
+    Xóa một bộ truyện khỏi thư viện theo ID.
+    Nhờ ràng buộc `ON DELETE CASCADE` trong CSDL, toàn bộ chapters và liên kết tác giả/thể loại của truyện sẽ tự động được xóa sạch.
     """
     with get_connection() as conn:
         with conn.cursor() as cur:
@@ -552,16 +559,21 @@ def delete_comic(comic_id):
         print(f"[INFO] Da xoa bo truyen ID: {comic_id}")
     return deleted
 
+
+# ==================== 5. CÁC HÀM QUẢN LÝ THƯ MỤC & TÁC GIẢ ====================
+
 def get_all_folders():
+    """Lấy danh sách tất cả thư mục, sắp xếp theo ID tăng dần (thư mục Mặc định luôn ở đầu)."""
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("SELECT * FROM folders ORDER BY id ASC;")
             return cur.fetchall()
 
+
 def create_folder(name, description = ""):
     """
-    Tạo một thư mục mới để phân loại truyện.
-    Nếu tên thư mục đã tồn tại thì cập nhật lại phần mô tả (description).
+    Tạo một thư mục phân loại truyện mới.
+    Nếu tên thư mục đã tồn tại thì chỉ cập nhật lại phần mô tả.
     """
     if not name or not name.strip():
         raise ValueError("Tên thư mục không được để trống!")
@@ -580,9 +592,10 @@ def create_folder(name, description = ""):
     print(f"[INFO] Da tao thu muc: '{new_folder['name']}' (ID: {new_folder['id']})")
     return new_folder
 
+
 def rename_folder(folder_id: int, new_name: str, description: str = "") -> dict:
     """
-    Đổi tên một thư mục (không cho phép đổi tên thư mục Mặc định ID = 1).
+    Đổi tên một thư mục hiện có (bảo vệ thư mục 'Mặc định' có ID = 1 không bị đổi tên).
     """
     if folder_id == 1:
         raise ValueError("Không thể đổi tên thư mục 'Mặc định'!")
@@ -607,18 +620,18 @@ def rename_folder(folder_id: int, new_name: str, description: str = "") -> dict:
 
 def delete_folder(folder_id: int) -> bool:
     """
-    Xóa một thư mục (không cho phép xóa thư mục Mặc định ID = 1).
-    Các truyện trong thư mục bị xóa sẽ tự động chuyển về thư mục Mặc định (ID = 1).
+    Xóa một thư mục (không cho phép xóa thư mục 'Mặc định' ID = 1).
+    Trước khi xóa, tất cả truyện đang nằm trong thư mục đó sẽ được chuyển về thư mục 'Mặc định' (ID = 1).
     """
     if folder_id == 1:
         raise ValueError("Không thể xóa thư mục 'Mặc định'!")
 
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # Chuyển các bộ truyện trong thư mục này về thư mục Mặc định (id = 1)
+            # Bước 1: Chuyển các bộ truyện thuộc thư mục sắp xóa về thư mục Mặc định (ID = 1)
             cur.execute("UPDATE comics SET folder_id = 1 WHERE folder_id = %s;", (folder_id,))
 
-            # Xóa thư mục
+            # Bước 2: Xóa thư mục khỏi bảng `folders`
             cur.execute("DELETE FROM folders WHERE id = %s;", (folder_id,))
             deleted = cur.rowcount > 0
             if not deleted:
@@ -627,9 +640,10 @@ def delete_folder(folder_id: int) -> bool:
     print(f"[INFO] Da xoa thu muc ID: {folder_id}")
     return True
 
+
 def update_comic_folder(comic_id, folder_id):
     """
-    Chuyển một bộ truyện sang thư mục khác.
+    Cập nhật thư mục chứa bộ truyện (dùng khi người dùng đổi thư mục trong trang Chi tiết).
     """
     with get_connection() as conn:
         with conn.cursor() as cur:
@@ -639,7 +653,7 @@ def update_comic_folder(comic_id, folder_id):
             if not folder:
                 raise ValueError(f"Thư mục ID {folder_id} không tồn tại!")
 
-            # Cập nhật folder_id cho bộ truyện
+            # Cập nhật `folder_id` mới cho bộ truyện
             cur.execute("""
                 UPDATE comics
                 SET folder_id = %s
@@ -653,7 +667,12 @@ def update_comic_folder(comic_id, folder_id):
             updated["folder_name"] = folder["name"]
             return updated
 
+
 def get_all_authors():
+    """
+    Lấy danh sách các tác giả hiện đang có ít nhất 1 bộ truyện trong thư viện (nhờ JOIN với `comic_artists`).
+    Giúp ô lọc Tác giả ở Trang chủ không bị hiển thị các tác giả rỗng sau khi xóa truyện.
+    """
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("""
@@ -663,6 +682,9 @@ def get_all_authors():
                 ORDER BY a.name ASC;
             """)
             return cur.fetchall()
+
+
+# ==================== 6. BỘ CÔNG CỤ KIỂM THỬ TRÊN TERMINAL ====================
 
 
 def test_use_case(choice):
@@ -691,8 +713,9 @@ def test_use_case(choice):
             # 2. TEST: Lấy danh sách truyện ở trang chủ
             # -------------------------------------------------------------
             print("\n--- 2. TEST: Lấy danh sách truyện ở trang chủ (get_all_comics) ---")
-            comics_list = get_all_comics()
-            print(f"-> Tổng số truyện trong thư viện: {len(comics_list)} bộ")
+            comics_data = get_all_comics()
+            comics_list = comics_data["items"]
+            print(f"-> Tổng số truyện trong thư viện: {comics_data['total_comics']} bộ (Trang {comics_data['page']}/{comics_data['total_pages']})")
             for c in comics_list:
                 print(f"   [ID: {c['id']}] {c['title']} | Tác giả: {c.get('author')} | Ngôn ngữ: {c.get('language')} | Thư mục: {c.get('folder_name')}")
 
@@ -744,8 +767,9 @@ def test_use_case(choice):
                 first_author_id = authors[0]["id"]
                 author_name = authors[0]["name"]
                 print(f"\n--- 6. TEST: Lọc truyện theo tác giả '{author_name}' (ID: {first_author_id}) ---")
-                filtered_comics = get_all_comics(artist_id=first_author_id)
-                print(f"-> Tìm thấy {len(filtered_comics)} truyện của tác giả '{author_name}':")
+                filtered_data = get_all_comics(artist_id=first_author_id)
+                filtered_comics = filtered_data["items"]
+                print(f"-> Tìm thấy {filtered_data['total_comics']} truyện của tác giả '{author_name}':")
                 for fc in filtered_comics:
                     print(f"   * [ID: {fc['id']}] {fc['title']}")
 
@@ -764,8 +788,9 @@ def test_use_case(choice):
                 target_folder_id = folders[0]["id"]
                 target_folder_name = folders[0]["name"]
                 print(f"\n-> Đang lọc truyện trong thư mục '{target_folder_name}' (ID: {target_folder_id}):")
-                folder_comics = get_all_comics(folder_id=target_folder_id)
-                print(f"-> Tìm thấy {len(folder_comics)} bộ truyện:")
+                folder_data = get_all_comics(folder_id=target_folder_id)
+                folder_comics = folder_data["items"]
+                print(f"-> Tìm thấy {folder_data['total_comics']} bộ truyện:")
                 for fc in folder_comics:
                     print(f"   * [ID: {fc['id']}] {fc['title']} | Tác giả: {fc['author']}")
         case 8:

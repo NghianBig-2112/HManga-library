@@ -1,8 +1,14 @@
 """
 HManga Library - Web API Server (FastAPI)
-uvicorn main:app --reload
 =========================================
-Cổng giao tiếp duy nhất giữa Frontend và Backend.
+Lệnh khởi chạy: uvicorn main:app --reload
+
+Đóng vai trò là cổng giao tiếp duy nhất giữa giao diện Frontend và các module Backend:
+1. Tự động kiểm tra/khởi tạo bảng CSDL trên Supabase khi khởi động server.
+2. Cung cấp hệ thống REST API quản lý Truyện, Chapter, Thư mục, Tác giả.
+3. Cung cấp In-Memory Image Proxy (/api/image-proxy) để vượt tường lửa nhà mạng mà không tốn dung lượng ổ cứng.
+4. Hỗ trợ Sao lưu & Khôi phục dữ liệu (backup.json) trực tiếp từ giao diện web.
+5. Phục vụ trực tiếp các trang giao diện tĩnh (HTML/CSS/JS) và ảnh nền từ thư mục `frontend/`.
 """
 
 from typing import Optional, List
@@ -18,14 +24,16 @@ import services
 import backup
 from nhentai import fetch_comic_from_nhentai
 
-# 1. Khởi tạo ứng dụng FastAPI
+
+# ==================== 1. KHỞI TẠO FASTAPI & CẤU HÌNH HỆ THỐNG ====================
+
 app = FastAPI(
     title="HManga Library API",
     description="Hệ thống quản lý và đọc truyện tranh NHentai cá nhân",
     version="1.0.0"
 )
 
-# 2. Cấu hình CORS để Frontend kết nối thoải mái
+# Cấu hình CORS cho phép Frontend (kể cả khi mở bằng Live Server hoặc file rời) gọi API không bị chặn
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -34,40 +42,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 3. Tự động kiểm tra/tạo bảng CSDL khi Server khởi động
+# Tự động kiểm tra và tạo bảng CSDL trên Supabase ngay khi Server vừa bật lên (không xóa dữ liệu cũ)
 @app.on_event("startup")
 def on_startup():
     init_db(reset=False)
 
 
-# ==================== PYDANTIC SCHEMAS (ĐẦU VÀO) ====================
+# ==================== 2. ĐỊNH NGHĨA DỮ LIỆU ĐẦU VÀO (PYDANTIC SCHEMAS) ====================
 
 class ComicAddRequest(BaseModel):
+    """Dữ liệu gửi lên khi thêm bộ truyện mới vào thư viện."""
     gallery_id: int
     folder_id: Optional[int] = 1
 
 class ChapterSplitItem(BaseModel):
+    """Thông tin 1 hồi/chương khi người dùng chia nhỏ truyện dài."""
     title: str
     start_page: int
     end_page: int
     chapter_number: Optional[float] = None
 
 class ComicSplitRequest(BaseModel):
+    """Danh sách các hồi/chương dùng cho API chia nhỏ truyện."""
     chapters: List[ChapterSplitItem]
 
 class ChapterAddRequest(BaseModel):
+    """Dữ liệu gửi lên khi gộp thêm 1 phần mới (từ Gallery ID khác) làm Chapter tiếp theo."""
     gallery_id: int
     title: Optional[str] = None
     chapter_number: Optional[float] = None
 
 class FolderCreateRequest(BaseModel):
+    """Dữ liệu gửi lên khi tạo mới hoặc đổi tên thư mục."""
     name: str
     description: Optional[str] = ""
 
 class ComicFolderUpdateRequest(BaseModel):
+    """Dữ liệu gửi lên khi chuyển bộ truyện sang thư mục khác."""
     folder_id: int
 
-# ==================== COMICS ROUTES ====================
+
+# ==================== 3. NHÓM API QUẢN LÝ TRUYỆN (COMICS ROUTES) ====================
+
 @app.get("/api/comics", summary="Lấy danh sách truyện ở Trang chủ (12 bộ / trang)")
 def get_comics(
     folder_id: Optional[int] = Query(None, description="Lọc theo ID thư mục"),
@@ -75,21 +91,26 @@ def get_comics(
     page: int = Query(1, ge=1, description="Số trang hiện tại (bắt đầu từ 1)"),
     limit: int = Query(12, ge=1, le=100, description="Số lượng truyện mỗi trang (mặc định 12)")
 ):
-    """Lấy danh sách truyện trong thư viện có phân trang 12 bộ mới nhất và hỗ trợ lọc."""
+    """Lấy danh sách truyện trong thư viện có phân trang (12 bộ mới nhất/trang) và hỗ trợ lọc theo Thư mục, Tác giả."""
     return services.get_all_comics(folder_id=folder_id, artist_id=artist_id, page=page, limit=limit)
 
 
 @app.get("/api/comics/check/{gallery_id}", summary="Kiểm tra ID và tên truyện trước khi thêm")
 def check_comic(gallery_id: int):
-    """Kiểm tra ID trong Supabase trước, nếu không có thì tìm trên NHentai và kiểm tra trùng title_pretty."""
+    """
+    Kiểm tra khi người dùng bấm nút 'Tìm' ở Trang chủ:
+    - Kiểm tra trùng ID trong Supabase trước.
+    - Nếu chưa có ID, lấy dữ liệu từ NHentai và kiểm tra trùng tên truyện (`title_pretty`).
+    """
     try:
         return services.check_comic_before_add(gallery_id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
 @app.get("/api/comics/{comic_id}", summary="Lấy chi tiết 1 bộ truyện")
 def get_comic(comic_id: int):
-    """Lấy thông tin chi tiết của truyện kèm tác giả, thể loại và danh sách các tập."""
+    """Lấy đầy đủ thông tin chi tiết của truyện kèm tác giả, thể loại, danh sách chapter và link ảnh xem trước."""
     comic = services.get_comic_detail(comic_id)
     if not comic:
         raise HTTPException(status_code=404, detail="Không tìm thấy truyện trong thư viện!")
@@ -98,7 +119,7 @@ def get_comic(comic_id: int):
 
 @app.post("/api/comics", summary="Thêm truyện mới từ NHentai bằng ID")
 def add_comic(data: ComicAddRequest):
-    """Nhận Gallery ID, tự động cào dữ liệu và lưu vào thư viện."""
+    """Nhận Gallery ID và Folder ID, tự động cào dữ liệu từ NHentai và lưu vào thư viện."""
     try:
         result = services.add_comic_by_gallery_id(
             gallery_id=data.gallery_id,
@@ -111,29 +132,31 @@ def add_comic(data: ComicAddRequest):
 
 @app.delete("/api/comics/{comic_id}", summary="Xóa 1 bộ truyện khỏi thư viện")
 def delete_comic(comic_id: int):
-    """Xóa truyện và tự động dọn dẹp chapters, tags liên quan."""
+    """Xóa bộ truyện khỏi CSDL và tự động dọn dẹp toàn bộ chapters, liên kết tác giả/thể loại liên quan."""
     success = services.delete_comic(comic_id)
     if not success:
         raise HTTPException(status_code=404, detail="Bộ truyện không tồn tại để xóa!")
     return {"status": "success", "message": f"Đã xóa thành công truyện ID {comic_id}"}
 
+
 @app.put("/api/comics/{comic_id}/folder", summary="Đổi thư mục của 1 bộ truyện")
 def change_comic_folder(comic_id: int, data: ComicFolderUpdateRequest):
-    """Cập nhật thư mục (folder_id) cho bộ truyện."""
+    """Cập nhật thư mục (`folder_id`) mới cho bộ truyện khi người dùng chọn ở trang Chi tiết."""
     try:
         updated = services.update_comic_folder(comic_id=comic_id, folder_id=data.folder_id)
         return {"status": "success", "comic": updated}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# ==================== CHAPTERS ROUTES ====================
 
-@app.post("/api/comics/{comic_id}/split", summary="Chia nhỏ chương thủ công theo ý người dùng")
+# ==================== 4. NHÓM API QUẢN LÝ CHƯƠNG/TẬP (CHAPTERS ROUTES) ====================
+
+@app.post("/api/comics/{comic_id}/split", summary="Chia nhỏ chương thủ công theo mốc trang")
 def split_chapters(comic_id: int, data: ComicSplitRequest):
-    """Nhận danh sách các hồi do người dùng tự nhập mốc trang và lưu vào CSDL."""
+    """Nhận danh sách các chương cùng khoảng trang (`start_page` -> `end_page`) do người dùng nhập và lưu vào CSDL."""
     try:
-        # Chuyển đổi danh sách Pydantic items thành list dictionary thuần
-        chapters_data = [item.dict() for item in data.chapters]
+        # Chuyển đổi danh sách Pydantic models sang list dictionary thuần để truyền vào tầng services
+        chapters_data = [item.model_dump() if hasattr(item, "model_dump") else item.dict() for item in data.chapters]
         created_chapters = services.split_comic_into_chapters(comic_id, chapters_data)
         return {
             "status": "success",
@@ -145,9 +168,9 @@ def split_chapters(comic_id: int, data: ComicSplitRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.post("/api/comics/{comic_id}/chapters", summary="Thêm chapter từ một Gallery ID khác (Series nhiều phần)")
+@app.post("/api/comics/{comic_id}/chapters", summary="Gộp thêm chapter mới từ một Gallery ID khác")
 def add_chapter(comic_id: int, data: ChapterAddRequest):
-    """Thêm một tập mới từ Gallery ID NHentai khác vào bộ truyện cha có sẵn."""
+    """Lấy dữ liệu từ một Gallery ID NHentai khác và gắn làm Chapter mới cho bộ truyện hiện tại (dùng cho Series nhiều phần)."""
     try:
         created_chapter = services.add_chapter_from_gallery_id(
             comic_id=comic_id,
@@ -162,20 +185,21 @@ def add_chapter(comic_id: int, data: ChapterAddRequest):
 
 @app.get("/api/chapters/{chapter_id}/pages", summary="Lấy danh sách link ảnh để đọc online")
 def get_chapter_pages(chapter_id: int):
-    """Trả về danh sách tất cả các trang ảnh của chapter để trình đọc hiển thị."""
+    """Trả về danh sách đường dẫn ảnh của từng trang trong Chapter để trình đọc (`reader.html`) hiển thị."""
     pages = services.get_chapter_pages(chapter_id)
     if not pages:
         raise HTTPException(status_code=404, detail="Chapter không tồn tại hoặc không có trang nào!")
     return pages
 
 
-# ==================== IMAGE PROXY (VƯỢT CHẶN NHÀ MẠNG) ====================
+# ==================== 5. TRUNG CHUYỂN ẢNH QUA RAM (IN-MEMORY IMAGE PROXY) ====================
 
 @app.get("/api/image-proxy", summary="Trung chuyển ảnh từ CDN để vượt tường lửa nhà mạng")
 def image_proxy(url: str = Query(..., description="URL ảnh gốc từ CDN nhentai")):
     """
-    Tải byte ảnh từ máy chủ CDN nhentai về RAM và trả trực tiếp cho trình duyệt.
-    Không lưu bất kỳ file nào ra ổ cứng, vượt qua hoàn toàn bộ chặn của ISP Việt Nam.
+    Tải dữ liệu byte của ảnh từ máy chủ CDN NHentai vào bộ nhớ RAM (kèm header Referer hợp lệ)
+    và trả trực tiếp về cho trình duyệt.
+    Giải pháp này giúp vượt chặn ISP và chống lỗi 403 Hotlink mà không cần lưu bất kỳ file ảnh nào xuống ổ cứng.
     """
     if "nhentai.net" not in url:
         raise HTTPException(status_code=400, detail="Chỉ hỗ trợ proxy ảnh từ nhentai.net!")
@@ -195,19 +219,27 @@ def image_proxy(url: str = Query(..., description="URL ảnh gốc từ CDN nhen
     except requests.RequestException as e:
         raise HTTPException(status_code=502, detail=f"Lỗi kết nối tải ảnh: {str(e)}")
 
+
+# ==================== 6. NHÓM API THƯ MỤC, TÁC GIẢ & TRA CỨU TRỰC TIẾP ====================
+
 @app.post("/api/folders", summary="Tạo thư mục mới")
 def add_folder(data: FolderCreateRequest):
+    """Tạo một thư mục phân loại truyện mới."""
     try:
         return services.create_folder(name=data.name, description=data.description or "")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
 @app.get("/api/folders", summary="Lấy danh sách thư mục")
 def get_folders():
+    """Lấy toàn bộ danh sách thư mục hiện có trong CSDL."""
     return services.get_all_folders()
+
 
 @app.put("/api/folders/{folder_id}", summary="Đổi tên thư mục")
 def update_folder(folder_id: int, data: FolderCreateRequest):
+    """Đổi tên thư mục theo ID (không áp dụng cho thư mục Mặc định ID = 1)."""
     try:
         return services.rename_folder(
             folder_id=folder_id,
@@ -220,29 +252,35 @@ def update_folder(folder_id: int, data: FolderCreateRequest):
 
 @app.delete("/api/folders/{folder_id}", summary="Xóa thư mục")
 def remove_folder(folder_id: int):
+    """Xóa thư mục và tự động chuyển các truyện bên trong về thư mục Mặc định (ID = 1)."""
     try:
         services.delete_folder(folder_id=folder_id)
         return {"status": "success", "message": f"Đã xóa thư mục ID {folder_id}"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
 @app.get("/api/authors", summary="Lấy danh sách tác giả")
 def get_authors():
+    """Lấy danh sách các tác giả đang có truyện trong thư viện để hiển thị lên bộ lọc."""
     return services.get_all_authors()
 
-@app.get("/api/nhentai/{gallery_id}", summary="Lấy trực tiếp dữ liệu từ nhentai.py bằng ID")
+
+@app.get("/api/nhentai/{gallery_id}", summary="Lấy trực tiếp dữ liệu từ NHentai bằng ID")
 def get_nhentai_gallery(gallery_id: int):
-    """Lấy dữ liệu truyện trực tiếp từ NHentai bằng hàm fetch_comic_from_nhentai."""
+    """Tra cứu trực tiếp thông tin truyện từ NHentai API v2 mà không lưu vào CSDL."""
     try:
         data = fetch_comic_from_nhentai(gallery_id)
         return data
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# ==================== BACKUP & RESTORE ROUTES ====================
+
+# ==================== 7. NHÓM API SAO LƯU & KHÔI PHỤC (BACKUP & RESTORE) ====================
 
 @app.post("/api/backup", summary="Sao lưu toàn bộ dữ liệu từ Supabase ra file backup.json")
 def backup_library():
+    """Xuất toàn bộ dữ liệu từ 7 bảng trên Supabase ra file `backup.json` ở thư mục gốc."""
     try:
         filepath = backup.save_backup_file()
         return {"status": "success", "filepath": filepath}
@@ -252,22 +290,26 @@ def backup_library():
 
 @app.post("/api/restore", summary="Khôi phục toàn bộ dữ liệu từ file backup.json lên Supabase")
 def restore_library():
+    """Đọc file `backup.json` ở thư mục gốc và nạp lại toàn bộ dữ liệu lên Supabase."""
     try:
         return backup.restore_backup_from_file()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-# ==================== HÌNH NỀN & MOUNT FRONTEND ====================
+# ==================== 8. QUẢN LÝ HÌNH NỀN & PHỤC VỤ GIAO DIỆN FRONTEND ====================
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = ROOT_DIR / "frontend"
 BACKGROUND_DIR = FRONTEND_DIR / "assets"
 
 
-@app.get("/api/backgrounds", summary="Lấy danh sách các file ảnh nền")
+@app.get("/api/backgrounds", summary="Lấy danh sách các file ảnh nền trong frontend/assets")
 def get_backgrounds():
-    """Tự động quét tất cả file ảnh trong thư mục frontend/assets."""
+    """
+    Tự động quét tất cả file ảnh hợp lệ (.jpg, .jpeg, .png, .webp, .gif) trong thư mục `frontend/assets`
+    (ngoại trừ ảnh logo `rem.jpg`) để người dùng chọn làm hình nền trên giao diện.
+    """
     if not BACKGROUND_DIR.exists():
         return []
 
@@ -280,6 +322,6 @@ def get_backgrounds():
     return files
 
 
-# Mount giao diện Frontend vào "/"
+# Mount toàn bộ thư mục `frontend` vào đường dẫn gốc "/" (đặt ở cuối file để không che khuất các route /api/...)
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

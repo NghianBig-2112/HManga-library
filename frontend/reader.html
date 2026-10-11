@@ -151,20 +151,24 @@
     </div>
 
     <script>
+        // ==================== 1. CẤU HÌNH API, HÌNH NỀN & THAM SỐ URL ====================
         const API_BASE = (window.location.protocol.startsWith("http") && window.location.port === "8000")
             ? ""
             : "http://127.0.0.1:8000";
 
+        // Đồng bộ hình nền đã chọn từ Trang chủ (lưu trong localStorage)
         const savedBg = localStorage.getItem("hmanga_bg");
         if (savedBg) {
             document.body.style.backgroundImage = `url("assets/${encodeURIComponent(savedBg)}")`;
         }
 
+        // Đọc tham số từ thanh địa chỉ: comic_id, chapter_id và trang bắt đầu (page)
         const urlParams = new URLSearchParams(window.location.search);
         const comicId = urlParams.get("comic_id");
         let currentChapterId = urlParams.get("chapter_id");
         const initialPage = parseInt(urlParams.get("page") || "1", 10);
 
+        // ==================== 2. THAM CHIẾU CÁC PHẦN TỬ DOM ====================
         const backToDetailLink = document.querySelector('.control-bar a[href="detail.html"]');
         const readerComicTitle = document.getElementById("readerComicTitle");
         const chapterSelect = document.getElementById("chapterSelect");
@@ -179,10 +183,12 @@
         const verticalContainer = document.getElementById("verticalContainer");
         const horizontalContainer = document.getElementById("horizontalContainer");
 
+        // Biến theo dõi chỉ số trang đang đọc (bắt đầu từ 0) để đồng bộ giữa chế độ Cuộn dọc và Cuộn ngang
         let currentSlideIndex = 0;
         let totalSlides = 0;
         let isLockingInitialVerticalScroll = false;
 
+        // Chuyển link ảnh gốc từ nhentai.net sang đi qua Image Proxy của Backend
         function getProxyImageUrl(url) {
             if (!url) return "assets/rem.jpg";
             if (url.includes("nhentai.net")) {
@@ -191,7 +197,9 @@
             return url;
         }
 
-        // Chuyển đến trang chỉ định trong chế độ Cuộn ngang
+        // ==================== 3. CÁC HÀM ĐIỀU HƯỚNG & TẢI TRANG ẢNH ====================
+
+        // 3.1. Chuyển đến trang chỉ định trong chế độ Cuộn ngang
         function scrollToHorizontalSlide(index, smooth = true) {
             if (totalSlides === 0) return;
             if (index < 0) index = 0;
@@ -205,7 +213,7 @@
             });
         }
 
-        // Tắt khóa cuộn trang ban đầu khi người dùng chủ động lăn chuột / vuốt cảm ứng / bấm phím
+        // 3.2. Mở khóa cuộn tự động ban đầu ngay khi người dùng chủ động lăn chuột / vuốt / bấm phím
         function unlockInitialVerticalScroll() {
             isLockingInitialVerticalScroll = false;
         }
@@ -213,7 +221,7 @@
         window.addEventListener("touchmove", unlockInitialVerticalScroll, { passive: true });
         window.addEventListener("keydown", unlockInitialVerticalScroll);
 
-        // Tải danh sách ảnh của 1 Chapter và đổ vào 2 chế độ đọc
+        // 3.3. Tải danh sách ảnh của 1 Chapter và hiển thị vào cả 2 khung đọc (Cuộn dọc & Cuộn ngang)
         async function loadChapterPages(chapterId, startAtPageNumber = null) {
             if (!chapterId) return;
 
@@ -227,17 +235,17 @@
                 currentSlideIndex = 0;
                 currentPageIndexEl.textContent = totalSlides > 0 ? 1 : 0;
 
-                // 1. Đổ ảnh vào Chế độ 1: Cuộn dọc (đặt min-height tạm thời trước khi ảnh tải xong để không bị nhảy trang)
+                // 1. Đổ ảnh vào Chế độ 1: Cuộn dọc (đặt min-height=100vh tạm thời trước khi ảnh tải xong để không bị nhảy vị trí cuộn)
                 verticalContainer.innerHTML = pages.map(p =>
                     `<img src="${getProxyImageUrl(p.url)}" alt="Trang ${p.page_number}" data-page="${p.page_number}" onload="this.style.minHeight='0'" style="width: 100vw; min-height: 100vh; height: auto; display: block;" loading="lazy">`
                 ).join("");
 
-                // 2. Đổ ảnh vào Chế độ 2: Cuộn ngang (trực tiếp thẻ <img> full màn hình 100vw x 100vh)
+                // 2. Đổ ảnh vào Chế độ 2: Cuộn ngang (mỗi ảnh chiếm trọn khung nhìn 100vw x 100vh)
                 horizontalContainer.innerHTML = pages.map(p =>
                     `<img src="${getProxyImageUrl(p.url)}" alt="Trang ${p.page_number}" data-page="${p.page_number}" style="flex: 0 0 100vw; width: 100vw; height: 100vh; object-fit: contain; scroll-snap-align: center; display: block;" loading="lazy">`
                 ).join("");
 
-                // Nếu người dùng bấm vào 1 trang cụ thể từ trang Chi tiết -> nhảy tới trang đó
+                // 3. Nếu người dùng bấm vào 1 trang cụ thể từ lưới xem trước ở trang Chi tiết -> nhảy tới đúng trang đó
                 const targetIdx = startAtPageNumber
                     ? pages.findIndex(p => p.page_number === startAtPageNumber)
                     : 0;
@@ -276,7 +284,7 @@
             }
         }
 
-        // Khởi tạo thông tin truyện và danh sách Chapter
+        // 3.4. Khởi tạo thông tin truyện và danh sách Chapter trên thanh điều khiển
         async function initReader() {
             if (comicId && backToDetailLink) {
                 backToDetailLink.href = `detail.html?id=${comicId}`;
@@ -294,7 +302,7 @@
 
                 const chapters = comic.chapters || [];
                 if (chapters.length > 0) {
-                    // Nếu URL chưa truyền chapter_id hoặc bấm từ trang ảnh xem trước -> chọn chapter chứa trang đó
+                    // Nếu URL chưa truyền chapter_id thì tự động chọn chapter chứa trang bắt đầu (initialPage)
                     if (!currentChapterId) {
                         const matchedCh = chapters.find(ch => initialPage >= ch.start_page && initialPage <= ch.end_page);
                         currentChapterId = matchedCh ? String(matchedCh.id) : String(chapters[0].id);
@@ -312,7 +320,9 @@
             }
         }
 
-        // Khi đổi Chapter trên thanh chọn
+        // ==================== 4. XỬ LÝ SỰ KIỆN ĐIỀU KHIỂN ĐỌC TRUYỆN ====================
+
+        // 4.1. Khi chọn Chapter khác trên thanh điều khiển
         chapterSelect.addEventListener("change", () => {
             currentChapterId = chapterSelect.value;
             const newUrl = `${window.location.pathname}?comic_id=${comicId}&chapter_id=${currentChapterId}`;
@@ -320,7 +330,7 @@
             loadChapterPages(currentChapterId, null);
         });
 
-        // Khi bấm chuyển sang chế độ Cuộn ngang -> đợi khung ngang hiện ra rồi nhảy đúng tới trang đang đọc
+        // 4.2. Đồng bộ vị trí trang đang đọc khi chuyển đổi qua lại giữa Cuộn dọc và Cuộn ngang
         modeHorizontal.addEventListener("change", () => {
             if (modeHorizontal.checked) {
                 isLockingInitialVerticalScroll = false;
@@ -330,7 +340,6 @@
             }
         });
 
-        // Khi bấm chuyển ngược từ Cuộn ngang về Cuộn dọc -> nhảy đúng tới trang đang đọc
         modeVertical.addEventListener("change", () => {
             if (modeVertical.checked) {
                 requestAnimationFrame(() => {
@@ -340,11 +349,11 @@
             }
         });
 
-        // Nút Trang trước / Trang sau ở chế độ Cuộn ngang
+        // 4.3. Nút Trang trước / Trang sau ở chế độ Cuộn ngang
         btnPrevPage.addEventListener("click", () => scrollToHorizontalSlide(currentSlideIndex - 1));
         btnNextPage.addEventListener("click", () => scrollToHorizontalSlide(currentSlideIndex + 1));
 
-        // Cập nhật trang hiện tại khi người dùng cuộn dọc
+        // 4.4. Tự động ghi nhận trang đang hiển thị ở giữa màn hình khi người dùng cuộn dọc
         window.addEventListener("scroll", () => {
             if (!modeVertical.checked || isLockingInitialVerticalScroll || totalSlides === 0) return;
             const viewportCenter = window.innerHeight / 2;
@@ -361,7 +370,7 @@
             }
         }, { passive: true });
 
-        // Cập nhật số trang hiện tại khi người dùng lướt ngang bằng chuột / cảm ứng
+        // 4.5. Tự động cập nhật số trang hiện tại khi người dùng lướt ngang bằng chuột / cảm ứng
         horizontalContainer.addEventListener("scroll", () => {
             if (!modeHorizontal.checked) return;
             if (window.innerWidth > 0) {
@@ -373,7 +382,7 @@
             }
         });
 
-        // Hỗ trợ phím mũi tên Trái / Phải khi ở chế độ Cuộn ngang
+        // 4.6. Hỗ trợ phím mũi tên Trái / Phải để lật trang khi ở chế độ Cuộn ngang
         window.addEventListener("keydown", (e) => {
             if (modeHorizontal.checked) {
                 if (e.key === "ArrowLeft") {
@@ -386,6 +395,7 @@
             }
         });
 
+        // Khởi chạy khi mở Trình đọc truyện
         window.addEventListener("DOMContentLoaded", initReader);
     </script>
 </body>

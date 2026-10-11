@@ -33,11 +33,6 @@ out/
 backend/data/*.db
 !backend/data/backup.json
 
-# Bỏ qua ảnh bìa truyện tải về (chỉ giữ lại ảnh giao diện tĩnh)
-frontend/assets/*
-!frontend/assets/background.jpg
-!frontend/assets/rem.jpg
-
 # ===== OS =====
 .DS_Store
 Thumbs.db

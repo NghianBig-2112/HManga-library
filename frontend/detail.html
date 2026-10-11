@@ -83,7 +83,7 @@
                     <p style="margin: 6px 0 15px 0;"><strong>Số trang:</strong> <span id="comicNumPages">236</span></p>
 
                     <!-- CÔNG CỤ 1: THÊM CHAPTER MỚI TỪ ID KHÁC (TRUYỆN NHIỀU PHẦN) -->
-                    <details style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 10px 14px; margin-bottom: 10px;">
+                    <details style="background: rgba(255, 255, 255, 0.45); border: 1px solid #dee2e6; border-radius: 6px; padding: 10px 14px; margin-bottom: 10px;">
                         <summary style="cursor: pointer; font-weight: bold; color: #0d6efd; font-size: 14px;">
                             Thêm Chapter mới từ ID khác (Truyện nhiều phần)
                         </summary>
@@ -98,7 +98,7 @@
                     </details>
 
                     <!-- CÔNG CỤ 2: CHIA NHỎ TRUYỆN DÀI THÀNH NHIỀU CHAPTER THEO SỐ TRANG -->
-                    <details style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 10px 14px;">
+                    <details style="background: rgba(255, 255, 255, 0.45); border: 1px solid #dee2e6; border-radius: 6px; padding: 10px 14px;">
                         <summary style="cursor: pointer; font-weight: bold; color: #d63384; font-size: 14px;">
                             Chia nhỏ truyện thành nhiều Chapter theo số trang
                         </summary>
@@ -145,19 +145,19 @@
             </div>
 
             <!-- KHU VỰC 2: DANH SÁCH CHAPTER (XẾP DỌC 1 CỘT HOẶC 2 CỘT DỌC KHI NHIỀU CHAPTER) -->
-            <div style="background: #f8f9fa; padding: 15px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 20px;">
+            <div style="background: rgba(255, 255, 255, 0.45); padding: 15px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 20px;">
                 <h3 style="margin-top: 0; margin-bottom: 12px; color: #2c3e50;">Danh sách Chapter</h3>
                 <div id="chaptersList">
                     <a href="reader.html" style="padding: 9px 14px; background: #0d6efd; color: white; border: 1px solid #0d6efd; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold;">
                         Chapter 1: Mở đầu (Trang 1 - 60)
                     </a>
-                    <a href="reader.html" style="padding: 9px 14px; background: #fff; color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
+                    <a href="reader.html" style="padding: 9px 14px; background: rgba(255, 255, 255, 0.55); color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
                         Chapter 2: Diễn biến (Trang 61 - 120)
                     </a>
-                    <a href="reader.html" style="padding: 9px 14px; background: #fff; color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
+                    <a href="reader.html" style="padding: 9px 14px; background: rgba(255, 255, 255, 0.55); color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
                         Chapter 3: Cao trào (Trang 121 - 180)
                     </a>
-                    <a href="reader.html" style="padding: 9px 14px; background: #fff; color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
+                    <a href="reader.html" style="padding: 9px 14px; background: rgba(255, 255, 255, 0.55); color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
                         Chapter 4: Kết thúc (Trang 181 - 236)
                     </a>
                 </div>
@@ -221,18 +221,23 @@
     </div>
 
     <script>
+        // ==================== 1. CẤU HÌNH API, HÌNH NỀN & THAM SỐ URL ====================
         const API_BASE = (window.location.protocol.startsWith("http") && window.location.port === "8000")
             ? ""
             : "http://127.0.0.1:8000";
 
+        // Đồng bộ hình nền đã chọn từ Trang chủ (lưu trong localStorage)
         const savedBg = localStorage.getItem("hmanga_bg");
         if (savedBg) {
             document.body.style.backgroundImage = `url("assets/${encodeURIComponent(savedBg)}")`;
         }
 
+        // Lấy ID bộ truyện từ thanh địa chỉ (vd: detail.html?id=14414)
         const urlParams = new URLSearchParams(window.location.search);
         const comicId = urlParams.get("id");
 
+        // ==================== 2. THAM CHIẾU CÁC PHẦN TỬ DOM ====================
+        // Thông tin cơ bản của truyện
         const comicCover = document.getElementById("comicCover");
         const comicTitle = document.getElementById("comicTitle");
         const comicIdEl = document.getElementById("comicId");
@@ -243,25 +248,30 @@
         const comicGenres = document.getElementById("comicGenres");
         const comicNumPages = document.getElementById("comicNumPages");
 
+        // Công cụ 1: Thêm Chapter mới từ Gallery ID khác
         const addChapterGalleryId = document.getElementById("addChapterGalleryId");
         const addChapterNumber = document.getElementById("addChapterNumber");
         const addChapterTitle = document.getElementById("addChapterTitle");
         const btnAddChapter = document.getElementById("btnAddChapter");
 
+        // Công cụ 2: Chia nhỏ truyện thành nhiều Chapter theo số trang
         const splitRowsContainer = document.getElementById("splitRowsContainer");
         const btnAddSplitRow = document.getElementById("btnAddSplitRow");
         const btnSaveSplit = document.getElementById("btnSaveSplit");
 
+        // Danh sách Chapter & Lưới xem trước trang ảnh
         const chaptersList = document.getElementById("chaptersList");
         const pagesCount = document.getElementById("pagesCount");
         const pagesList = document.getElementById("pagesList");
         const btnLoadMore = document.getElementById("btnLoadMore");
 
+        // Biến trạng thái lưu thông tin truyện và danh sách trang xem trước (tải từng đợt 12 trang)
         let currentComic = null;
         let previewPages = [];
         let shownPagesCount = 0;
         const PAGE_BATCH = 12;
 
+        // Chuyển link ảnh gốc từ nhentai.net sang đi qua Image Proxy của Backend
         function getProxyImageUrl(url) {
             if (!url) return "assets/rem.jpg";
             if (url.includes("nhentai.net")) {
@@ -270,7 +280,9 @@
             return url;
         }
 
-        // Tạo 1 dòng nhập mốc trang cho Công cụ 2 (giữ nguyên 100% style mẫu)
+        // ==================== 3. CÁC HÀM HIỂN THỊ GIAO DIỆN ====================
+
+        // 3.1. Tạo 1 dòng nhập mốc trang (Tên chapter, Từ trang, Đến trang) cho Công cụ 2
         function createSplitRowHTML(title = "", startPage = 1, endPage = 1) {
             const row = document.createElement("div");
             row.style.cssText = "display: flex; gap: 6px; align-items: center; flex-wrap: wrap;";
@@ -292,13 +304,13 @@
             return row;
         }
 
-        // Hiển thị thêm 12 trang ảnh xem trước
+        // 3.2. Hiển thị thêm 1 đợt 12 trang ảnh xem trước (giúp trang tải nhanh dù truyện có hàng trăm trang)
         function renderMorePreviewPages() {
             const nextBatch = previewPages.slice(shownPagesCount, shownPagesCount + PAGE_BATCH);
             const chapters = (currentComic && currentComic.chapters) ? currentComic.chapters : [];
 
             nextBatch.forEach(p => {
-                // Tìm chapter chứa trang này (nếu truyện đã chia nhiều chapter)
+                // Tự động xác định chapter chứa trang ảnh này để khi bấm vào sẽ mở đúng chapter và đúng trang đó
                 const matchedChapter = chapters.find(
                     ch => String(ch.media_id) === String(currentComic.media_id) &&
                           p.page_number >= ch.start_page &&
@@ -325,7 +337,7 @@
             }
         }
 
-        // Tải chi tiết bộ truyện
+        // 3.3. Tải toàn bộ thông tin chi tiết của bộ truyện từ Backend
         async function loadComicDetail() {
             if (!comicId) return;
 
@@ -342,13 +354,13 @@
                 currentComic = comic;
                 document.title = `Thư Viện HManga — ${comic.title}`;
 
-                // 1. Đổ thông tin cơ bản
+                // 1. Đổ thông tin cơ bản (Ảnh bìa, Tên truyện, ID, Tác giả, Ngôn ngữ, Thể loại)
                 comicCover.src = getProxyImageUrl(comic.cover_url);
                 comicTitle.textContent = comic.title;
                 comicIdEl.textContent = comic.id;
                 comicArtist.textContent = comic.author || "Unknown";
 
-                // Đổ danh sách thư mục vào ô chọn và chọn sẵn thư mục hiện tại của truyện
+                // Đổ danh sách thư mục vào ô chọn và chọn sẵn thư mục hiện tại của bộ truyện
                 if (folders.length > 0) {
                     comicFolderSelect.innerHTML = folders
                         .map(f => `<option value="${f.id}">${f.name}</option>`)
@@ -366,7 +378,7 @@
                 comicNumPages.textContent = comic.num_pages;
                 pagesCount.textContent = comic.num_pages;
 
-                // 2. Đổ danh sách Chapter
+                // 2. Đổ danh sách Chapter để người dùng bấm vào đọc
                 const chapters = comic.chapters || [];
                 if (chapters.length === 0) {
                     chaptersList.innerHTML = `<p style="color: #555; margin: 0;">Chưa có chapter nào.</p>`;
@@ -374,7 +386,7 @@
                     chaptersList.innerHTML = chapters.map(ch => {
                         const chNum = Number(ch.chapter_number);
                         return `
-                            <a href="reader.html?comic_id=${comic.id}&chapter_id=${ch.id}" style="padding: 9px 14px; background: #fff; color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
+                            <a href="reader.html?comic_id=${comic.id}&chapter_id=${ch.id}" style="padding: 9px 14px; background: rgba(255, 255, 255, 0.55); color: #2c3e50; border: 1px solid #ced4da; text-decoration: none; border-radius: 4px; font-size: 14px;">
                                 Chapter ${chNum}: ${ch.title || ""} (Trang ${ch.start_page} - ${ch.end_page})
                             </a>
                         `;
@@ -394,7 +406,7 @@
                     splitRowsContainer.appendChild(createSplitRowHTML("Toàn bộ", 1, comic.num_pages));
                 }
 
-                // 4. Lấy danh sách trang ảnh xem trước đã được Python tạo chuẩn đuôi ảnh
+                // 4. Khởi tạo danh sách trang ảnh xem trước và hiển thị 12 trang đầu tiên
                 previewPages = comic.pages || [];
                 pagesList.innerHTML = "";
                 shownPagesCount = 0;
@@ -405,7 +417,9 @@
             }
         }
 
-        // Đổi thư mục của bộ truyện ngay khi chọn thư mục mới trong dropdown
+        // ==================== 4. XỬ LÝ SỰ KIỆN TƯƠNG TÁC ====================
+
+        // 4.1. Đổi thư mục của bộ truyện ngay khi người dùng chọn thư mục mới trong dropdown
         comicFolderSelect.addEventListener("change", async () => {
             if (!comicId) return;
             const newFolderId = parseInt(comicFolderSelect.value, 10);
@@ -432,7 +446,7 @@
             }
         });
 
-        // Xử lý Công cụ 1: Thêm Chapter mới từ ID khác
+        // 4.2. Xử lý Công cụ 1: Gộp thêm Chapter mới từ một Gallery ID khác
         btnAddChapter.addEventListener("click", async () => {
             if (!comicId) return;
             const galleryId = parseInt(addChapterGalleryId.value.trim(), 10);
@@ -472,7 +486,7 @@
             }
         });
 
-        // Xử lý Công cụ 2: Thêm dòng & Lưu chia nhỏ Chapter
+        // 4.3. Xử lý Công cụ 2: Thêm dòng mới & Lưu danh sách chia nhỏ Chapter theo số trang
         btnAddSplitRow.addEventListener("click", () => {
             const nextIndex = splitRowsContainer.children.length + 1;
             const maxPage = currentComic ? currentComic.num_pages : 1;
@@ -508,8 +522,10 @@
             }
         });
 
+        // 4.4. Nút "Hiện thêm 12 trang"
         btnLoadMore.addEventListener("click", renderMorePreviewPages);
 
+        // Khởi chạy khi mở trang Chi tiết
         window.addEventListener("DOMContentLoaded", loadComicDetail);
     </script>
 </body>
