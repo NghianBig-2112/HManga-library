@@ -273,6 +273,38 @@ def check_comic_before_add(gallery_id):
             nhentai_data = fetch_comic_from_nhentai(gallery_id)
             title_pretty = nhentai_data["title"].strip()
 
+            # Bước 2.5: Kiểm tra xem media_id của truyện này đã từng được gộp làm Chapter của bộ truyện nào chưa
+            cur.execute("""
+                SELECT
+                    c.id,
+                    c.title,
+                    c.artist AS author,
+                    c.language,
+                    c.category,
+                    c.cover_url,
+                    c.num_pages,
+                    c.folder_id,
+                    f.name AS folder_name,
+                    ch.chapter_number
+                FROM chapters ch
+                JOIN comics c ON ch.comic_id = c.id
+                LEFT JOIN folders f ON c.folder_id = f.id
+                WHERE ch.media_id = %s
+                LIMIT 1;
+            """, (str(nhentai_data["media_id"]),))
+            existing_by_chapter = cur.fetchone()
+
+            if existing_by_chapter:
+                return {
+                    "status": "exists_chapter",
+                    "message": (
+                        f"Truyện ID {gallery_id} đã tồn tại trong thư viện (đang là Chapter {existing_by_chapter['chapter_number']} "
+                        f"của bộ '{existing_by_chapter['title']}' - ID gốc: {existing_by_chapter['id']})!"
+                    ),
+                    "comic": existing_by_chapter,
+                    "nhentai_data": nhentai_data
+                }
+
             # Bước 3: So sánh tên truyện (không phân biệt hoa thường) với các bộ đã có trong CSDL
             cur.execute("""
                 SELECT

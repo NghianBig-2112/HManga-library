@@ -183,8 +183,10 @@
                 Trang trước
             </button>
 
-            <span style="font-size: 14px; font-weight: bold; color: #2c3e50;">
-                Trang <span id="currentComicPage">1</span> / <span id="totalComicPages">1</span>
+            <span style="font-size: 14px; font-weight: bold; color: #2c3e50; display: flex; align-items: center; gap: 6px;">
+                Trang
+                <input type="number" id="currentComicPage" value="1" min="1" style="width: 55px; padding: 4px 6px; font-size: 14px; font-weight: bold; text-align: center; border: 1px solid #ccc; border-radius: 4px;">
+                / <span id="totalComicPages">1</span>
             </span>
 
             <button type="button" id="btnNextComicPage" style="padding: 8px 16px; font-size: 14px; cursor: pointer; background: #0d6efd; color: white; font-weight: bold; border: none; border-radius: 4px;">
@@ -342,11 +344,22 @@
                 if (!resp.ok) throw new Error("Không thể tải danh sách truyện");
                 const data = await resp.json();
 
+                // Nếu trang yêu cầu vượt quá tổng số trang thực tế (ví dụ vừa xóa truyện cuối ở trang cuối), tự lùi về trang cuối
+                if (data.total_pages > 0 && page > data.total_pages) {
+                    return loadComics(data.total_pages);
+                }
+
                 currentPage = data.page || 1;
                 totalPages = data.total_pages || 1;
 
+                // Lưu lại trạng thái trang hiện tại và bộ lọc vào sessionStorage để giữ nguyên khi từ trang Chi tiết quay về
+                sessionStorage.setItem("hmanga_current_page", currentPage);
+                sessionStorage.setItem("hmanga_filter_folder", filterFolder.value);
+                sessionStorage.setItem("hmanga_filter_author", filterAuthor.value);
+
                 comicsCount.textContent = data.total_comics ?? 0;
-                currentComicPage.textContent = currentPage;
+                currentComicPage.value = currentPage;
+                currentComicPage.max = totalPages;
                 totalComicPages.textContent = totalPages;
 
                 paginationBar.style.display = "flex";
@@ -384,8 +397,8 @@
                     throw new Error(data.detail || "Không tìm thấy truyện trên NHentai!");
                 }
 
-                if (data.status === "exists_id" || data.status === "exists_title") {
-                    // Đã có ID hoặc trùng tên trong Supabase -> Lọc hiện ngay bộ truyện đó lên lưới để người dùng tiện bấm vào xem/gộp chapter
+                if (data.status === "exists_id" || data.status === "exists_title" || data.status === "exists_chapter") {
+                    // Đã có ID, đã gộp làm chapter, hoặc trùng tên trong Supabase -> Lọc hiện ngay bộ truyện đó lên lưới để người dùng tiện bấm vào xem/gộp chapter
                     searchCheckStatus.style.color = "#856404";
                     searchCheckStatus.style.borderColor = "#ffc107";
                     searchCheckStatus.innerHTML = `<strong>Thông báo:</strong> ${data.message}`;
@@ -624,13 +637,36 @@
             }
         });
 
-        // Chuyển trang Trước / Sau
+        // Chuyển trang Trước / Sau hoặc nhập nhanh số trang
         btnPrevComicPage.addEventListener("click", () => {
             if (currentPage > 1) loadComics(currentPage - 1);
         });
 
         btnNextComicPage.addEventListener("click", () => {
             if (currentPage < totalPages) loadComics(currentPage + 1);
+        });
+
+        function handleJumpPage() {
+            let targetPage = parseInt(currentComicPage.value, 10);
+            if (isNaN(targetPage) || targetPage < 1) {
+                targetPage = 1;
+            } else if (targetPage > totalPages) {
+                targetPage = totalPages;
+            }
+            if (targetPage !== currentPage) {
+                loadComics(targetPage);
+            } else {
+                currentComicPage.value = currentPage;
+            }
+        }
+
+        currentComicPage.addEventListener("change", handleJumpPage);
+        currentComicPage.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                handleJumpPage();
+                currentComicPage.blur();
+            }
         });
 
         // Hỗ trợ nhấn phím Enter trong ô nhập ID truyện và ô tạo thư mục
@@ -691,7 +727,22 @@
         // ==================== 8. KHỞI CHẠY KHI MỞ TRANG CHỦ ====================
         window.addEventListener("DOMContentLoaded", async () => {
             await Promise.all([loadFolders(), loadAuthors(), loadBackgrounds()]);
-            await loadComics(1);
+
+            // Khôi phục lại bộ lọc và số trang đang xem trước đó (nếu từ trang Chi tiết quay về)
+            const savedFolder = sessionStorage.getItem("hmanga_filter_folder") || "";
+            const savedAuthor = sessionStorage.getItem("hmanga_filter_author") || "";
+            const savedPage = parseInt(sessionStorage.getItem("hmanga_current_page"), 10) || 1;
+
+            if (savedFolder) {
+                filterFolder.value = savedFolder;
+                if (filterFolder.selectedIndex === -1) filterFolder.value = "";
+            }
+            if (savedAuthor) {
+                filterAuthor.value = savedAuthor;
+                if (filterAuthor.selectedIndex === -1) filterAuthor.value = "";
+            }
+
+            await loadComics(savedPage);
         });
     </script>
 </body>
