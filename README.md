@@ -1,6 +1,6 @@
 # 📚 HManga-library
 
-Ứng dụng web quản lý và đọc truyện tranh cá nhân — đồng bộ cơ sở dữ liệu đám mây với **Supabase (PostgreSQL)**, tích hợp trực tiếp **NHentai API v2**, đọc truyện trực tuyến **Zero-Storage** qua **In-Memory Image Proxy** (vượt chặn nhà mạng, không tốn dung lượng ổ cứng) và hỗ trợ sao lưu / khôi phục dữ liệu chỉ với 1 cú nhấp chuột.
+Ứng dụng web quản lý và đọc truyện tranh cá nhân — đồng bộ cơ sở dữ liệu đám mây với **Supabase (PostgreSQL)**, tích hợp trực tiếp **NHentai API v2** và hỗ trợ sao lưu / khôi phục dữ liệu.
 
 ---
 
